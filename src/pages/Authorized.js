@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Redirect from 'umi/redirect';
 import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
@@ -6,7 +6,20 @@ import Authorized from '@/utils/Authorized';
 import { getAuthority } from '@/utils/authority';
 import Exception403 from '@/pages/Exception/403';
 
-function AuthComponent({ children, location, routerData }) {
+function AuthComponent({ children, location, routerData, ...rest }) {
+  useEffect(() => {
+    const {
+      dispatch,
+      route: { routes, path, authority },
+    } = rest;
+    console.log(routes);
+
+    dispatch({
+      type: 'menu/getMenuData',
+      payload: { routes, path, authority },
+    });
+  }, []);
+
   const auth = getAuthority();
   const isLogin = auth && auth[0] !== 'guest';
   const getRouteAuthority = (path, routeData) => {
