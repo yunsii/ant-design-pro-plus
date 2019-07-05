@@ -1,4 +1,4 @@
-<h1 align="center">Ant Design Pro V2 PLUS</h1>
+<h1 align="center">Ant Design Pro V2 Plus</h1>
 
 <div align="center">
 
@@ -8,5 +8,4 @@
 
 ## 新增特性
 
-* 标签页
-* 
+* 基于路由实现多标签页切换
