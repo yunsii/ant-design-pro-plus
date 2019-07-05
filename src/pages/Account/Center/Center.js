@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import router from 'umi/router';
 import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import Projects from './Projects';
+import Articles from './Articles';
+import Applications from './Applications';
 import styles from './Center.less';
 
 @connect(({ loading, user, project }) => ({
@@ -18,6 +20,7 @@ class Center extends PureComponent {
     newTags: [],
     inputVisible: false,
     inputValue: '',
+    tabKey: 'articles',
   };
 
   componentDidMount() {
@@ -37,20 +40,27 @@ class Center extends PureComponent {
   }
 
   onTabChange = key => {
-    const { match } = this.props;
-    switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
-        break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
-        break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
-        break;
-      default:
-        break;
-    }
+    // const { match } = this.props;
+    // switch (key) {
+    //   case 'articles':
+    //     router.push(`${match.url}/articles`);
+    //     break;
+    //   case 'applications':
+    //     router.push(`${match.url}/applications`);
+    //     break;
+    //   case 'projects':
+    //     router.push(`${match.url}/projects`);
+    //     break;
+    //   default:
+    //     break;
+    // }
+
+    // If you need to sync state to url
+    // const { match } = this.props;
+    // router.push(`${match.url}/${key}`);
+    this.setState({
+      tabKey: key,
+    });
   };
 
   showInput = () => {
@@ -79,17 +89,27 @@ class Center extends PureComponent {
     });
   };
 
+  renderChildrenByTabKey = tabKey => {
+    if (tabKey === 'projects') {
+      return <Projects />;
+    }
+    if (tabKey === 'applications') {
+      return <Applications />;
+    }
+    if (tabKey === 'articles') {
+      return <Articles />;
+    }
+    return null;
+  };
+
   render() {
-    const { newTags, inputVisible, inputValue } = this.state;
+    const { newTags, inputVisible, inputValue, tabKey } = this.state;
     const {
       listLoading,
       currentUser,
       currentUserLoading,
       project: { notice },
       projectLoading,
-      match,
-      location,
-      children,
     } = this.props;
 
     const operationTabList = [
@@ -200,11 +220,11 @@ class Center extends PureComponent {
               className={styles.tabsCard}
               bordered={false}
               tabList={operationTabList}
-              activeTabKey={location.pathname.replace(`${match.path}/`, '')}
+              activeTabKey={tabKey}
               onTabChange={this.onTabChange}
               loading={listLoading}
             >
-              {children}
+              {this.renderChildrenByTabKey(tabKey)}
             </Card>
           </Col>
         </Row>

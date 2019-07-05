@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Button, Row, Col } from 'antd';
-import router from 'umi/router';
 import Result from '@/components/Result';
 import styles from './style.less';
 
@@ -10,9 +9,14 @@ import styles from './style.less';
 }))
 class Step3 extends React.PureComponent {
   render() {
-    const { data } = this.props;
+    const { data, dispatch } = this.props;
     const onFinish = () => {
-      router.push('/form/step-form/info');
+      if (dispatch) {
+        dispatch({
+          type: 'form/saveCurrentStep',
+          payload: 'info',
+        });
+      }
     };
     const information = (
       <div className={styles.information}>

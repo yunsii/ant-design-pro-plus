@@ -42,7 +42,8 @@ function flatMenuTreeToList(menu) {
 function getTabName(pathId, menuData) {
   const flatedMenu = flatMenuTreeToList(menuData);
   const targetMenuItem = _find(flatedMenu, { path: pathId });
-  return targetMenuItem.name;
+  if (targetMenuItem) return targetMenuItem.name;
+  return '';
 }
 
 function generatePathId(childrenPathname) {
@@ -52,6 +53,28 @@ function generatePathId(childrenPathname) {
     pathId = `/${pathSegment[0]}/${pathSegment[1]}`;
   }
   return pathId;
+}
+
+function addTab(newTab, activedTabs) {
+  // map 添加第一个 tab 不可删除
+  return [...activedTabs, newTab].map((item, index) =>
+    activedTabs.length === 0 && index === 0
+      ? { ...item, closable: false }
+      : { ...item, closable: true }
+  );
+}
+
+function switchOrDeleteTab(activeIndex, children, activedTabs) {
+  const { content, ...rest } = activedTabs[activeIndex];
+  activedTabs.splice(activeIndex, 1, {
+    content: children,
+    ...rest,
+  });
+  // filter 过滤路由 为 '/' 的 children
+  // map 删除后的 activedTabs 长度为 1 时不可删除
+  return activedTabs
+    .filter(item => item.tab)
+    .map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
 }
 
 // lazy load SettingDrawer
@@ -87,73 +110,49 @@ const query = {
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
     const { children, menuData } = props;
-    const { activedTabs, activeKey } = state;
-    const activedTabsLength = activedTabs.length;
+    const { activedTabs } = state;
     const {
       props: {
         location: { pathname: childrenPathname },
       },
     } = children;
-    console.log(activeKey);
-    console.log(childrenPathname);
 
     const pathId = generatePathId(childrenPathname);
-    if (_find(activedTabs, { tabId: pathId })) {
-      const index = _findIndex(activedTabs, { tabId: pathId });
-      if (index > -1) {
-        const { content, ...rest } = activedTabs[index];
-        activedTabs.splice(index, 1, {
-          content: children,
-          ...rest,
-        });
-        return {
-          activedTabs,
-          activeKey: pathId,
-        };
-      }
+    const activedTabIndex = _findIndex(activedTabs, { key: pathId });
+    if (activedTabIndex > -1) {
+      return {
+        activedTabs: switchOrDeleteTab(activedTabIndex, children, activedTabs),
+        activeKey: pathId,
+      };
     }
     return {
-      activedTabs: [
-        ...activedTabs,
+      activedTabs: addTab(
         {
           tab: getTabName(pathId, menuData),
           path: childrenPathname,
-          tabId: pathId,
+          key: pathId,
           closable: true,
           content: children,
         },
-      ].map((item, index) =>
-        activedTabsLength === 0 && index === 0
-          ? { ...item, closable: false }
-          : { ...item, closable: true }
+        activedTabs
       ),
       activeKey: pathId,
     };
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      activedTabs: [],
-      activeKey: null,
-    };
-  }
+  state = {
+    activedTabs: [],
+    activeKey: null,
+  };
 
   componentDidMount() {
-    const {
-      dispatch,
-      // route: { routes, path, authority },
-    } = this.props;
+    const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     });
     dispatch({
       type: 'setting/getSetting',
     });
-    // dispatch({
-    //   type: 'menu/getMenuData',
-    //   payload: { routes, path, authority },
-    // });
   }
 
   getContext() {
@@ -196,8 +195,6 @@ class BasicLayout extends React.Component {
   };
 
   handleTabChange = key => {
-    // console.log(key);
-    // this.setState({ activeKey: key });
     router.push(key);
   };
 
@@ -207,22 +204,12 @@ class BasicLayout extends React.Component {
 
   remove = targetKey => {
     const { activedTabs } = this.state;
-    const targetIndex = _findIndex(activedTabs, { tabId: targetKey });
-    const nextTabKey = activedTabs[targetIndex > 0 ? targetIndex - 1 : targetIndex + 1].tabId;
+    const targetIndex = _findIndex(activedTabs, { key: targetKey });
+    const nextTabKey = activedTabs[targetIndex > 0 ? targetIndex - 1 : targetIndex + 1].key;
     router.push(nextTabKey);
-    this.setState(
-      {
-        activedTabs: activedTabs.filter(item => item.key !== targetKey),
-      },
-      () => {
-        const { activedTabs: newActivedTabs } = this.state;
-        if (newActivedTabs.length === 1) {
-          this.setState({
-            activedTabs: newActivedTabs.map(item => ({ ...item, closable: false })),
-          });
-        }
-      }
-    );
+    this.setState({
+      activedTabs: activedTabs.filter(item => item.key !== targetKey),
+    });
   };
 
   handleTabsMenuClick = event => {
@@ -253,6 +240,7 @@ class BasicLayout extends React.Component {
       menuLoading,
     } = this.props;
     const { activedTabs, activeKey } = this.state;
+    // console.log(activedTabs);
 
     const isTop = PropsLayout === 'topmenu';
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
@@ -287,7 +275,7 @@ class BasicLayout extends React.Component {
         >
           {activedTabs.map(item => {
             return (
-              <TabPane tab={item.tab} key={item.tabId} closable={item.closable}>
+              <TabPane tab={item.tab} key={item.key} closable={item.closable}>
                 {/* <Route key={item.key} path={item.path} component={item.content} exact={item.exact} /> */}
                 {item.content}
                 {/* {children} */}

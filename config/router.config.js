@@ -62,28 +62,28 @@ export default [
             path: '/form/step-form',
             name: 'stepform',
             component: './Forms/StepForm',
-            hideChildrenInMenu: true,
-            routes: [
-              {
-                path: '/form/step-form',
-                redirect: '/form/step-form/info',
-              },
-              {
-                path: '/form/step-form/info',
-                name: 'info',
-                component: './Forms/StepForm/Step1',
-              },
-              {
-                path: '/form/step-form/confirm',
-                name: 'confirm',
-                component: './Forms/StepForm/Step2',
-              },
-              {
-                path: '/form/step-form/result',
-                name: 'result',
-                component: './Forms/StepForm/Step3',
-              },
-            ],
+            // hideChildrenInMenu: true,
+            // routes: [
+            //   {
+            //     path: '/form/step-form',
+            //     redirect: '/form/step-form/info',
+            //   },
+            //   {
+            //     path: '/form/step-form/info',
+            //     name: 'info',
+            //     component: './Forms/StepForm/Step1',
+            //   },
+            //   {
+            //     path: '/form/step-form/confirm',
+            //     name: 'confirm',
+            //     component: './Forms/StepForm/Step2',
+            //   },
+            //   {
+            //     path: '/form/step-form/result',
+            //     name: 'result',
+            //     component: './Forms/StepForm/Step3',
+            //   },
+            // ],
           },
           {
             path: '/form/advanced-form',
@@ -218,24 +218,24 @@ export default [
             path: '/account/center',
             name: 'center',
             component: './Account/Center/Center',
-            routes: [
-              {
-                path: '/account/center',
-                redirect: '/account/center/articles',
-              },
-              {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
-              },
-              {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
-              },
-              {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
-              },
-            ],
+            // routes: [
+            //   {
+            //     path: '/account/center',
+            //     redirect: '/account/center/articles',
+            //   },
+            //   {
+            //     path: '/account/center/articles',
+            //     component: './Account/Center/Articles',
+            //   },
+            //   {
+            //     path: '/account/center/applications',
+            //     component: './Account/Center/Applications',
+            //   },
+            //   {
+            //     path: '/account/center/projects',
+            //     component: './Account/Center/Projects',
+            //   },
+            // ],
           },
           {
             path: '/account/settings',

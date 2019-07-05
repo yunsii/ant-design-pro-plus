@@ -1,4 +1,3 @@
-import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import { fakeSubmitForm } from '@/services/api';
 
@@ -6,6 +5,7 @@ export default {
   namespace: 'form',
 
   state: {
+    current: 'info',
     step: {
       payAccount: 'ant-design@alipay.com',
       receiverAccount: 'test@example.com',
@@ -25,7 +25,10 @@ export default {
         type: 'saveStepFormData',
         payload,
       });
-      yield put(routerRedux.push('/form/step-form/result'));
+      yield put({
+        type: 'saveCurrentStep',
+        payload: 'result',
+      });
     },
     *submitAdvancedForm({ payload }, { call }) {
       yield call(fakeSubmitForm, payload);
@@ -34,6 +37,12 @@ export default {
   },
 
   reducers: {
+    saveCurrentStep(state, { payload }) {
+      return {
+        ...state,
+        current: payload,
+      };
+    },
     saveStepFormData(state, { payload }) {
       return {
         ...state,

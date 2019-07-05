@@ -1,16 +1,21 @@
 import React, { PureComponent, Fragment } from 'react';
+import { connect } from 'dva';
 import { Card, Steps } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import Step1 from './Step1';
+import Step2 from './Step2';
+import Step3 from './Step3';
 import styles from '../style.less';
 
 const { Step } = Steps;
 
-export default class StepForm extends PureComponent {
+@connect(({ form }) => ({
+  current: form.current,
+}))
+class StepForm extends PureComponent {
   getCurrentStep() {
-    const { location } = this.props;
-    const { pathname } = location;
-    const pathList = pathname.split('/');
-    switch (pathList[pathList.length - 1]) {
+    const { current } = this.props;
+    switch (current) {
       case 'info':
         return 0;
       case 'confirm':
@@ -23,24 +28,30 @@ export default class StepForm extends PureComponent {
   }
 
   render() {
-    const { location, children } = this.props;
+    const currentStep = this.getCurrentStep();
+    let stepComponent;
+    if (currentStep === 1) {
+      stepComponent = <Step2 />;
+    } else if (currentStep === 2) {
+      stepComponent = <Step3 />;
+    } else {
+      stepComponent = <Step1 />;
+    }
     return (
-      <PageHeaderWrapper
-        title="分步表单"
-        tabActiveKey={location.pathname}
-        content="将一个冗长或用户不熟悉的表单任务分成多个步骤，指导用户完成。"
-      >
+      <PageHeaderWrapper content="将一个冗长或用户不熟悉的表单任务分成多个步骤，指导用户完成。">
         <Card bordered={false}>
           <Fragment>
-            <Steps current={this.getCurrentStep()} className={styles.steps}>
+            <Steps current={currentStep} className={styles.steps}>
               <Step title="填写转账信息" />
               <Step title="确认转账信息" />
               <Step title="完成" />
             </Steps>
-            {children}
+            {stepComponent}
           </Fragment>
         </Card>
       </PageHeaderWrapper>
     );
   }
 }
+
+export default StepForm;

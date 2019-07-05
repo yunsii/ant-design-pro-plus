@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Form, Input, Button, Select, Divider } from 'antd';
-import router from 'umi/router';
 import styles from './style.less';
 
 const { Option } = Select;
@@ -25,12 +24,15 @@ class Step1 extends React.PureComponent {
     const { getFieldDecorator, validateFields } = form;
     const onValidateForm = () => {
       validateFields((err, values) => {
-        if (!err) {
+        if (!err && dispatch) {
           dispatch({
             type: 'form/saveStepFormData',
             payload: values,
           });
-          router.push('/form/step-form/confirm');
+          dispatch({
+            type: 'form/saveCurrentStep',
+            payload: 'confirm',
+          });
         }
       });
     };

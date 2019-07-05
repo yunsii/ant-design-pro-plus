@@ -12,7 +12,6 @@ function AuthComponent({ children, location, routerData, ...rest }) {
       dispatch,
       route: { routes, path, authority },
     } = rest;
-    console.log(routes);
 
     dispatch({
       type: 'menu/getMenuData',
