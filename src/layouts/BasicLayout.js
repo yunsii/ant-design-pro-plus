@@ -246,8 +246,12 @@ class BasicLayout extends React.Component {
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const menu = (
       <Menu onClick={this.handleTabsMenuClick}>
-        <Menu.Item key={closeCurrentTabMenuKey}>关闭当前标签页</Menu.Item>
-        <Menu.Item key={closeOthersTabMenuKey}>关闭其他标签页</Menu.Item>
+        <Menu.Item disabled={activedTabs.length === 1} key={closeCurrentTabMenuKey}>
+          关闭当前标签页
+        </Menu.Item>
+        <Menu.Item disabled={activedTabs.length === 1} key={closeOthersTabMenuKey}>
+          关闭其他标签页
+        </Menu.Item>
       </Menu>
     );
     const operations = (
