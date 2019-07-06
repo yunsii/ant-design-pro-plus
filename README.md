@@ -6,6 +6,8 @@
 
 </div>
 
+![ant-design-pro-v2-plus-screenshot.png](https://i.loli.net/2019/07/06/5d1ff32b16d2497023.png)
+
 ## 新增特性
 
 * 基于路由实现多标签页切换
