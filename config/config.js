@@ -115,6 +115,7 @@ export default {
   manifest: {
     basePath: '/',
   },
-
   chainWebpack: webpackPlugin,
+  // base: '/demo/ant-design-pro-v2-plus',
+  // publicPath: '/demo/ant-design-pro-v2-plus/',
 };

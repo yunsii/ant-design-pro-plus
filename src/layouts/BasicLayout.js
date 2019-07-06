@@ -56,12 +56,15 @@ function generatePathId(childrenPathname) {
 }
 
 function addTab(newTab, activedTabs) {
+  // filter 过滤路由 为 '/' 的 children
   // map 添加第一个 tab 不可删除
-  return [...activedTabs, newTab].map((item, index) =>
-    activedTabs.length === 0 && index === 0
-      ? { ...item, closable: false }
-      : { ...item, closable: true }
-  );
+  return [...activedTabs, newTab]
+    .filter(item => item.tab)
+    .map((item, index) =>
+      activedTabs.length === 0 && index === 0
+        ? { ...item, closable: false }
+        : { ...item, closable: true }
+    );
 }
 
 function switchOrDeleteTab(activeIndex, children, activedTabs) {
@@ -70,11 +73,8 @@ function switchOrDeleteTab(activeIndex, children, activedTabs) {
     content: children,
     ...rest,
   });
-  // filter 过滤路由 为 '/' 的 children
   // map 删除后的 activedTabs 长度为 1 时不可删除
-  return activedTabs
-    .filter(item => item.tab)
-    .map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
+  return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
 }
 
 // lazy load SettingDrawer
