@@ -11,3 +11,11 @@
 ## 新增特性
 
 * 基于路由实现多标签页切换
+
+## 功能实现概述
+
+### 基于路由实现多标签页切换
+
+`router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
+
+关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)
