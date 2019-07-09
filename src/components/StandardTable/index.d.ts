@@ -6,6 +6,7 @@ export interface StandardTableProps {
   onSelectRow: (row: any) => void;
   data: any;
   rowKey?: string;
+  checkable?: boolean;
   selectedRows: any[];
   onChange?: (
     pagination: PaginationConfig,
