@@ -11,8 +11,12 @@
 ## 新增特性✨
 
 * [基于路由实现多标签页切换](#基于路由实现多标签页切换)
-* StandardTable 斑马线
-* StandardTable 配置是否多选
+* [StandardTable 增强](#StandardTable%20增强)
+* [antd-form-pro 表单功能增强](#antd-form-pro%20表单功能增强)
+* [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer%20详情抽屉组件)
+* [QueryPanel 查询面板组件](#QueryPanel%20查询面板组件)
+* [base-models/curd 生成基础增删改查 model](#base-models/curd%20基础增删改查%20model)
+* [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd%20基础增删改查页面组件)
 
 ## 功能实现概述☁️
 
@@ -21,3 +25,45 @@
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
 
 关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)
+
+### StandardTable 增强
+
+* 默认开启 hideOnSinglePage
+* 间隔行着色
+* 多选功能可选，通过 checkable 控制
+
+### antd-form-pro 表单功能增强
+
+新增组件 ant-form-pro ，可配置化实现表单功能。支持的组件与配置方式可参考 [map.js](/src/pages/Enhance/CurdPage/map.js) ，使用方式参考 [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer%20详情抽屉组件)。
+
+### DetailFormDrawer 详情抽屉组件
+
+基于 antd-form-pro 实现的详情表单抽屉，参数定义可参见 [DetailFormDrawer/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) ，结合 ant-form-pro 的具体使用可参考 [DetailFormDrawer/index.js](/src/components/DetailFormDrawer/index.js) 。
+
+### QueryPanel 查询面板组件
+
+基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。
+
+### base-models/curd 生成基础增删改查 model
+
+通过 `namespace` 和 `modelConfig` 配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。
+
+### BasePage/Curd 基础增删改查页面组件
+
+前置工具及组件：
+
+* base-models/curd
+* antd-form-pro
+* DetailFormDrawer
+* QueryPanel
+* StandardTable
+
+如果需要新建一个类似**基础增删改查**的页面，快速开发指南：
+
+* 配置页面路由
+* 编写接口增删改查 service
+* 基于 base-models/curd 配置 model
+* 配置新建和编辑的表单数据映射 map.js
+* 配置页面 index.js ，主要是配置查询面板和数据列模型
+
+具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
