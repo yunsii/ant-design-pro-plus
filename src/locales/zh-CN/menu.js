@@ -42,4 +42,7 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
+
+  'menu.enhance': '功能示例',
+  'menu.enhance.curdPage': '基础增删改查',
 };

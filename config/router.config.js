@@ -289,6 +289,19 @@ export default [
           },
         ],
       },
+      //  enhance
+      {
+        name: 'enhance',
+        icon: 'star',
+        path: '/enhance',
+        routes: [
+          {
+            path: '/enhance/curd-page',
+            name: 'curdPage',
+            component: './Enhance/CurdPage',
+          },
+        ],
+      },
       {
         component: '404',
       },
