@@ -4,6 +4,7 @@ import { Avatar } from 'antd';
 
 import BaseCurd from '@/components/BasePage/Curd';
 import setFormItemsConfig from './map';
+import styles from './index.less';
 
 @connect(({ curdPage, loading }) => ({
   data: curdPage.data,
@@ -39,21 +40,38 @@ class TableList extends PureComponent {
 
   columns = [
     {
-      title: '头像',
+      title: '公式照',
       dataIndex: 'avatar',
-      render: value => <Avatar src={value} />,
+      render: value => (
+        <div className={styles.avatarWrapper}>
+          <Avatar src={value} size="large" />
+        </div>
+      ),
     },
     {
-      title: '通知',
-      dataIndex: 'title',
+      title: '姓名',
+      dataIndex: 'name',
+      render: (value, record) => (
+        <a href={record.profile} target="_blank" rel="noreferrer noopener">
+          {value}
+        </a>
+      ),
     },
     {
-      title: '时间',
-      dataIndex: 'datetime',
+      title: '昵称',
+      dataIndex: 'nickname',
     },
     {
-      title: '类型',
-      dataIndex: 'type',
+      title: '生日',
+      dataIndex: 'birthday',
+    },
+    {
+      title: '特长',
+      dataIndex: 'speciality',
+    },
+    {
+      title: '爱好',
+      dataIndex: 'habit',
     },
   ];
 
