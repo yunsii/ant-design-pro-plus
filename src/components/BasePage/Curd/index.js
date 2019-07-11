@@ -56,7 +56,7 @@ class TableList extends PureComponent {
   //         ),
   //         okText: '确定',
   //         cancelText: '取消',
-  //         onOk: () => this.deleteAdSpace(record.id),
+  //         onOk: () => this.deleteModel(record.id),
   //         maskClosable: true,
   //       });
   //       return;
@@ -66,7 +66,7 @@ class TableList extends PureComponent {
   //   }
   // };
 
-  deleteAdSpace = id => {
+  deleteModel = id => {
     const { namespace, dispatch } = this.props;
     dispatch({
       type: `${namespace}/delete`,
@@ -209,7 +209,7 @@ class TableList extends PureComponent {
             详情
           </a>
           <Divider type="vertical" />
-          <Popconfirm title="确定删除吗？" onConfirm={() => this.deleteAdSpace(record.id)}>
+          <Popconfirm title="确定删除吗？" onConfirm={() => this.deleteModel(record.id)}>
             <a>删除</a>
           </Popconfirm>
           {/* <Dropdown
