@@ -11,12 +11,12 @@
 ## 新增特性✨
 
 * [基于路由实现多标签页切换](#基于路由实现多标签页切换)
-* [StandardTable 增强](#StandardTable%20增强)
-* [antd-form-pro 表单功能增强](#antd-form-pro%20表单功能增强)
-* [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer%20详情抽屉组件)
-* [QueryPanel 查询面板组件](#QueryPanel%20查询面板组件)
-* [base-models/curd 生成基础增删改查 model](#base-models/curd%20基础增删改查%20model)
-* [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd%20基础增删改查页面组件)
+* [StandardTable 增强](#StandardTable-增强)
+* [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
+* [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer-详情抽屉组件)
+* [QueryPanel 查询面板组件](#QueryPanel-查询面板组件)
+* [base-models/curd 生成基础增删改查 model](#base-models/curd-基础增删改查-model)
+* [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd-基础增删改查页面组件)
 
 ## 功能实现概述☁️
 
@@ -34,7 +34,7 @@
 
 ### antd-form-pro 表单功能增强
 
-新增组件 ant-form-pro ，可配置化实现表单功能。支持的组件与配置方式可参考 [map.js](/src/pages/Enhance/CurdPage/map.js) ，使用方式参考 [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer%20详情抽屉组件)。
+新增组件 ant-form-pro ，可配置化实现表单功能。支持的组件与配置方式可参考 [map.js](/src/pages/Enhance/CurdPage/map.js) ，使用方式参考 [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer-详情抽屉组件)。
 
 ### DetailFormDrawer 详情抽屉组件
 
