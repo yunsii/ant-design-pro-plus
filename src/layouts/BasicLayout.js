@@ -25,10 +25,19 @@ const { TabPane } = Tabs;
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 
+function generatePathId(childrenPathname) {
+  let pathId = childrenPathname;
+  const pathSegment = childrenPathname.split('/').filter(item => item);
+  if (pathSegment.length > 2) {
+    pathId = `/${pathSegment[0]}/${pathSegment[1]}`;
+  }
+  return pathId;
+}
+
 function flatMenuTreeToList(menu) {
   function nodeTransfer(node) {
     return {
-      path: node.path,
+      path: generatePathId(node.path), // 由于动态路由会导致 getTabName 查找失败。生成 PathId 后即可。
       name: node.name,
       locale: node.locale,
       // content: node.component,
@@ -43,16 +52,7 @@ function getTabName(pathId, menuData) {
   const flatedMenu = flatMenuTreeToList(menuData);
   const targetMenuItem = _find(flatedMenu, { path: pathId });
   if (targetMenuItem) return targetMenuItem.name;
-  return '';
-}
-
-function generatePathId(childrenPathname) {
-  let pathId = childrenPathname;
-  const pathSegment = childrenPathname.split('/').filter(item => item);
-  if (pathSegment.length > 2) {
-    pathId = `/${pathSegment[0]}/${pathSegment[1]}`;
-  }
-  return pathId;
+  return '佚名';
 }
 
 function addTab(newTab, activedTabs) {
