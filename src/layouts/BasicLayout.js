@@ -59,7 +59,7 @@ function addTab(newTab, activedTabs) {
   // filter 过滤路由 为 '/' 的 children
   // map 添加第一个 tab 不可删除
   return [...activedTabs, newTab]
-    .filter(item => item.tab)
+    .filter(item => item.path !== '/')
     .map((item, index) =>
       activedTabs.length === 0 && index === 0
         ? { ...item, closable: false }
