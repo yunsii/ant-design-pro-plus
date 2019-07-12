@@ -72,12 +72,29 @@
 
 具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
 
-相较于之前一个个去复制粘贴修改代码，通过配置化的方式快速实现一个页面 demo 看起来已经好了不少。另外，本想着用 umi 里的区块试试的，后来意识到即使写了一个页面的区块，还是得去修改代码，索性自己把这些逻辑全都抽出来，一顿操作，最终得到了现在的结果。当然，肯定还有很多不足，后续会结合实际继续完善。
+相较于之前一个个去复制粘贴修改代码，通过配置化的方式快速实现一个页面 demo 看起来已经好了不少。另外，本想着用 umi 里的区块试试的，后来意识到即使写了一个页面的区块，还是得去修改代码，索性自己把这些逻辑全都抽出来，通过配置实现页面扩展。
 
-#### 部分 API 说明
+#### API
+
+##### BasePage/Curd
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| namespace | model 名称空间 | string | - |
+| queryArgsConfig | 查询参数配置，参考[map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
+| columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
+| data | StandardTable data | any | {} |
+| fetchLoading | 请求列表 loading | boolean | - |
+| createLoading | 创建 model loading | boolean | - |
+| updateLoading | 更新 model loading | boolean | - |
+| setFormItemsConfig | 配置新建和更新表单数据 | (detail: {}, mode: string) => any[] | - |
+| dipatch | dva 注入的 dispatch 函数 | Function | - |
+| interceptors | 拦截器 | [interceptors](#interceptors) | - |
 
 ##### interceptors
 
-* `updateFieldsValue?: (fieldsValue: any) => any`  // 类似时间区间那样的数据，需要单独处理后提交
-* `handleDetailClick?: (record: any) => any`  // 拦截详情点击事件，可通过路由跳转到对象的详情页面
-* `handleDeleteClick?: (record: any) => any`  // 拦截删除点击事件
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| updateFieldsValue | 新建和更新表单处理拦截，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any) => any | - |
+| handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
+| handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
