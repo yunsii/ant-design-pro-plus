@@ -20,6 +20,8 @@
 
 ## 功能实现概述☁️
 
+除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用 `any` 。
+
 ### 基于路由实现多标签页切换
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
@@ -71,3 +73,11 @@
 具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
 
 相较于之前一个个去复制粘贴修改代码，通过配置化的方式快速实现一个页面 demo 看起来已经好了不少。另外，本想着用 umi 里的区块试试的，后来意识到即使写了一个页面的区块，还是得去修改代码，索性自己把这些逻辑全都抽出来，一顿操作，最终得到了现在的结果。当然，肯定还有很多不足，后续会结合实际继续完善。
+
+#### 部分 API 说明
+
+##### interceptors
+
+* updateFieldsValue?: (fieldsValue: any) => any;  // 类似时间区间那样的数据，需要单独处理后提交
+* handleDetailClick?: (record: any) => any;  // 拦截详情点击事件，可通过路由跳转到对象的详情页面
+* handleDeleteClick?: (record: any) => any;  // 拦截删除点击事件
