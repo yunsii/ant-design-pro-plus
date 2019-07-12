@@ -52,7 +52,7 @@
 
 ### BasePage/Curd 基础增删改查页面组件
 
-![base-curd.png](https://i.loli.net/2019/07/11/5d27532d6843236996.png)
+![base-curd.png](https://i.loli.net/2019/07/12/5d28976248c5c94749.png)
 
 前置工具及组件：
 
