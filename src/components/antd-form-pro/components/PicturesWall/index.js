@@ -1,9 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import './index.css';
-import { Icon, Modal, Upload } from 'antd';
+import { Icon, Modal } from 'antd';
 import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
+import CustomUpload from '../Upload';
 
 export function getPicturesLink(fileList) {
   if (_isArray(fileList) && fileList.length === 1) {
@@ -85,7 +86,7 @@ class PicturesWall extends React.Component {
     );
     return (
       <div className="clearfix">
-        <Upload
+        <CustomUpload
           accept=".jpg,.jpeg,.bmp,.png,.gif"
           fileList={fileList}
           onPreview={this.handlePreview}
@@ -94,7 +95,7 @@ class PicturesWall extends React.Component {
           disabled={disabled}
         >
           {fileList.length >= 1 ? null : uploadButton}
-        </Upload>
+        </CustomUpload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>

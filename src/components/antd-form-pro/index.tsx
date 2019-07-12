@@ -11,10 +11,11 @@ import {
   GetFieldDecoratorOptions,
 } from 'antd';
 
-import CustomDatePicker from './components/CustomDatePicker';
+import CustomDatePicker, { CustomRangePicker } from './components/CustomDatePicker';
 import CustomSelect from './components/Select';
 import PicturesWall from './components/PicturesWall';
 import CustomSwitch from './components/CustomSwitch';
+import { CustomDragger } from './components/Upload';
 import { inputComponentStyle } from './style';
 
 const FormContext = React.createContext<WrappedFormUtils | null>(null);
@@ -44,10 +45,19 @@ function renderInputComponent(inputConfig) {
     case 'datetime':
       return (
         <CustomDatePicker
-          {...componentProps}
           style={inputComponentStyle}
           format="YYYY-MM-DD HH:mm:ss"
           showTime
+          {...componentProps}
+        />
+      );
+    case 'datetime-range':
+      return (
+        <CustomRangePicker
+          format="YYYY-MM-DD HH:mm:ss"
+          showTime
+          style={inputComponentStyle}
+          {...componentProps}
         />
       );
     case 'number':
@@ -72,6 +82,8 @@ function renderInputComponent(inputConfig) {
       return <CustomSwitch {...componentProps} />;
     case 'slider':
       return <Slider {...componentProps} />;
+    case 'file-dragger':
+      return <CustomDragger {...componentProps} />;
     default:
       return <Input style={inputComponentStyle} placeholder="请输入" {...componentProps} />;
   }
