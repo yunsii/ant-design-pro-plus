@@ -78,6 +78,6 @@
 
 ##### interceptors
 
-* updateFieldsValue?: (fieldsValue: any) => any;  // 类似时间区间那样的数据，需要单独处理后提交
-* handleDetailClick?: (record: any) => any;  // 拦截详情点击事件，可通过路由跳转到对象的详情页面
-* handleDeleteClick?: (record: any) => any;  // 拦截删除点击事件
+* `updateFieldsValue?: (fieldsValue: any) => any`  // 类似时间区间那样的数据，需要单独处理后提交
+* `handleDetailClick?: (record: any) => any`  // 拦截详情点击事件，可通过路由跳转到对象的详情页面
+* `handleDeleteClick?: (record: any) => any`  // 拦截删除点击事件
