@@ -197,6 +197,7 @@ class TableList extends PureComponent {
   };
 
   enhanceColumns = columns => {
+    if (!columns) return [];
     const { interceptors = {} } = this.props;
     const { handleDetailClick, handleDeleteClick } = interceptors;
     return [
@@ -251,9 +252,9 @@ class TableList extends PureComponent {
 
   render() {
     const {
-      queryArgsConfig,
+      queryArgsConfig = [],
       columns,
-      data,
+      data = {},
       fetchLoading,
       createLoading,
       updateLoading,
