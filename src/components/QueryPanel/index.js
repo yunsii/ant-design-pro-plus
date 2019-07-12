@@ -42,7 +42,7 @@ class QueryPanel extends PureComponent {
   };
 
   renderSimpleForm() {
-    const { form, queryArgsConfig } = this.props;
+    const { form, queryArgsConfig = [] } = this.props;
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -76,7 +76,7 @@ class QueryPanel extends PureComponent {
   }
 
   renderAdvancedForm() {
-    const { form, queryArgsConfig } = this.props;
+    const { form, queryArgsConfig = [] } = this.props;
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
         <FormProvider value={form}>
