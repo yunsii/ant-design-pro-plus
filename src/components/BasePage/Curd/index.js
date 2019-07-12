@@ -162,10 +162,11 @@ class TableList extends PureComponent {
 
   handleCreateOk = fieldsValue => {
     console.log('handleCreateOk', fieldsValue);
-    const { namespace, dispatch } = this.props;
+    const { namespace, dispatch, interceptors = {} } = this.props;
+    const { updateFieldsValue } = interceptors;
     dispatch({
       type: `${namespace}/create`,
-      payload: fieldsValue,
+      payload: updateFieldsValue ? updateFieldsValue(fieldsValue) : fieldsValue,
       callback: response => {
         if (!response) {
           const { formValues } = this.state;
@@ -181,11 +182,12 @@ class TableList extends PureComponent {
     const {
       record: { id },
     } = this.state;
-    const { namespace, dispatch } = this.props;
+    const { namespace, dispatch, interceptors = {} } = this.props;
+    const { updateFieldsValue } = interceptors;
     dispatch({
       type: `${namespace}/update`,
       id,
-      payload: fieldsValue,
+      payload: updateFieldsValue ? updateFieldsValue(fieldsValue) : fieldsValue,
       callback: response => {
         if (!response) {
           this.handleUpdateVisible(false);
@@ -194,25 +196,41 @@ class TableList extends PureComponent {
     });
   };
 
-  enHandceColumns = columns => [
-    ...columns,
-    {
-      title: '操作',
-      render: (text, record) => (
-        <Fragment>
-          {/* <a onClick={() => this.handleUpdateVisible(true, record)}>详情</a> */}
-          <a
-            onClick={() => {
-              this.handleUpdateVisible(true, record);
-            }}
-          >
-            详情
-          </a>
-          <Divider type="vertical" />
-          <Popconfirm title="确定删除吗？" onConfirm={() => this.deleteModel(record.id)}>
-            <a>删除</a>
-          </Popconfirm>
-          {/* <Dropdown
+  enhanceColumns = columns => {
+    const { interceptors = {} } = this.props;
+    const { handleDetailClick, handleDeleteClick } = interceptors;
+    return [
+      ...columns,
+      {
+        title: '操作',
+        render: (text, record) => (
+          <Fragment>
+            {/* <a onClick={() => this.handleUpdateVisible(true, record)}>详情</a> */}
+            <a
+              onClick={() => {
+                if (handleDetailClick) {
+                  handleDetailClick(record);
+                  return;
+                }
+                this.handleUpdateVisible(true, record);
+              }}
+            >
+              详情
+            </a>
+            <Divider type="vertical" />
+            <Popconfirm
+              title="确定删除吗？"
+              onConfirm={() => {
+                if (handleDeleteClick) {
+                  handleDeleteClick(record);
+                  return;
+                }
+                this.deleteModel(record.id);
+              }}
+            >
+              <a>删除</a>
+            </Popconfirm>
+            {/* <Dropdown
             overlay={
               <Menu onClick={({ key }) => this.handleMoreClick(key, record)}>
                 <Menu.Item key={deleteActionName}>
@@ -225,10 +243,11 @@ class TableList extends PureComponent {
               更多 <Icon type="down" />
             </a>
           </Dropdown> */}
-        </Fragment>
-      ),
-    },
-  ];
+          </Fragment>
+        ),
+      },
+    ];
+  };
 
   render() {
     const {
@@ -240,7 +259,6 @@ class TableList extends PureComponent {
       updateLoading,
       setFormItemsConfig,
     } = this.props;
-
     const { selectedRows, createVisible, updateVisible, record } = this.state;
 
     const menu = (
@@ -274,7 +292,7 @@ class TableList extends PureComponent {
             selectedRows={selectedRows}
             loading={fetchLoading}
             data={data}
-            columns={this.enHandceColumns(columns)}
+            columns={this.enhanceColumns(columns)}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
           />

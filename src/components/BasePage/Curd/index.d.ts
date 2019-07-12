@@ -14,6 +14,11 @@ export declare type CurdProps = {
   updateLoading: boolean;
   setFormItemsConfig: (detail: {}, mode: string) => any[];
   dipatch: Function;
+  interceptors?: {
+    updateFieldsValue?: (fieldsValue: any) => any;
+    handleDetailClick?: (record: any) => any;
+    handleDeleteClick?: (record: any) => any;
+  };
 };
 interface CurdState {
   createVisible: boolean;
