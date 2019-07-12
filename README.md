@@ -81,7 +81,7 @@
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | namespace | model 名称空间 | string | - |
-| queryArgsConfig | 查询参数配置，参考[map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
+| queryArgsConfig | 查询参数配置，参考 [map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
 | columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | data | StandardTable data | any | {} |
 | fetchLoading | 请求列表 loading | boolean | - |
