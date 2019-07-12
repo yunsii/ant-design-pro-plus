@@ -17,23 +17,16 @@ class TableList extends PureComponent {
   queryArgsConfig = [
     {
       type: 'string',
-      field: 'organ_id',
-      formItemProps: {
-        label: '所属机构',
-      },
-    },
-    {
-      type: 'string',
       field: 'name',
       formItemProps: {
-        label: '位置名称',
+        label: '姓名',
       },
     },
     {
       type: 'string',
-      field: 'code',
+      field: 'nickname',
       formItemProps: {
-        label: '位置编码',
+        label: '昵称',
       },
     },
   ];
