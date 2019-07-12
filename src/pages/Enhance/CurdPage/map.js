@@ -130,6 +130,26 @@ export default function setFormItemsConfig(detail = {}, mode) {
       },
     },
     {
+      type: 'datetime-range',
+      field: 'period',
+      formItemProps: {
+        label: '有效期',
+      },
+      fieldProps: {
+        initialValue: detail.period,
+      },
+    },
+    {
+      type: 'file-dragger',
+      field: 'file',
+      formItemProps: {
+        label: '文件',
+      },
+      fieldProps: {
+        initialValue: detail.file,
+      },
+    },
+    {
       type: 'default/string',
       field: 'string',
       formItemProps: {
