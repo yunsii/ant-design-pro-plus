@@ -111,7 +111,7 @@ export interface Layout {
   wrapperCol?: ColProps;
 }
 
-export const createFormItems = (itemsConfig: ItemConfig[], globalLayout: Layout) => {
+export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout) => {
   return itemsConfig.map(item => {
     const {
       type,
