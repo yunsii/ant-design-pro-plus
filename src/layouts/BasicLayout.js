@@ -122,7 +122,7 @@ const query = {
 
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
-    const { children, menuData } = props;
+    const { children, originalMenuData } = props;
     // console.log(children);
     const { activedTabs } = state;
     const {
@@ -131,7 +131,7 @@ class BasicLayout extends React.Component {
       },
     } = children;
 
-    const pathId = getPathId(childrenPathname, menuData);
+    const pathId = getPathId(childrenPathname, originalMenuData);
     const activedTabIndex = _findIndex(activedTabs, { key: pathId });
     if (activedTabIndex > -1) {
       return {
@@ -142,7 +142,7 @@ class BasicLayout extends React.Component {
     return {
       activedTabs: addTab(
         {
-          tab: getTabName(childrenPathname, menuData),
+          tab: getTabName(childrenPathname, originalMenuData),
           path: childrenPathname,
           key: pathId,
           closable: true,
@@ -362,7 +362,7 @@ export default connect(({ global, setting, menu: menuModel, loading }) => ({
   breadcrumbNameMap: menuModel.breadcrumbNameMap,
   ...setting,
 
-  routerData: menuModel.routerData,
+  originalMenuData: menuModel.originalMenuData,
   menuLoading: loading.effects['menu/getMenuData'],
 }))(props => (
   <Media query="(max-width: 599px)">

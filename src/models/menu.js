@@ -102,6 +102,7 @@ export default {
   namespace: 'menu',
 
   state: {
+    originalMenuData: [],
     menuData: [],
     routerData: [],
     breadcrumbNameMap: {},
@@ -115,7 +116,7 @@ export default {
       const breadcrumbNameMap = memoizeOneGetBreadcrumbNameMap(originalMenuData);
       yield put({
         type: 'save',
-        payload: { menuData, breadcrumbNameMap, routerData: routes },
+        payload: { originalMenuData, menuData, breadcrumbNameMap, routerData: routes },
       });
     },
   },
