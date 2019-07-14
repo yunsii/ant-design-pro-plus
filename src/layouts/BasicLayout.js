@@ -5,9 +5,11 @@ import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import Media from 'react-media';
 import router from 'umi/router';
+import pathToRegexp from 'path-to-regexp';
+import memoizeOne from 'memoize-one';
+import isEqual from 'lodash/isEqual';
 
 import { Layout, Tabs, Dropdown, Menu, Icon, Spin } from 'antd';
-import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import { flatTreeToList } from '@/utils/treeUtils'; // 引入工具函数
 
@@ -25,19 +27,10 @@ const { TabPane } = Tabs;
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 
-function generatePathId(childrenPathname) {
-  let pathId = childrenPathname;
-  const pathSegment = childrenPathname.split('/').filter(item => item);
-  if (pathSegment.length > 2) {
-    pathId = `/${pathSegment[0]}/${pathSegment[1]}`;
-  }
-  return pathId;
-}
-
 function flatMenuTreeToList(menu) {
   function nodeTransfer(node) {
     return {
-      path: generatePathId(node.path), // 由于动态路由会导致 getTabName 查找失败。生成 PathId 后即可。
+      path: node.path,
       name: node.name,
       locale: node.locale,
       // content: node.component,
@@ -48,11 +41,31 @@ function flatMenuTreeToList(menu) {
   });
 }
 
-function getTabName(pathId, menuData) {
-  const flatedMenu = flatMenuTreeToList(menuData);
-  const targetMenuItem = _find(flatedMenu, { path: pathId });
-  if (targetMenuItem) return targetMenuItem.name;
-  return '佚名';
+const memoizeOneFlatMenuTreeToList = memoizeOne(flatMenuTreeToList, isEqual);
+
+function getPathId(childrenPathname, menuData) {
+  const flatedMenu = memoizeOneFlatMenuTreeToList(menuData);
+  let result = '404';
+  for (let i = 0; i < flatedMenu.length; i += 1) {
+    if (pathToRegexp(flatedMenu[i].path).test(childrenPathname)) {
+      result = flatedMenu[i].path;
+      break;
+    }
+  }
+  return result;
+}
+
+function getTabName(path, menuData) {
+  let tabName = '佚名';
+  const flatedMenu = memoizeOneFlatMenuTreeToList(menuData);
+  // console.log(flatedMenu);
+  flatedMenu.forEach(item => {
+    // console.log('pathToRegexp', path, item.path, pathToRegexp(item.path).test(path))
+    if (pathToRegexp(item.path).test(path)) {
+      tabName = item.name;
+    }
+  });
+  return tabName;
 }
 
 function addTab(newTab, activedTabs) {
@@ -110,6 +123,7 @@ const query = {
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
     const { children, menuData } = props;
+    // console.log(children);
     const { activedTabs } = state;
     const {
       props: {
@@ -117,7 +131,7 @@ class BasicLayout extends React.Component {
       },
     } = children;
 
-    const pathId = generatePathId(childrenPathname);
+    const pathId = getPathId(childrenPathname, menuData);
     const activedTabIndex = _findIndex(activedTabs, { key: pathId });
     if (activedTabIndex > -1) {
       return {
@@ -128,7 +142,7 @@ class BasicLayout extends React.Component {
     return {
       activedTabs: addTab(
         {
-          tab: getTabName(pathId, menuData),
+          tab: getTabName(childrenPathname, menuData),
           path: childrenPathname,
           key: pathId,
           closable: true,
