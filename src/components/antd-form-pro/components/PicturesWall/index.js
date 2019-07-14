@@ -28,7 +28,7 @@ class PicturesWall extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps', nextProps.value);
+    // console.log('nextProps', nextProps.value);
     if (_isString(nextProps.value)) {
       this.setState({
         fileList: [
