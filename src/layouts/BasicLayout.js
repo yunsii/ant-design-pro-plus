@@ -129,12 +129,11 @@ const query = {
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
     const { children, originalMenuData } = props;
+    const { activedTabs } = state;
     // console.log(children);
     if (originalMenuData.length === 0) return null;
 
-    const { activedTabs } = state;
-    const childrenPathname = getChildrenPathname(children);
-    const [pathId, pathName] = searchPathIdAndName(childrenPathname, originalMenuData);
+    const [pathId, pathName] = searchPathIdAndName(getChildrenPathname(children), originalMenuData);
     const activedTabIndex = _findIndex(activedTabs, { key: pathId });
     if (activedTabIndex > -1) {
       // return state after switch or delete tab
@@ -143,17 +142,15 @@ class BasicLayout extends React.Component {
         activeKey: pathId,
       };
     }
+    const newTab = {
+      tab: pathName,
+      path: getChildrenPathname(children),
+      key: pathId,
+      closable: true,
+      content: children,
+    };
     return {
-      activedTabs: addTab(
-        {
-          tab: pathName,
-          path: childrenPathname,
-          key: pathId,
-          closable: true,
-          content: children,
-        },
-        activedTabs
-      ),
+      activedTabs: addTab(newTab, activedTabs),
       activeKey: pathId,
     };
   }
@@ -218,17 +215,18 @@ class BasicLayout extends React.Component {
     router.push(targetTab.path); // key is not work fine with dynamic router
   };
 
-  onEdit = (targetKey, action) => {
+  handleTabEdit = (targetKey, action) => {
     this[action](targetKey);
   };
 
-  remove = targetKey => {
+  remove = key => {
     const { activedTabs } = this.state;
-    const targetIndex = _findIndex(activedTabs, { key: targetKey });
-    const nextTabKey = activedTabs[targetIndex > 0 ? targetIndex - 1 : targetIndex + 1].key;
+    const targetIndex = _findIndex(activedTabs, { key });
+    const nextIndex = targetIndex > 0 ? targetIndex - 1 : targetIndex + 1;
+    const nextTabKey = activedTabs[nextIndex].key;
     router.push(nextTabKey);
     this.setState({
-      activedTabs: activedTabs.filter(item => item.key !== targetKey),
+      activedTabs: activedTabs.filter(item => item.key !== key),
     });
   };
 
@@ -295,7 +293,7 @@ class BasicLayout extends React.Component {
           tabBarGutter={-1}
           hideAdd
           type="editable-card"
-          onEdit={this.onEdit}
+          onEdit={this.handleTabEdit}
         >
           {activedTabs.map(item => {
             return (
