@@ -85,7 +85,7 @@ function addTab(newTab, activedTabs) {
     );
 }
 
-function switchTab(activeIndex, children, activedTabs) {
+function switchAndUpdateTab(activeIndex, children, activedTabs) {
   const { path, content, ...rest } = activedTabs[activeIndex];
   activedTabs.splice(activeIndex, 1, {
     path: getChildrenPathname(children),
@@ -133,25 +133,28 @@ class BasicLayout extends React.Component {
     // console.log(children);
     if (originalMenuData.length === 0) return null;
 
-    const [pathId, pathName] = searchPathIdAndName(getChildrenPathname(children), originalMenuData);
-    const activedTabIndex = _findIndex(activedTabs, { key: pathId });
+    const [newOrSwitchOrNextPathId, pathName] = searchPathIdAndName(
+      getChildrenPathname(children),
+      originalMenuData
+    );
+    const activedTabIndex = _findIndex(activedTabs, { key: newOrSwitchOrNextPathId });
     if (activedTabIndex > -1) {
       // return state after switch or delete tab
       return {
-        activedTabs: switchTab(activedTabIndex, children, activedTabs),
-        activeKey: pathId,
+        activedTabs: switchAndUpdateTab(activedTabIndex, children, activedTabs),
+        activeKey: newOrSwitchOrNextPathId,
       };
     }
     const newTab = {
       tab: pathName,
       path: getChildrenPathname(children),
-      key: pathId,
+      key: newOrSwitchOrNextPathId,
       closable: true,
       content: children,
     };
     return {
       activedTabs: addTab(newTab, activedTabs),
-      activeKey: pathId,
+      activeKey: newOrSwitchOrNextPathId,
     };
   }
 
@@ -210,7 +213,9 @@ class BasicLayout extends React.Component {
   };
 
   handleTabChange = key => {
-    const { activedTabs } = this.state;
+    const { activedTabs, activeKey } = this.state;
+    if (activeKey === key) return;
+
     const targetTab = _find(activedTabs, { key });
     router.push(targetTab.path); // key is not work fine with dynamic router
   };
