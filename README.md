@@ -10,7 +10,7 @@
 
 ## 新增特性✨
 
-* [基于路由实现标签页切换](#基于路由实现标签页切换)
+* [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 * [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
 * [DetailFormDrawer 详情抽屉组件](#DetailFormDrawer-详情抽屉组件)
@@ -22,9 +22,11 @@
 
 除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用了 `any` 。
 
-### 基于路由实现标签页切换
+### PageTabs 基于路由实现标签页切换
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
+
+可通过 `defaultSettings.js` 中的 `pageTabs` 配置是否开启标签页功能，默认开启。
 
 关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)
 
