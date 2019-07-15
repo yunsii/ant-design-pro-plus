@@ -10,19 +10,19 @@
 
 ## 新增特性✨
 
-* [基于路由实现多标签页切换](#基于路由实现多标签页切换)
+* [基于路由实现标签页切换](#基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 * [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
-* [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer-详情抽屉组件)
+* [DetailFormDrawer 详情抽屉组件](#DetailFormDrawer-详情抽屉组件)
 * [QueryPanel 查询面板组件](#QueryPanel-查询面板组件)
 * [base-models/curd 生成基础增删改查 model](#base-models/curd-基础增删改查-model)
 * [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd-基础增删改查页面组件)
 
 ## 功能实现概述☁️
 
-除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用 `any` 。
+除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用了 `any` 。
 
-### 基于路由实现多标签页切换
+### 基于路由实现标签页切换
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
 
