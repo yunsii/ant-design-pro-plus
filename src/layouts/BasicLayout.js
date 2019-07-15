@@ -66,7 +66,7 @@ function getPathId(childrenPathname, menuData) {
 }
 
 function getTabName(path, menuData) {
-  let tabName = '佚名';
+  let tabName = 'Error';
   const flatedMenu = memoizeOneFlatMenuTreeToList(menuData);
   // console.log(flatedMenu);
   flatedMenu.forEach(item => {
