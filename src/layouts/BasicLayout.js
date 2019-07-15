@@ -134,6 +134,7 @@ const query = {
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
     const { children, originalMenuData } = props;
+    if (originalMenuData.length === 0) return null;
     // console.log(children);
     const { activedTabs } = state;
     const childrenPathname = getChildrenPathname(children);
