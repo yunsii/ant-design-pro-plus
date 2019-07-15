@@ -53,29 +53,24 @@ function flatMenuTreeToList(menu) {
 
 const memoizeOneFlatMenuTreeToList = memoizeOne(flatMenuTreeToList, isEqual);
 
-function getPathId(childrenPathname, menuData) {
-  const flatedMenu = memoizeOneFlatMenuTreeToList(menuData);
-  let result = '404';
+function searchPathIdAndName(childrenPathname, originalMenuData) {
+  let result = ['404', 'Error'];
+  let pathToSearchPathId = childrenPathname;
+  const routeDepthInMenu = 2;
+  const pathSegments = childrenPathname.split(/\//g).filter(item => item);
+  if (pathSegments.length > routeDepthInMenu) {
+    pathToSearchPathId = `/${pathSegments.slice(0, routeDepthInMenu).join('/')}`;
+  }
+  // console.log(pathSegments, pathToSearchPathId);
+
+  const flatedMenu = memoizeOneFlatMenuTreeToList(originalMenuData);
   for (let i = 0; i < flatedMenu.length; i += 1) {
-    if (pathToRegexp(flatedMenu[i].path).test(childrenPathname)) {
-      result = flatedMenu[i].path;
+    if (pathToRegexp(flatedMenu[i].path).test(pathToSearchPathId)) {
+      result = [flatedMenu[i].path, flatedMenu[i].name];
       break;
     }
   }
   return result;
-}
-
-function getTabName(path, menuData) {
-  let tabName = 'Error';
-  const flatedMenu = memoizeOneFlatMenuTreeToList(menuData);
-  // console.log(flatedMenu);
-  flatedMenu.forEach(item => {
-    // console.log('pathToRegexp', path, item.path, pathToRegexp(item.path).test(path))
-    if (pathToRegexp(item.path).test(path)) {
-      tabName = item.name;
-    }
-  });
-  return tabName;
 }
 
 function addTab(newTab, activedTabs) {
@@ -134,11 +129,12 @@ const query = {
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
     const { children, originalMenuData } = props;
-    if (originalMenuData.length === 0) return null;
     // console.log(children);
+    if (originalMenuData.length === 0) return null;
+
     const { activedTabs } = state;
     const childrenPathname = getChildrenPathname(children);
-    const pathId = getPathId(childrenPathname, originalMenuData);
+    const [pathId, pathName] = searchPathIdAndName(childrenPathname, originalMenuData);
     const activedTabIndex = _findIndex(activedTabs, { key: pathId });
     if (activedTabIndex > -1) {
       // return state after switch or delete tab
@@ -150,7 +146,7 @@ class BasicLayout extends React.Component {
     return {
       activedTabs: addTab(
         {
-          tab: getTabName(childrenPathname, originalMenuData),
+          tab: pathName,
           path: childrenPathname,
           key: pathId,
           closable: true,
