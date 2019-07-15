@@ -128,6 +128,7 @@ const query = {
 
 class BasicLayout extends React.Component {
   static getDerivedStateFromProps(props, state) {
+    // children 可能用于新建 tab ，切换并更新 tab ，切换到被删除 tab 的相邻 tab
     const { children, originalMenuData } = props;
     const { activedTabs } = state;
     // console.log(children);
