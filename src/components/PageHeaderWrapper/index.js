@@ -38,6 +38,7 @@ const renderFooter = ({ tabList, tabActiveKey, onTabChange, tabBarExtraContent }
 const PageHeaderWrapper = ({
   children,
   contentWidth,
+  pageTabs,
   fluid,
   wrapperClassName,
   home,
@@ -50,7 +51,10 @@ const PageHeaderWrapper = ({
   ...restProps
 }) => {
   return (
-    <div className={classNames(wrapperClassName, styles.main)}>
+    <div
+      style={pageTabs ? {} : { margin: '-24px -24px 0' }}
+      className={classNames(wrapperClassName, styles.main)}
+    >
       {top}
       <MenuContext.Consumer>
         {value => {
@@ -117,4 +121,5 @@ const PageHeaderWrapper = ({
 
 export default connect(({ setting }) => ({
   contentWidth: setting.contentWidth,
+  pageTabs: setting.pageTabs,
 }))(PageHeaderWrapper);
