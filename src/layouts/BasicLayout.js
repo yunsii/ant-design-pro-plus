@@ -11,6 +11,7 @@ import isEqual from 'lodash/isEqual';
 
 import { Layout, Tabs, Dropdown, Menu, Icon, Spin } from 'antd';
 import _findIndex from 'lodash/findIndex';
+import _find from 'lodash/find';
 import { flatTreeToList } from '@/utils/treeUtils'; // 引入工具函数
 
 import logo from '../assets/logo.svg';
@@ -26,6 +27,15 @@ const { TabPane } = Tabs;
 // tabs 菜单选项 key 值
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
+
+function getChildrenPathname(children) {
+  const {
+    props: {
+      location: { pathname: childrenPathname },
+    },
+  } = children;
+  return childrenPathname;
+}
 
 function flatMenuTreeToList(menu) {
   function nodeTransfer(node) {
@@ -80,9 +90,10 @@ function addTab(newTab, activedTabs) {
     );
 }
 
-function switchOrDeleteTab(activeIndex, children, activedTabs) {
-  const { content, ...rest } = activedTabs[activeIndex];
+function switchTab(activeIndex, children, activedTabs) {
+  const { path, content, ...rest } = activedTabs[activeIndex];
   activedTabs.splice(activeIndex, 1, {
+    path: getChildrenPathname(children),
     content: children,
     ...rest,
   });
@@ -125,17 +136,13 @@ class BasicLayout extends React.Component {
     const { children, originalMenuData } = props;
     // console.log(children);
     const { activedTabs } = state;
-    const {
-      props: {
-        location: { pathname: childrenPathname },
-      },
-    } = children;
-
+    const childrenPathname = getChildrenPathname(children);
     const pathId = getPathId(childrenPathname, originalMenuData);
     const activedTabIndex = _findIndex(activedTabs, { key: pathId });
     if (activedTabIndex > -1) {
+      // return state after switch or delete tab
       return {
-        activedTabs: switchOrDeleteTab(activedTabIndex, children, activedTabs),
+        activedTabs: switchTab(activedTabIndex, children, activedTabs),
         activeKey: pathId,
       };
     }
@@ -209,7 +216,9 @@ class BasicLayout extends React.Component {
   };
 
   handleTabChange = key => {
-    router.push(key);
+    const { activedTabs } = this.state;
+    const targetTab = _find(activedTabs, { key });
+    router.push(targetTab.path); // key is not work fine with dynamic router
   };
 
   onEdit = (targetKey, action) => {
