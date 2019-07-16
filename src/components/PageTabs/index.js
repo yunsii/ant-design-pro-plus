@@ -15,29 +15,21 @@ function getChildrenPathname(children) {
 }
 
 function searchPathIdAndName(childrenPathname, originalMenuData) {
-  const searchPathIdMaxDepth = 2;
-  let currentDepth = 0;
-  function getPathIdAndName(path, menuData) {
+  const getPathIdAndName = (path, menuData) => {
     let result;
-    currentDepth += 1;
     menuData.forEach(item => {
       // match prefix
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
-        if (currentDepth <= searchPathIdMaxDepth) {
-          result = [item.path, item.name];
-        } else {
-          // only update pathname
-          result = [result[0] || '404', item.name];
-        }
+        result = [item.path, item.name];
 
-        // get children pathIdAndName recursively
+        // get children authority recursively
         if (item.children) {
-          result = getPathIdAndName(path, item.children) || result;
+          result = searchPathIdAndName(path, item.children) || result;
         }
       }
     });
     return result;
-  }
+  };
   return getPathIdAndName(childrenPathname, originalMenuData) || ['404', 'Error'];
 }
 
