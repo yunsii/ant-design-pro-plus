@@ -79,7 +79,6 @@ export default class ChildrenTabs extends React.Component {
 
     if (handleTabChange) {
       handleTabChange(keyToSwitch, activedTabs);
-      return;
     }
     this.setState({
       activeKey: beforeSwtichTab ? beforeSwtichTab(keyToSwitch) : keyToSwitch,
@@ -99,6 +98,7 @@ export default class ChildrenTabs extends React.Component {
     beforeRemoveTab(nextTabKey, activedTabs);
     this.setState({
       activedTabs: activedTabs.filter(item => item.key !== key),
+      activeKey: nextTabKey,
     });
   };
 
