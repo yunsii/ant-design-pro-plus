@@ -264,6 +264,7 @@ class Curd extends PureComponent {
       form,
       createTitle = '新建对象',
       updateTitle = '对象详情',
+      checkable,
     } = this.props;
     const { selectedRows, createVisible, updateVisible, record } = this.state;
 
@@ -301,6 +302,7 @@ class Curd extends PureComponent {
             columns={this.enhanceColumns(columns)}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
+            checkable={checkable}
           />
         </div>
         <DetailFormDrawer

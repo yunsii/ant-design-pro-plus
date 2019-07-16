@@ -22,6 +22,7 @@ export declare type CurdProps = {
   afterDrawerNotVisible?: () => void;
   createTitle?: string;
   updateTitle?: string;
+  checkable?: boolean;
 };
 interface CurdState {
   createVisible: boolean;
