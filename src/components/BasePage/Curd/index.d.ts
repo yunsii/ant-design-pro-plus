@@ -19,6 +19,9 @@ export declare type CurdProps = {
     handleDetailClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;
   };
+  afterDrawerNotVisible?: () => void;
+  createTitle?: string;
+  updateTitle?: string;
 };
 interface CurdState {
   createVisible: boolean;

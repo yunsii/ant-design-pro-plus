@@ -4,6 +4,7 @@ import { Card, Form, Icon, Button, Dropdown, Menu, Divider, Popconfirm } from 'a
 import StandardTable from '@/components/StandardTable';
 import QueryPanel from '@/components/QueryPanel';
 import DetailFormDrawer from '@/components/DetailFormDrawer';
+import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 // import { updateActionName, deleteActionName } from '@/contant';
 import styles from '@/utils/table.less';
 
@@ -13,7 +14,7 @@ const getValue = obj =>
     .join(',');
 
 @Form.create()
-class TableList extends PureComponent {
+class Curd extends PureComponent {
   state = {
     createVisible: false,
     updateVisible: false,
@@ -30,17 +31,25 @@ class TableList extends PureComponent {
   }
 
   handleCreateVisible = visible => {
+    const { afterDrawerNotVisible } = this.props;
     this.setState({
       createVisible: !!visible,
     });
+    if (!visible) {
+      callFunctionIfFunction(afterDrawerNotVisible)();
+    }
   };
 
   handleUpdateVisible = (visible, record) => {
+    const { afterDrawerNotVisible } = this.props;
     this.setState({
       updateVisible: !!visible,
     });
-    if (record) {
+    if (visible) {
       this.setState({ record });
+    } else {
+      this.setState({ record: {} });
+      callFunctionIfFunction(afterDrawerNotVisible)();
     }
   };
 
@@ -79,13 +88,6 @@ class TableList extends PureComponent {
       },
     });
   };
-
-  // handleRoleVisible = (visible, record) => {
-  //   this.setState({
-  //     roleVisible: !!visible,
-  //     record: record || {},
-  //   });
-  // };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { namespace, dispatch } = this.props;
@@ -259,6 +261,9 @@ class TableList extends PureComponent {
       createLoading,
       updateLoading,
       setFormItemsConfig,
+      form,
+      createTitle = '新建对象',
+      updateTitle = '对象详情',
     } = this.props;
     const { selectedRows, createVisible, updateVisible, record } = this.state;
 
@@ -299,24 +304,24 @@ class TableList extends PureComponent {
           />
         </div>
         <DetailFormDrawer
-          title="新建对象"
-          visible={createVisible}
-          loading={createLoading}
-          handleVisible={this.handleCreateVisible}
-          handleOk={this.handleCreateOk}
-          itemsConfig={setFormItemsConfig()}
-        />
-        <DetailFormDrawer
-          title="对象详情"
-          visible={updateVisible}
-          loading={updateLoading}
-          handleVisible={this.handleUpdateVisible}
-          handleOk={this.handleUpdateOk}
-          itemsConfig={setFormItemsConfig(record, 'update')}
+          title={createVisible ? createTitle : updateTitle}
+          visible={createVisible || updateVisible}
+          loading={createLoading || updateLoading}
+          handleVisible={
+            createVisible
+              ? () => this.handleCreateVisible(false)
+              : () => this.handleUpdateVisible(false)
+          }
+          handleOk={createVisible ? this.handleCreateOk : this.handleUpdateOk}
+          itemsConfig={setFormItemsConfig(
+            createVisible ? {} : record,
+            createVisible ? 'create' : 'update',
+            form
+          )}
         />
       </Card>
     );
   }
 }
 
-export default TableList;
+export default Curd;
