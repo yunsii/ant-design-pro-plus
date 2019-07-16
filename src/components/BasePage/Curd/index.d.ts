@@ -1,10 +1,13 @@
 import { PaginationConfig } from 'antd/lib/table';
 import * as React from 'react';
 
+export type ActionType = {
+  title: string;
+  handleClick: (record: any) => void;
+};
+
 export declare type CurdProps = {
   namespace: string;
-  queryArgsConfig: any[];
-  columns: any[];
   data: {
     list: any[];
     pagination?: PaginationConfig;
@@ -12,8 +15,17 @@ export declare type CurdProps = {
   fetchLoading: boolean;
   createLoading: boolean;
   updateLoading: boolean;
-  setFormItemsConfig: (detail: {}, mode: string) => any[];
+  deleteLoading?: boolean;
   dipatch: Function;
+  queryArgsConfig: any[];
+  tableConfig: {
+    columns: any[];
+    checkable?: boolean;
+    showActionsCount?: number;
+    extraActions?: ActionType[];
+    confirmKeys: number[];
+  };
+  setFormItemsConfig: (detail: {}, mode: string) => any[];
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any) => any;
     handleDetailClick?: (record: any) => any;
@@ -22,7 +34,6 @@ export declare type CurdProps = {
   afterDrawerNotVisible?: () => void;
   createTitle?: string;
   updateTitle?: string;
-  checkable?: boolean;
 };
 interface CurdState {
   createVisible: boolean;

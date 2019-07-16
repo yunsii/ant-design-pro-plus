@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Avatar } from 'antd';
+import { Avatar, message } from 'antd';
 
 import BaseCurd from '@/components/BasePage/Curd';
 import setFormItemsConfig from './map';
@@ -73,8 +73,17 @@ class TableList extends PureComponent {
       <BaseCurd
         namespace="curdPage"
         queryArgsConfig={this.queryArgsConfig}
-        columns={this.columns}
         setFormItemsConfig={setFormItemsConfig}
+        tableConfig={{
+          columns: this.columns,
+          extraActions: [
+            {
+              key: 9,
+              title: '兼职',
+              handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
+            },
+          ],
+        }}
         {...this.props}
       />
     );

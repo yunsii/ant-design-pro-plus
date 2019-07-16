@@ -1,5 +1,6 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { Card, Form, Icon, Button, Dropdown, Menu, Divider, Popconfirm } from 'antd';
+import _flatten from 'lodash/flatten';
 
 import StandardTable from '@/components/StandardTable';
 import QueryPanel from '@/components/QueryPanel';
@@ -12,6 +13,67 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
+function sortActionsAsc(actions) {
+  return [...actions].sort((x, y) => {
+    if (x.key > y.key) return 1;
+    if (x.key < y.key) return -1;
+    return 0;
+  });
+}
+
+function addDivider(actions) {
+  return _flatten(
+    actions.map((item, index) => {
+      if (index + 1 < actions.length) {
+        return [item, <Divider type="vertical" />];
+      }
+      return [item];
+    })
+  );
+}
+
+const generateShowActions = record => (actions, confirmKeys = []) => {
+  return [
+    ...actions.map(item => {
+      if (confirmKeys.includes(item.key)) {
+        return (
+          <Popconfirm title={`确定${item.title}吗？`} onConfirm={() => item.handleClick(record)}>
+            <a>{item.title}</a>
+          </Popconfirm>
+        );
+      }
+      return <a onClick={() => item.handleClick(record)}>{item.title}</a>;
+    }),
+  ];
+};
+
+const renderActions = record => (sortedActions, showActionsCount, confirmKeys) => {
+  if (sortedActions.length <= showActionsCount) {
+    return addDivider(generateShowActions(record)(sortedActions, confirmKeys));
+  }
+
+  const showActions = sortedActions.slice(0, showActionsCount);
+  const moreAction = sortedActions.slice(showActionsCount);
+  return addDivider([
+    ...generateShowActions(record)(showActions, confirmKeys),
+    <Dropdown
+      overlay={
+        <Menu>
+          {moreAction.map(item => (
+            <Menu.Item key={item.title} onClick={() => item.handleClick(record)}>
+              <a>{item.title}</a>
+            </Menu.Item>
+          ))}
+        </Menu>
+      }
+    >
+      <a>
+        更多 <Icon type="down" />
+      </a>
+    </Dropdown>,
+  ]);
+};
 
 @Form.create()
 class Curd extends PureComponent {
@@ -29,6 +91,41 @@ class Curd extends PureComponent {
       type: `${namespace}/fetch`,
     });
   }
+
+  setActions = (value, record) => {
+    const {
+      interceptors = {},
+      tableConfig: { showActionsCount = 2, confirmKeys = [], extraActions = [] },
+    } = this.props;
+    const { handleDetailClick, handleDeleteClick } = interceptors;
+    const actions = [
+      {
+        key: 4,
+        title: '详情',
+        handleClick: () => {
+          if (handleDetailClick) {
+            handleDetailClick(record);
+            return;
+          }
+          this.handleUpdateVisible(true, record);
+        },
+      },
+      {
+        key: 8,
+        title: '删除',
+        handleClick: () => {
+          if (handleDeleteClick) {
+            handleDeleteClick(record);
+            return;
+          }
+          this.deleteModel(record.id);
+        },
+      },
+      ...extraActions,
+    ];
+    const orderedActions = sortActionsAsc(actions);
+    return renderActions(record)(orderedActions, showActionsCount, [8, ...confirmKeys]);
+  };
 
   handleCreateVisible = visible => {
     const { afterDrawerNotVisible } = this.props;
@@ -52,28 +149,6 @@ class Curd extends PureComponent {
       callFunctionIfFunction(afterDrawerNotVisible)();
     }
   };
-
-  // handleMoreClick = (key, record) => {
-  //   switch (key) {
-  //     case deleteActionName: {
-  //       Modal.confirm({
-  //         title: '删除广告位',
-  //         content: (
-  //           <p>
-  //             确定删除编号为 <span style={{ color: 'red' }}>{record.code}</span> 的广告位吗？
-  //           </p>
-  //         ),
-  //         okText: '确定',
-  //         cancelText: '取消',
-  //         onOk: () => this.deleteModel(record.id),
-  //         maskClosable: true,
-  //       });
-  //       return;
-  //     }
-  //     default:
-  //       message.error('非法操作')
-  //   }
-  // };
 
   deleteModel = id => {
     const { namespace, dispatch } = this.props;
@@ -200,54 +275,11 @@ class Curd extends PureComponent {
 
   enhanceColumns = columns => {
     if (!columns) return [];
-    const { interceptors = {} } = this.props;
-    const { handleDetailClick, handleDeleteClick } = interceptors;
     return [
       ...columns,
       {
         title: '操作',
-        render: (text, record) => (
-          <Fragment>
-            {/* <a onClick={() => this.handleUpdateVisible(true, record)}>详情</a> */}
-            <a
-              onClick={() => {
-                if (handleDetailClick) {
-                  handleDetailClick(record);
-                  return;
-                }
-                this.handleUpdateVisible(true, record);
-              }}
-            >
-              详情
-            </a>
-            <Divider type="vertical" />
-            <Popconfirm
-              title="确定删除吗？"
-              onConfirm={() => {
-                if (handleDeleteClick) {
-                  handleDeleteClick(record);
-                  return;
-                }
-                this.deleteModel(record.id);
-              }}
-            >
-              <a>删除</a>
-            </Popconfirm>
-            {/* <Dropdown
-            overlay={
-              <Menu onClick={({ key }) => this.handleMoreClick(key, record)}>
-                <Menu.Item key={deleteActionName}>
-                  <a>删除</a>
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <a>
-              更多 <Icon type="down" />
-            </a>
-          </Dropdown> */}
-          </Fragment>
-        ),
+        render: this.setActions,
       },
     ];
   };
@@ -255,7 +287,6 @@ class Curd extends PureComponent {
   render() {
     const {
       queryArgsConfig = [],
-      columns,
       data = {},
       fetchLoading,
       createLoading,
@@ -264,7 +295,7 @@ class Curd extends PureComponent {
       form,
       createTitle = '新建对象',
       updateTitle = '对象详情',
-      checkable,
+      tableConfig: { columns, checkable },
     } = this.props;
     const { selectedRows, createVisible, updateVisible, record } = this.state;
 
