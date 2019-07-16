@@ -10,6 +10,7 @@
 
 ## 新增特性✨
 
+* [ChildrenTabs 根据 children 实现标签页切换](#ChildrenTabs-根据-children-实现标签页切换)
 * [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 * [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
@@ -21,6 +22,21 @@
 ## 功能实现概述☁️
 
 除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用了 `any` 。
+
+### ChildrenTabs 根据 children 实现标签页切换
+
+可通过配置实现 children 的标签页展示。
+
+#### API
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| tabKey | tab 的唯一标识 | string | - |
+| tabName | tab 展示的标题 | string | - |
+| extraTabProperties | tab 标签的扩展属性 | {} | {} |
+| beforeSwtichTab | 切换 tab 前的钩子函数，返回值即为切换后的 tabKey | (keyToSwitch: string, activedTabs: any[]) => string | - |
+| handleTabChange | 切换 tab 时的回调函数。现目前用于路由切换 children 的场景中，路由切换到根据 key 找到的对应的真实 children path | (keyToSwitch: string, activedTabs: any[]) => void; | - |
+| beforeRemoveTab | 删除 tab 前的钩子函数。现目前用于切换到被删除 tab 的相邻 tab 页。相邻的 tab 页又根据 key 路由到对应的真实 children path | (nextTabKey: string, activedTabs: any[]) => void | - |
 
 ### PageTabs 基于路由实现标签页切换
 
