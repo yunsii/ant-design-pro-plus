@@ -55,7 +55,7 @@ function searchPathIdAndName(childrenPathname, originalMenuData) {
 
 export default function PageTabs(props) {
   const { children, originalMenuData } = props;
-  console.log(originalMenuData);
+  // console.log(originalMenuData);
   if (!originalMenuData.length) return children;
   const [newOrSwitchOrNextPathId, pathName] = searchPathIdAndName(
     getChildrenPathname(children),
