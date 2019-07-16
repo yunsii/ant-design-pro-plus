@@ -31,9 +31,9 @@
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| tabKey | tab 的唯一标识 | string | - |
-| tabName | tab 展示的标题 | string | - |
-| extraTabProperties | tab 标签的扩展属性 | {} | {} |
+| tabKey | 当前 tab 的唯一标识 | string | - |
+| tabName | 当前 tab 展示的标题 | string | - |
+| extraTabProperties | 当前 tab 标签的扩展属性 | {} | {} |
 | beforeSwtichTab | 切换 tab 前的钩子函数，返回值即为切换后的 tabKey | (keyToSwitch: string, activedTabs: any[]) => string | - |
 | handleTabChange | 切换 tab 时的回调函数。现目前用于路由切换 children 的场景中，路由切换到根据 key 找到的对应的真实 children path | (keyToSwitch: string, activedTabs: any[]) => void; | - |
 | beforeRemoveTab | 删除 tab 前的钩子函数。现目前用于切换到被删除 tab 的相邻 tab 页。相邻的 tab 页又根据 key 路由到对应的真实 children path | (nextTabKey: string, activedTabs: any[]) => void | - |
