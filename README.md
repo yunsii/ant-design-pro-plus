@@ -31,10 +31,11 @@
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| activeKey | 当前 tab 的唯一标识 | string | - |
-| activetTitle | 当前 tab 展示的标题 | string | - |
+| activeKey | 激活 tab 的唯一标识 | string | - |
+| activetTitle | 激活 tab 展示的标题 | string | - |
 | handleTabChange | 切换 tab 时的回调函数。设置新的的 activeKey | (keyToSwitch: string, activedTabs: any[]) => void; | - |
 | handleRemoveTab | 删除 tab 时的回调函数。可直接设置新的 activeKey 为相邻的 nextTabKey | (removeKey: string, nextTabKey: string, activedTabs: any[]) => void | - |
+| children | 与当前 tab 对应的 children | JSX.Element | - |
 | extraTabProperties | 当前 tab 的扩展属性 | {} | {} |
 | tabsConfig | 可自行配置 Tabs 属性，除 `activeKey`， `onEdit`， `onChange`， `tabBarExtraContent` 外 | TabsProps | - |
 
