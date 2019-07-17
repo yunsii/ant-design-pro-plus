@@ -3,7 +3,12 @@ import { Spin, Button, Drawer, Form } from 'antd';
 import { FormProvider, createFormItems } from '@/components/antd-form-pro';
 
 const DetailFormDrawer = props => {
-  const { visible, title, form, itemsConfig, handleOk, handleVisible, loading } = props;
+  const {
+    drawerConfig: { onOk: handleOk, ...restDrawerConfig },
+    form,
+    itemsConfig,
+    loading,
+  } = props;
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -13,20 +18,8 @@ const DetailFormDrawer = props => {
     });
   };
 
-  const afterVisibleChange = isVisible => {
-    if (!isVisible) {
-      form.resetFields();
-    }
-  };
-
   return (
-    <Drawer
-      width={560}
-      title={title}
-      visible={visible}
-      onClose={() => handleVisible(false)}
-      afterVisibleChange={afterVisibleChange}
-    >
+    <Drawer destroyOnClose width={560} {...restDrawerConfig}>
       <Spin spinning={!loading ? false : loading}>
         <FormProvider value={form}>{createFormItems(itemsConfig)}</FormProvider>
         {handleOk ? (
@@ -42,7 +35,7 @@ const DetailFormDrawer = props => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={() => handleVisible(false)} style={{ marginRight: 8 }}>
+            <Button onClick={restDrawerConfig.onClose} style={{ marginRight: 8 }}>
               取消
             </Button>
             <Button onClick={okHandle} type="primary">
