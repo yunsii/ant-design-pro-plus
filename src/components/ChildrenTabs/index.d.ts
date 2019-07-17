@@ -5,7 +5,7 @@ export declare interface ChildrenTabsProps {
   activeKey: string;
   activetTitle: string;
   handleTabChange: (keyToSwitch: string, activedTabs: any[]) => void;
-  beforeRemoveTab: (nextTabKey: string, activedTabs: any[]) => void;
+  handleRemoveTab: (removeKey: string, nextTabKey: string, activedTabs: any[]) => void;
   extraTabProperties?: {};
   tabsConfig?: TabsProps;
 }

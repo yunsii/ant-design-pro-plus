@@ -81,12 +81,12 @@ export default class ChildrenTabs extends React.Component {
   };
 
   remove = key => {
-    const { beforeRemoveTab } = this.props;
+    const { handleRemoveTab } = this.props;
     const { activedTabs } = this.state;
     const targetIndex = _findIndex(activedTabs, { key });
     const nextIndex = targetIndex > 0 ? targetIndex - 1 : targetIndex + 1;
     const nextTabKey = activedTabs[nextIndex].key;
-    callFunctionIfFunction(beforeRemoveTab)(nextTabKey, activedTabs);
+    callFunctionIfFunction(handleRemoveTab)(key, nextTabKey, activedTabs);
     this.setState({
       activedTabs: activedTabs.filter(item => item.key !== key),
     });

@@ -45,7 +45,7 @@ export default function PageTabs(props) {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
     router.push(targetTab.path); // key is not work fine with dynamic router
   };
-  const beforeRemoveTab = (nextTabKey, activedTabs) => {
+  const handleRemoveTab = (removeKey, nextTabKey, activedTabs) => {
     const targetTab = _find(activedTabs, { key: nextTabKey });
     router.push(targetTab.path); // key is not work fine with dynamic router
   };
@@ -57,7 +57,7 @@ export default function PageTabs(props) {
       activetTitle={pathName}
       extraTabProperties={{ path: getChildrenPathname(children) }}
       handleTabChange={handleTabChange}
-      beforeRemoveTab={beforeRemoveTab}
+      handleRemoveTab={handleRemoveTab}
     >
       {children}
     </ChildrenTabs>
