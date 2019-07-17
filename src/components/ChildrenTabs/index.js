@@ -136,11 +136,11 @@ export default class ChildrenTabs extends React.Component {
         tabBarStyle={{ margin: 0 }}
         tabBarGutter={0}
         hideAdd
+        tabBarExtraContent={operations}
         {...tabsConfig}
         activeKey={activeKey}
         onEdit={this.handleTabEdit}
         onChange={this.handleSwitch}
-        tabBarExtraContent={operations}
       >
         {activedTabs && activedTabs.length
           ? activedTabs.map(item => {
