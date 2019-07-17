@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { TabsProps } from 'antd';
 
 export declare type ChildrenTabsProps = {
   activeKey: string;
   activetTitle: string;
   extraTabProperties?: {};
+  tabsConfig?: TabsProps;
   beforeSwtichTab?: (keyToSwitch: string, activedTabs: any[]) => string;
   handleTabChange?: (keyToSwitch: string, activedTabs: any[]) => void;
   beforeRemoveTab?: (nextTabKey: string, activedTabs: any[]) => void;

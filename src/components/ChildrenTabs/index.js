@@ -116,6 +116,7 @@ export default class ChildrenTabs extends React.Component {
   };
 
   render() {
+    const { tabsConfig } = this.props;
     const { activedTabs, activeKey } = this.state;
     // console.log(activedTabs);
 
@@ -139,17 +140,16 @@ export default class ChildrenTabs extends React.Component {
     );
     return (
       <Tabs
-        // className={styles.tabs}
+        tabPosition="top"
+        type="editable-card"
+        tabBarStyle={{ margin: 0 }}
+        tabBarGutter={0}
+        hideAdd
+        {...tabsConfig}
         activeKey={activeKey}
-        // animated
+        onEdit={this.handleTabEdit}
         onChange={this.handleSwitch}
         tabBarExtraContent={operations}
-        tabBarStyle={{ margin: 0 }}
-        tabPosition="top"
-        tabBarGutter={-1}
-        hideAdd
-        type="editable-card"
-        onEdit={this.handleTabEdit}
       >
         {activedTabs && activedTabs.length
           ? activedTabs.map(item => {
