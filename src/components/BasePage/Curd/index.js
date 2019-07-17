@@ -26,7 +26,7 @@ function addDivider(actions) {
   return _flatten(
     actions.map((item, index) => {
       if (index + 1 < actions.length) {
-        return [item, <Divider type="vertical" />];
+        return [item, <Divider key={`${item.key}_divider`} type="vertical" />];
       }
       return [item];
     })
@@ -38,12 +38,20 @@ const generateShowActions = record => (actions, confirmKeys = []) => {
     ...actions.map(item => {
       if (confirmKeys.includes(item.key)) {
         return (
-          <Popconfirm title={`确定${item.title}吗？`} onConfirm={() => item.handleClick(record)}>
+          <Popconfirm
+            key={item.key}
+            title={`确定${item.title}吗？`}
+            onConfirm={() => item.handleClick(record)}
+          >
             <a>{item.title}</a>
           </Popconfirm>
         );
       }
-      return <a onClick={() => item.handleClick(record)}>{item.title}</a>;
+      return (
+        <a key={item.key} onClick={() => item.handleClick(record)}>
+          {item.title}
+        </a>
+      );
     }),
   ];
 };
@@ -58,6 +66,7 @@ const renderActions = record => (sortedActions, showActionsCount, confirmKeys) =
   return addDivider([
     ...generateShowActions(record)(showActions, confirmKeys),
     <Dropdown
+      key="more"
       overlay={
         <Menu>
           {moreAction.map(item => (
