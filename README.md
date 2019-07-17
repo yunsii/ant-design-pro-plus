@@ -37,7 +37,7 @@
 | handleRemoveTab | 删除 tab 时的回调函数。可直接设置新的 activeKey 为相邻的 nextTabKey | (removeKey: string, nextTabKey: string, activedTabs: any[]) => void | - |
 | children | 与当前 tab 对应的 children | JSX.Element | - |
 | extraTabProperties | 当前 tab 的扩展属性 | {} | {} |
-| tabsConfig | 可自行配置 Tabs 属性，除 `activeKey`， `onEdit`， `onChange`， `tabBarExtraContent` 外 | TabsProps | - |
+| tabsConfig | 可自行配置 Tabs 属性，除 `activeKey`， `onEdit`， `onChange` 外 | TabsProps | - |
 
 ### PageTabs 基于路由实现标签页切换
 
