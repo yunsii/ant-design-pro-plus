@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs, Dropdown, Menu, Icon } from 'antd';
 import _findIndex from 'lodash/findIndex';
+import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 
 import styles from './index.less';
 
@@ -71,16 +72,9 @@ export default class ChildrenTabs extends React.Component {
   };
 
   handleSwitch = keyToSwitch => {
-    const { beforeSwtichTab, handleTabChange } = this.props;
-    const { activedTabs, activeKey } = this.state;
-    if (keyToSwitch === activeKey) return;
-
-    if (handleTabChange) {
-      handleTabChange(keyToSwitch, activedTabs);
-    }
-    this.setState({
-      activeKey: beforeSwtichTab ? beforeSwtichTab(keyToSwitch) : keyToSwitch,
-    });
+    const { handleTabChange } = this.props;
+    const { activedTabs } = this.state;
+    callFunctionIfFunction(handleTabChange)(keyToSwitch, activedTabs);
   };
 
   handleTabEdit = (targetKey, action) => {
@@ -93,7 +87,7 @@ export default class ChildrenTabs extends React.Component {
     const targetIndex = _findIndex(activedTabs, { key });
     const nextIndex = targetIndex > 0 ? targetIndex - 1 : targetIndex + 1;
     const nextTabKey = activedTabs[nextIndex].key;
-    beforeRemoveTab(nextTabKey, activedTabs);
+    callFunctionIfFunction(beforeRemoveTab)(nextTabKey, activedTabs);
     this.setState({
       activedTabs: activedTabs.filter(item => item.key !== key),
     });
