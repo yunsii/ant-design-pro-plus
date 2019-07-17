@@ -96,7 +96,6 @@ export default class ChildrenTabs extends React.Component {
     beforeRemoveTab(nextTabKey, activedTabs);
     this.setState({
       activedTabs: activedTabs.filter(item => item.key !== key),
-      activeKey: nextTabKey,
     });
   };
 
@@ -110,7 +109,6 @@ export default class ChildrenTabs extends React.Component {
       const currentTab = activedTabs.filter(item => item.key === activeKey);
       this.setState({
         activedTabs: currentTab.map(item => ({ ...item, closable: false })),
-        activeKey,
       });
     }
   };
