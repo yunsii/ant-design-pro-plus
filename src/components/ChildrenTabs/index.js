@@ -36,32 +36,32 @@ function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, 
 export default class ChildrenTabs extends React.Component {
   static getDerivedStateFromProps(props, state) {
     // children 可能用于新建 tab ，切换并更新 tab ，切换到被删除 tab 的相邻 tab
-    const { children, tabKey, tabName, extraTabProperties } = props;
+    const { children, activeKey, activetTitle, extraTabProperties } = props;
     const { activedTabs } = state;
 
-    const activedTabIndex = _findIndex(activedTabs, { key: tabKey });
+    const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
     if (activedTabIndex > -1) {
       // return state after switch or delete tab
       return {
         activedTabs: switchAndUpdateTab(
           activedTabIndex,
-          tabName,
+          activetTitle,
           extraTabProperties,
           children,
           activedTabs
         ),
-        activeKey: tabKey,
+        activeKey,
       };
     }
     const newTab = {
-      tab: tabName,
-      key: tabKey,
+      tab: activetTitle,
+      key: activeKey,
       content: children,
       ...extraTabProperties,
     };
     return {
       activedTabs: addTab(newTab, activedTabs),
-      activeKey: tabKey,
+      activeKey,
     };
   }
 
@@ -131,7 +131,7 @@ export default class ChildrenTabs extends React.Component {
     );
     const operations = (
       <Dropdown overlay={menu}>
-        <a className={styles.tabsMenu} href="#">
+        <a className={styles.tabsMenu}>
           标签菜单&nbsp;
           <Icon type="down" />
         </a>

@@ -61,8 +61,8 @@ export default function PageTabs(props) {
     children
   ) : (
     <ChildrenTabs
-      tabKey={newOrSwitchOrNextPathId}
-      tabName={pathName}
+      activeKey={newOrSwitchOrNextPathId}
+      activetTitle={pathName}
       extraTabProperties={{ path: getChildrenPathname(children) }}
       handleTabChange={handleTabChange}
       beforeRemoveTab={beforeRemoveTab}

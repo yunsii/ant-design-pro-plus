@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 export declare type ChildrenTabsProps = {
-  tabKey: string;
-  tabName: string;
+  activeKey: string;
+  activetTitle: string;
   extraTabProperties?: {};
   beforeSwtichTab?: (keyToSwitch: string, activedTabs: any[]) => string;
   handleTabChange?: (keyToSwitch: string, activedTabs: any[]) => void;
