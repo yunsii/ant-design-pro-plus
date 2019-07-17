@@ -9,15 +9,6 @@ const { TabPane } = Tabs;
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 
-function getChildrenPathname(children) {
-  const {
-    props: {
-      location: { pathname: childrenPathname },
-    },
-  } = children;
-  return childrenPathname;
-}
-
 function addTab(newTab, activedTabs) {
   // filter 过滤路由 为 '/' 的 children
   // map 添加第一个 tab 不可删除
@@ -30,12 +21,13 @@ function addTab(newTab, activedTabs) {
     );
 }
 
-function switchAndUpdateTab(activeIndex, children, activedTabs) {
+function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, activedTabs) {
   const { path, content, ...rest } = activedTabs[activeIndex];
   activedTabs.splice(activeIndex, 1, {
-    path: getChildrenPathname(children),
+    tab: tabName,
     content: children,
     ...rest,
+    ...extraTabProperties,
   });
   // map 删除后的 activedTabs 长度为 1 时不可删除
   return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
@@ -51,7 +43,13 @@ export default class ChildrenTabs extends React.Component {
     if (activedTabIndex > -1) {
       // return state after switch or delete tab
       return {
-        activedTabs: switchAndUpdateTab(activedTabIndex, children, activedTabs),
+        activedTabs: switchAndUpdateTab(
+          activedTabIndex,
+          tabName,
+          extraTabProperties,
+          children,
+          activedTabs
+        ),
         activeKey: tabKey,
       };
     }
