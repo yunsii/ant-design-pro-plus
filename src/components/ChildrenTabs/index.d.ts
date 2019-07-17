@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { TabsProps } from 'antd';
+import { TabsProps } from 'antd/lib/tabs';
 
-export declare type ChildrenTabsProps = {
+export declare interface ChildrenTabsProps {
   activeKey: string;
   activetTitle: string;
   handleTabChange: (keyToSwitch: string, activedTabs: any[]) => void;
   beforeRemoveTab: (nextTabKey: string, activedTabs: any[]) => void;
   extraTabProperties?: {};
   tabsConfig?: TabsProps;
-};
+}
 interface ChildrenTabsState {
   activedTabs: any[];
   activeKey: string | null;
