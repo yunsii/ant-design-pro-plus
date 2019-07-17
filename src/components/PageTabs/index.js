@@ -2,7 +2,6 @@ import React from 'react';
 import pathToRegexp from 'path-to-regexp';
 import _find from 'lodash/find';
 import router from 'umi/router';
-
 import ChildrenTabs from '@/components/ChildrenTabs';
 
 function getChildrenPathname(children) {

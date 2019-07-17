@@ -2,7 +2,6 @@ import React from 'react';
 import { Tabs, Dropdown, Menu, Icon } from 'antd';
 import _findIndex from 'lodash/findIndex';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
-
 import styles from './index.less';
 
 const { TabPane } = Tabs;
