@@ -7,16 +7,16 @@ export default function setFormItemsConfig(detail = {}, mode) {
       type: 'custom',
       field: 'organ_id',
       formItemProps: {
-        label: '所属机构',
+        label: '所属团体',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择所属机构' }],
+        rules: [{ required: true, message: '请选择所属团体' }],
         initialValue: detail.organ_id,
       },
       component: (
         <TreeSelect
           style={{ width: '100%' }}
-          placeholder="请选择所属机构！"
+          placeholder="请选择所属团体"
           disabled={mode === 'update'}
         />
       ),
@@ -151,12 +151,12 @@ export default function setFormItemsConfig(detail = {}, mode) {
     },
     {
       type: 'default/string',
-      field: 'string',
+      field: 'name',
       formItemProps: {
-        label: '字符串',
+        label: '姓名',
       },
       fieldProps: {
-        initialValue: detail.string,
+        initialValue: detail.name,
       },
     },
   ];

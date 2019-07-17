@@ -84,6 +84,7 @@ class TableList extends PureComponent {
             },
           ],
         }}
+        containerConfig={{ type: 'drawer' }}
         {...this.props}
       />
     );
