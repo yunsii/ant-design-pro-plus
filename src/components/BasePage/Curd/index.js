@@ -5,6 +5,7 @@ import _flatten from 'lodash/flatten';
 import StandardTable from '@/components/StandardTable';
 import QueryPanel from '@/components/QueryPanel';
 import DetailFormDrawer from '@/components/DetailFormDrawer';
+import DetailFormModal from '@/components/DetailFormModal';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 // import { updateActionName, deleteActionName } from '@/contant';
 import styles from '@/utils/table.less';
@@ -154,7 +155,6 @@ class Curd extends PureComponent {
     if (visible) {
       this.setState({ record });
     } else {
-      this.setState({ record: {} });
       callFunctionIfFunction(afterDrawerNotVisible)();
     }
   };
@@ -305,15 +305,30 @@ class Curd extends PureComponent {
       createTitle = '新建对象',
       updateTitle = '对象详情',
       tableConfig: { columns, checkable },
+      containerConfig = {},
     } = this.props;
     const { selectedRows, createVisible, updateVisible, record } = this.state;
-
+    const { type, ...restContainerConfig } = containerConfig;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
+
+    const mergeContainerConfig = {
+      type: type || 'modal',
+      containerConfig: {
+        ...restContainerConfig,
+        title: createVisible ? createTitle : updateTitle,
+        visible: createVisible || updateVisible,
+        loading: createLoading || updateLoading,
+        onClose: createVisible
+          ? () => this.handleCreateVisible(false)
+          : () => this.handleUpdateVisible(false),
+        onOk: createVisible ? this.handleCreateOk : this.handleUpdateOk,
+      },
+    };
 
     return (
       <Card bordered={false}>
@@ -345,22 +360,31 @@ class Curd extends PureComponent {
             checkable={checkable}
           />
         </div>
-        <DetailFormDrawer
-          title={createVisible ? createTitle : updateTitle}
-          visible={createVisible || updateVisible}
-          loading={createLoading || updateLoading}
-          handleVisible={
-            createVisible
-              ? () => this.handleCreateVisible(false)
-              : () => this.handleUpdateVisible(false)
-          }
-          handleOk={createVisible ? this.handleCreateOk : this.handleUpdateOk}
-          itemsConfig={setFormItemsConfig(
-            createVisible ? {} : record,
-            createVisible ? 'create' : 'update',
-            form
-          )}
-        />
+        {mergeContainerConfig.type === 'modal' ? (
+          <DetailFormModal
+            modalConfig={{
+              ...mergeContainerConfig.containerConfig,
+              onCancel: mergeContainerConfig.containerConfig.onClose,
+            }}
+            itemsConfig={setFormItemsConfig(
+              createVisible ? {} : record,
+              createVisible ? 'create' : 'update',
+              form
+            )}
+            cols={2}
+          />
+        ) : (
+          <DetailFormDrawer
+            drawerConfig={{
+              ...mergeContainerConfig.containerConfig,
+            }}
+            itemsConfig={setFormItemsConfig(
+              createVisible ? {} : record,
+              createVisible ? 'create' : 'update',
+              form
+            )}
+          />
+        )}
       </Card>
     );
   }

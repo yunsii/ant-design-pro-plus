@@ -34,6 +34,10 @@ export declare type CurdProps = {
   afterDrawerNotVisible?: () => void;
   createTitle?: string;
   updateTitle?: string;
+  containerConfig: {
+    type: 'modal' | 'drawer';
+    [x: string]: any;
+  };
 };
 interface CurdState {
   createVisible: boolean;
