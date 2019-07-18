@@ -99,7 +99,7 @@ class Curd extends PureComponent {
   };
 
   handleVisible = (action, visible, record) => {
-    const { afterDrawerNotVisible } = this.props;
+    const { afterPopupNotVisible } = this.props;
     const actionVisible = `${action}Visible`;
     this.setState({
       [actionVisible]: !!visible,
@@ -107,18 +107,18 @@ class Curd extends PureComponent {
     if (visible) {
       this.setState({ record: record || {} });
     } else {
-      callFunctionIfFunction(afterDrawerNotVisible)();
+      callFunctionIfFunction(afterPopupNotVisible)();
     }
   };
 
   setVisibleToFalse = () => {
-    const { afterDrawerNotVisible } = this.props;
+    const { afterPopupNotVisible } = this.props;
     this.setState({
       createVisible: false,
       detailVisible: false,
       updateVisible: false,
     });
-    callFunctionIfFunction(afterDrawerNotVisible)();
+    callFunctionIfFunction(afterPopupNotVisible)();
   };
 
   deleteModel = id => {

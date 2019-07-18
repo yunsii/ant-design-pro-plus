@@ -16,6 +16,7 @@ export declare type CurdProps = {
   };
   fetchLoading: boolean;
   createLoading: boolean;
+  detailLoading?: boolean;
   updateLoading: boolean;
   deleteLoading?: boolean;
   dipatch: Function;
@@ -36,7 +37,7 @@ export declare type CurdProps = {
     handleUpdateClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;
   };
-  afterDrawerNotVisible?: () => void;
+  afterPopupNotVisible?: () => void;
   createTitle?: string;
   detailTitle?: string;
   updateTitle?: string;
