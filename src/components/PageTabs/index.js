@@ -42,7 +42,7 @@ function isPathChildrenHaveName(pathChildren) {
 }
 
 export default function PageTabs(props) {
-  const { proRootPath, children, originalMenuData } = props;
+  const { proRootPath = '/', children, originalMenuData } = props;
   // console.log(children);
   // console.log(originalMenuData);
 
