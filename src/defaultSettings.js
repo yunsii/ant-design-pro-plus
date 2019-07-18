@@ -17,4 +17,5 @@ module.exports = {
   // Usage: https://github.com/ant-design/ant-design-pro/pull/3517
   iconfontUrl: '',
   pageTabs: true,
+  proRootPath: '/',
 };

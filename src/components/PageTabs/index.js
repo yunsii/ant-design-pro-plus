@@ -13,14 +13,14 @@ function getChildrenPathname(children) {
   return childrenPathname;
 }
 
-function searchPathIdAndName(childrenPathname, originalMenuData) {
+function searchPathIdAndNameAndChildren(childrenPathname, originalMenuData) {
   function getPathIdAndName(path, menuData) {
     let result;
     menuData.forEach(item => {
       // match prefix
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
         if (item.name) {
-          result = [item.path, item.name];
+          result = [item.path, item.name, item.children];
         }
         // get children pathIdAndName recursively
         if (item.children) {
@@ -33,14 +33,29 @@ function searchPathIdAndName(childrenPathname, originalMenuData) {
   return getPathIdAndName(childrenPathname, originalMenuData) || ['404', 'Error'];
 }
 
+function isChildrenEqualProRootPath(children, proRootPath) {
+  return getChildrenPathname(children) === proRootPath;
+}
+
+function isPathChildrenHaveName(pathChildren) {
+  return pathChildren && pathChildren.length && _find(pathChildren, 'name');
+}
+
 export default function PageTabs(props) {
-  const { children, originalMenuData } = props;
+  const { proRootPath, children, originalMenuData } = props;
+  // console.log(children);
   // console.log(originalMenuData);
+
+  // return children to redirect if children pathname equal proRootPath
+  if (isChildrenEqualProRootPath(children, proRootPath)) return children;
+  // return children if menu originalMenuData is empty, because can't get pathId and pathName
   if (!originalMenuData.length) return children;
-  const [newOrSwitchOrNextPathId, pathName] = searchPathIdAndName(
+  const [newOrSwitchOrNextPathId, pathName, pathChildren] = searchPathIdAndNameAndChildren(
     getChildrenPathname(children),
     originalMenuData
   );
+  if (isPathChildrenHaveName(pathChildren)) return children;
+
   const handleTabChange = (keyToSwitch, activedTabs) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
     router.push(targetTab.path); // key is not work fine with dynamic router
@@ -49,9 +64,7 @@ export default function PageTabs(props) {
     const targetTab = _find(activedTabs, { key: nextTabKey });
     router.push(targetTab.path); // key is not work fine with dynamic router
   };
-  return getChildrenPathname(children) === '/' ? (
-    children
-  ) : (
+  return (
     <ChildrenTabs
       activeKey={newOrSwitchOrNextPathId}
       activetTitle={pathName}
