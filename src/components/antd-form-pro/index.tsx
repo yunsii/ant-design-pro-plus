@@ -89,7 +89,7 @@ function setDefaultCheckedTypeHint(type: string, rules: ValidationRule[]) {
   return result;
 }
 
-interface CustomFormItemProps extends FormItemProps {
+export interface CustomFormItemProps extends FormItemProps {
   dense: boolean;
 }
 
@@ -127,20 +127,12 @@ export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout
     const {
       type,
       field,
-      formItemProps = {},
+      formItemProps = {} as CustomFormItemProps,
       fieldProps = {},
       componentProps = {},
       component,
     } = item;
-    const {
-      style = {},
-      dense,
-      extra,
-      pre,
-      wrapperCol,
-      labelCol,
-      ...restFormItemProps
-    } = formItemProps;
+    const { style = {}, dense, extra, wrapperCol, labelCol, ...restFormItemProps } = formItemProps;
     const { rules = [], ...restFieldProps } = fieldProps;
     const itemLayout = wrapperCol && labelCol ? { wrapperCol, labelCol } : {};
 
