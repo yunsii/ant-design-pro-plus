@@ -36,7 +36,7 @@ function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, 
 export default class ChildrenTabs extends React.Component {
   static getDerivedStateFromProps(props, state) {
     // children 可能用于新建 tab ，切换并更新 tab ，切换到被删除 tab 的相邻 tab
-    const { children, activeKey, activetTitle, extraTabProperties } = props;
+    const { children, activeKey, activeTitle, extraTabProperties } = props;
     const { activedTabs } = state;
 
     const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
@@ -45,7 +45,7 @@ export default class ChildrenTabs extends React.Component {
       return {
         activedTabs: switchAndUpdateTab(
           activedTabIndex,
-          activetTitle,
+          activeTitle,
           extraTabProperties,
           children,
           activedTabs
@@ -54,7 +54,7 @@ export default class ChildrenTabs extends React.Component {
       };
     }
     const newTab = {
-      tab: activetTitle,
+      tab: activeTitle,
       key: activeKey,
       content: children,
       ...extraTabProperties,
