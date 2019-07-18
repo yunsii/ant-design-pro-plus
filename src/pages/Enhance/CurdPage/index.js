@@ -29,6 +29,13 @@ class TableList extends PureComponent {
         label: '昵称',
       },
     },
+    {
+      type: 'string',
+      field: 'habit',
+      formItemProps: {
+        label: '爱好',
+      },
+    },
   ];
 
   columns = [
@@ -85,6 +92,10 @@ class TableList extends PureComponent {
           ],
         }}
         containerConfig={{ type: 'drawer' }}
+        queryPanelProps={{
+          rowCount: 4,
+          maxCount: 2,
+        }}
         {...this.props}
       />
     );
