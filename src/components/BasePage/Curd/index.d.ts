@@ -1,5 +1,6 @@
-import { PaginationConfig } from 'antd/lib/table';
 import * as React from 'react';
+import { PaginationConfig } from 'antd/lib/table';
+import { QueryPanelProps } from '@/components/QueryPanel';
 
 export type ActionType = {
   key: number;
@@ -43,6 +44,7 @@ export declare type CurdProps = {
     type: 'modal' | 'drawer';
     [x: string]: any;
   };
+  queryPanelProps: QueryPanelProps;
 };
 interface CurdState {
   createVisible: boolean;

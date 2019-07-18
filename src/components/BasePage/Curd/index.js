@@ -309,6 +309,7 @@ class Curd extends PureComponent {
       form,
       tableConfig: { columns, checkable },
       containerConfig = {},
+      queryPanelProps = {},
     } = this.props;
     const { selectedRows } = this.state;
     const { type, ...restContainerConfig } = containerConfig;
@@ -335,7 +336,11 @@ class Curd extends PureComponent {
     return (
       <Card bordered={false}>
         <div className={styles.tableList}>
-          <QueryPanel queryArgsConfig={queryArgsConfig} onSearch={this.handleSearch} />
+          <QueryPanel
+            {...queryPanelProps}
+            queryArgsConfig={queryArgsConfig}
+            onSearch={this.handleSearch}
+          />
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={() => this.handleVisible('create', true)}>
               {createButtonName}
