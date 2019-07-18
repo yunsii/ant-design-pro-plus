@@ -11,4 +11,4 @@ export interface DetailFormModalProps {
   cols?: number;
 }
 
-export default class DetailFormDrawer extends React.Component<DetailFormModalProps, any> {}
+export default class DetailFormModal extends React.Component<DetailFormModalProps, any> {}
