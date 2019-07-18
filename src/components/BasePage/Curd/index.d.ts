@@ -19,6 +19,7 @@ export declare type CurdProps = {
   deleteLoading?: boolean;
   dipatch: Function;
   queryArgsConfig: any[];
+  createButtonName: string;
   tableConfig: {
     columns: any[];
     checkable?: boolean;

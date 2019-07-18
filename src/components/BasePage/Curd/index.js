@@ -300,6 +300,7 @@ class Curd extends PureComponent {
     const {
       queryArgsConfig = [],
       data = {},
+      createButtonName = '新建',
       fetchLoading,
       createLoading,
       detailLoading,
@@ -337,7 +338,7 @@ class Curd extends PureComponent {
           <QueryPanel queryArgsConfig={queryArgsConfig} onSearch={this.handleSearch} />
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={() => this.handleVisible('create', true)}>
-              新建
+              {createButtonName}
             </Button>
             {selectedRows.length > 0 && (
               <span>
