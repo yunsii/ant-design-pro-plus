@@ -78,7 +78,7 @@ class TableList extends PureComponent {
           columns: this.columns,
           extraActions: [
             {
-              key: 9,
+              key: 14,
               title: '兼职',
               handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
             },
