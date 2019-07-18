@@ -15,6 +15,7 @@
 * [StandardTable 增强](#StandardTable-增强)
 * [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
 * [DetailFormDrawer 详情抽屉组件](#DetailFormDrawer-详情抽屉组件)
+* [DetailFormModal 详情模态框组件](#DetailFormModal-详情模态框组件)
 * [QueryPanel 查询面板组件](#QueryPanel-查询面板组件)
 * [base-models/curd 生成基础增删改查 model](#base-models/curd-基础增删改查-model)
 * [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd-基础增删改查页面组件)
