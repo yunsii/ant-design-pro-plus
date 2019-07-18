@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Button, Dropdown, Menu, Divider, Popconfirm } from 'antd';
-import _flatten from 'lodash/flatten';
+import { Card, Form, Icon, Button, Dropdown, Menu } from 'antd';
+import {
+  renderActions,
+  transferBoolArrayToStringArray,
+  sortAndFilterActionsAsc,
+} from './utils.tsx';
 
 import StandardTable from '@/components/StandardTable';
 import QueryPanel from '@/components/QueryPanel';
@@ -10,80 +14,14 @@ import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 // import { updateActionName, deleteActionName } from '@/contant';
 import styles from '@/utils/table.less';
 
+// const CreateVisible = '100';
+const DetailVisible = '010';
+const UpdateVisible = '001';
+
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
-
-function sortActionsAsc(actions) {
-  return [...actions].sort((x, y) => {
-    if (x.key > y.key) return 1;
-    if (x.key < y.key) return -1;
-    return 0;
-  });
-}
-
-function addDivider(actions) {
-  return _flatten(
-    actions.map((item, index) => {
-      if (index + 1 < actions.length) {
-        return [item, <Divider key={`${item.key}_divider`} type="vertical" />];
-      }
-      return [item];
-    })
-  );
-}
-
-const generateShowActions = record => (actions, confirmKeys = []) => {
-  return [
-    ...actions.map(item => {
-      if (confirmKeys.includes(item.key)) {
-        return (
-          <Popconfirm
-            key={item.key}
-            title={`确定${item.title}吗？`}
-            onConfirm={() => item.handleClick(record)}
-          >
-            <a>{item.title}</a>
-          </Popconfirm>
-        );
-      }
-      return (
-        <a key={item.key} onClick={() => item.handleClick(record)}>
-          {item.title}
-        </a>
-      );
-    }),
-  ];
-};
-
-const renderActions = record => (sortedActions, showActionsCount, confirmKeys) => {
-  if (sortedActions.length <= showActionsCount) {
-    return addDivider(generateShowActions(record)(sortedActions, confirmKeys));
-  }
-
-  const showActions = sortedActions.slice(0, showActionsCount);
-  const moreAction = sortedActions.slice(showActionsCount);
-  return addDivider([
-    ...generateShowActions(record)(showActions, confirmKeys),
-    <Dropdown
-      key="more"
-      overlay={
-        <Menu>
-          {moreAction.map(item => (
-            <Menu.Item key={item.title} onClick={() => item.handleClick(record)}>
-              <a>{item.title}</a>
-            </Menu.Item>
-          ))}
-        </Menu>
-      }
-    >
-      <a>
-        更多 <Icon type="down" />
-      </a>
-    </Dropdown>,
-  ]);
-};
 
 @Form.create()
 class Curd extends PureComponent {
@@ -105,24 +43,43 @@ class Curd extends PureComponent {
   setActions = (value, record) => {
     const {
       interceptors = {},
-      tableConfig: { showActionsCount = 2, confirmKeys = [], extraActions = [] },
+      tableConfig: {
+        detailTitle = '详情',
+        updateTitle = '编辑',
+        deleteTitle = '删除',
+        showActionsCount = 3,
+        confirmKeys = [],
+        extraActions = [],
+        hideActions = [],
+      },
     } = this.props;
-    const { handleDetailClick, handleDeleteClick } = interceptors;
+    const { handleDetailClick, handleDeleteClick, handleUpdateClick } = interceptors;
     const actions = [
       {
         key: 4,
-        title: '详情',
+        title: detailTitle,
         handleClick: () => {
           if (handleDetailClick) {
             handleDetailClick(record);
             return;
           }
-          this.handleUpdateVisible(true, record);
+          this.handleVisible('detail', true, record);
         },
       },
       {
         key: 8,
-        title: '删除',
+        title: updateTitle,
+        handleClick: () => {
+          if (handleUpdateClick) {
+            handleUpdateClick(record);
+            return;
+          }
+          this.handleVisible('update', true, record);
+        },
+      },
+      {
+        key: 12,
+        title: deleteTitle,
         handleClick: () => {
           if (handleDeleteClick) {
             handleDeleteClick(record);
@@ -133,30 +90,35 @@ class Curd extends PureComponent {
       },
       ...extraActions,
     ];
-    const orderedActions = sortActionsAsc(actions);
-    return renderActions(record)(orderedActions, showActionsCount, [8, ...confirmKeys]);
+    const orderedActions = sortAndFilterActionsAsc(actions, hideActions);
+    return renderActions(record)(
+      orderedActions,
+      showActionsCount,
+      confirmKeys.length ? confirmKeys : [12]
+    );
   };
 
-  handleCreateVisible = visible => {
+  handleVisible = (action, visible, record) => {
     const { afterDrawerNotVisible } = this.props;
+    const actionVisible = `${action}Visible`;
     this.setState({
-      createVisible: !!visible,
-    });
-    if (!visible) {
-      callFunctionIfFunction(afterDrawerNotVisible)();
-    }
-  };
-
-  handleUpdateVisible = (visible, record) => {
-    const { afterDrawerNotVisible } = this.props;
-    this.setState({
-      updateVisible: !!visible,
+      [actionVisible]: !!visible,
     });
     if (visible) {
-      this.setState({ record });
+      this.setState({ record: record || {} });
     } else {
       callFunctionIfFunction(afterDrawerNotVisible)();
     }
+  };
+
+  setVisibleToFalse = () => {
+    const { afterDrawerNotVisible } = this.props;
+    this.setState({
+      createVisible: false,
+      detailVisible: false,
+      updateVisible: false,
+    });
+    callFunctionIfFunction(afterDrawerNotVisible)();
   };
 
   deleteModel = id => {
@@ -256,7 +218,7 @@ class Curd extends PureComponent {
       callback: response => {
         if (!response) {
           const { formValues } = this.state;
-          this.handleCreateVisible(false);
+          this.handleVisible('create', false);
           this.handleSearch(formValues);
         }
       },
@@ -276,7 +238,7 @@ class Curd extends PureComponent {
       payload: updateFieldsValue ? updateFieldsValue(fieldsValue) : fieldsValue,
       callback: response => {
         if (!response) {
-          this.handleUpdateVisible(false);
+          this.handleVisible('update', false);
         }
       },
     });
@@ -293,22 +255,63 @@ class Curd extends PureComponent {
     ];
   };
 
+  getVisibleState = () => {
+    const { createVisible, detailVisible, updateVisible } = this.state;
+    return transferBoolArrayToStringArray([createVisible, detailVisible, updateVisible]);
+  };
+
+  getContainerTitle = () => {
+    const {
+      createTitle = '新建对象',
+      detailTitle = '对象详情',
+      updateTitle = '编辑对象',
+    } = this.props;
+    if (this.getVisibleState() === DetailVisible) {
+      return detailTitle;
+    }
+    if (this.getVisibleState() === UpdateVisible) {
+      return updateTitle;
+    }
+    return createTitle;
+  };
+
+  handleOk = fieldsValue => {
+    if (this.getVisibleState() === DetailVisible) {
+      this.handleVisible('detail', false);
+    }
+    if (this.getVisibleState() === UpdateVisible) {
+      return this.handleUpdateOk(fieldsValue);
+    }
+    return this.handleCreateOk(fieldsValue);
+  };
+
+  setContainerModeAndDetail = () => {
+    const { record } = this.state;
+    if (this.getVisibleState() === DetailVisible) {
+      return ['detail', record];
+    }
+    if (this.getVisibleState() === UpdateVisible) {
+      return ['update', record];
+    }
+    return ['create', {}];
+  };
+
   render() {
     const {
       queryArgsConfig = [],
       data = {},
       fetchLoading,
       createLoading,
+      detailLoading,
       updateLoading,
       setFormItemsConfig,
       form,
-      createTitle = '新建对象',
-      updateTitle = '对象详情',
       tableConfig: { columns, checkable },
       containerConfig = {},
     } = this.props;
-    const { selectedRows, createVisible, updateVisible, record } = this.state;
+    const { selectedRows } = this.state;
     const { type, ...restContainerConfig } = containerConfig;
+    const [mode, detail] = this.setContainerModeAndDetail();
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -320,13 +323,11 @@ class Curd extends PureComponent {
       type: type || 'modal',
       containerConfig: {
         ...restContainerConfig,
-        title: createVisible ? createTitle : updateTitle,
-        visible: createVisible || updateVisible,
-        loading: createLoading || updateLoading,
-        onClose: createVisible
-          ? () => this.handleCreateVisible(false)
-          : () => this.handleUpdateVisible(false),
-        onOk: createVisible ? this.handleCreateOk : this.handleUpdateOk,
+        title: this.getContainerTitle(),
+        visible: this.getVisibleState().includes('1'),
+        loading: createLoading || detailLoading || updateLoading,
+        onClose: this.setVisibleToFalse,
+        onOk: this.handleOk,
       },
     };
 
@@ -335,7 +336,7 @@ class Curd extends PureComponent {
         <div className={styles.tableList}>
           <QueryPanel queryArgsConfig={queryArgsConfig} onSearch={this.handleSearch} />
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={() => this.handleCreateVisible(true)}>
+            <Button icon="plus" type="primary" onClick={() => this.handleVisible('create', true)}>
               新建
             </Button>
             {selectedRows.length > 0 && (
@@ -366,11 +367,7 @@ class Curd extends PureComponent {
               ...mergeContainerConfig.containerConfig,
               onCancel: mergeContainerConfig.containerConfig.onClose,
             }}
-            itemsConfig={setFormItemsConfig(
-              createVisible ? {} : record,
-              createVisible ? 'create' : 'update',
-              form
-            )}
+            itemsConfig={setFormItemsConfig(detail, mode, form)}
             cols={2}
           />
         ) : (
@@ -378,11 +375,7 @@ class Curd extends PureComponent {
             drawerConfig={{
               ...mergeContainerConfig.containerConfig,
             }}
-            itemsConfig={setFormItemsConfig(
-              createVisible ? {} : record,
-              createVisible ? 'create' : 'update',
-              form
-            )}
+            itemsConfig={setFormItemsConfig(detail, mode, form)}
           />
         )}
       </Card>

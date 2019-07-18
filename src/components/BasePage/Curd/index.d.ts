@@ -2,6 +2,7 @@ import { PaginationConfig } from 'antd/lib/table';
 import * as React from 'react';
 
 export type ActionType = {
+  key: number;
   title: string;
   handleClick: (record: any) => void;
 };
@@ -24,15 +25,18 @@ export declare type CurdProps = {
     showActionsCount?: number;
     extraActions?: ActionType[];
     confirmKeys: number[];
+    hideActions: number[];
   };
-  setFormItemsConfig: (detail: {}, mode: string) => any[];
+  setFormItemsConfig: (detail: {}, mode: string, form: any) => any[];
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any) => any;
     handleDetailClick?: (record: any) => any;
+    handleUpdateClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;
   };
   afterDrawerNotVisible?: () => void;
   createTitle?: string;
+  detailTitle?: string;
   updateTitle?: string;
   containerConfig: {
     type: 'modal' | 'drawer';
