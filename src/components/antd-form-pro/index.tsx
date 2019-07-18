@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  Form,
-  Input,
-  InputNumber,
-  Slider,
-  WrappedFormUtils,
-  FormItemProps,
-  ColProps,
-  ValidationRule,
-  GetFieldDecoratorOptions,
-} from 'antd';
+import { Form, Input, InputNumber, Slider, WrappedFormUtils } from 'antd';
+import { FormItemProps, GetFieldDecoratorOptions, ValidationRule } from 'antd/lib/form';
+import { ColProps } from 'antd/lib/col';
 
 import CustomDatePicker, { CustomRangePicker } from './components/CustomDatePicker';
 import CustomSelect from './components/Select';
@@ -22,11 +14,11 @@ const FormContext = React.createContext<WrappedFormUtils | null>(null);
 export const FormProvider = FormContext.Provider;
 const FormConsumer = FormContext.Consumer;
 
-const defaultExtra = {
+export const defaultExtra = {
   picture: '图片必须大于100*100像素',
 };
 
-const defaultTypeHint = {
+export const defaultTypeHint = {
   email: '请输入正确的邮箱格式',
 };
 
@@ -97,10 +89,29 @@ function setDefaultCheckedTypeHint(type: string, rules: ValidationRule[]) {
   return result;
 }
 
+interface CustomFormItemProps extends FormItemProps {
+  dense: boolean;
+}
+
+export type ComponentType =
+  | 'custom'
+  | 'date'
+  | 'datetime'
+  | 'datetime-range'
+  | 'number'
+  | 'select'
+  | 'textarea'
+  | 'password'
+  | 'picture'
+  | 'switch'
+  | 'slider'
+  | 'file-dragger'
+  | string;
+
 export interface ItemConfig {
-  type: string;
+  type: ComponentType;
   field: string;
-  formItemProps?: FormItemProps;
+  formItemProps?: CustomFormItemProps;
   fieldProps?: GetFieldDecoratorOptions;
   componentProps?: any;
   component?: React.ElementType;
@@ -121,8 +132,17 @@ export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout
       componentProps = {},
       component,
     } = item;
-    const { style = {}, dense, extra, layout: itemLayout, ...restFormItemProps } = formItemProps;
+    const {
+      style = {},
+      dense,
+      extra,
+      pre,
+      wrapperCol,
+      labelCol,
+      ...restFormItemProps
+    } = formItemProps;
     const { rules = [], ...restFieldProps } = fieldProps;
+    const itemLayout = wrapperCol && labelCol ? { wrapperCol, labelCol } : {};
 
     const layout = itemLayout || globalLayout || defaultLayout;
 
