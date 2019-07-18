@@ -4,6 +4,7 @@ import { ColProps } from 'antd/lib/col';
 
 export declare type QueryPanelProps = {
   queryArgsConfig: any[];
+  onSearch: (fieldsValue: any) => void;
   rowCount: number;
   maxCount: number;
   rowProps: RowProps;
