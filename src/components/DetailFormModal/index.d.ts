@@ -2,9 +2,13 @@ import React from 'react';
 import { ModalProps } from 'antd/lib/modal';
 
 export interface DetailFormModalProps {
-  drawerConfig: ModalProps;
+  modalConfig: ModalProps;
   itemsConfig: any[];
   loading?: boolean;
+  itemsWrapperStyle?: StyleSheet;
+  itemsWrapperClassName?: string;
+  children?: JSX.Element;
+  cols?: number;
 }
 
 export default class DetailFormDrawer extends React.Component<DetailFormModalProps, any> {}
