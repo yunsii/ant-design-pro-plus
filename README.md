@@ -43,7 +43,7 @@
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
 
-可通过 `defaultSettings.js` 中的 `pageTabs` 配置是否开启标签页功能，默认开启。
+可通过 [defaultSettings](/src/defaultSettings.js) 中的 `pageTabs` 配置是否开启标签页功能，默认开启。
 
 关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)
 
@@ -51,7 +51,7 @@
 
 * 默认开启 hideOnSinglePage
 * 间隔行着色
-* 多选功能可选，通过 checkable 控制
+* 多选功能可选，通过 `checkable` 控制
 
 ### antd-form-pro 表单功能增强
 
@@ -61,9 +61,13 @@
 
 基于 antd-form-pro 实现的详情表单抽屉，参数定义可参见 [DetailFormDrawer/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) ，结合 ant-form-pro 的具体使用可参考 [DetailFormDrawer/index.js](/src/components/DetailFormDrawer/index.js) 。
 
+### DetailFormModal 详情模态框组件
+
+基于 antd-form-pro 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) 。
+
 ### QueryPanel 查询面板组件
 
-基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。
+基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。
 
 ### base-models/curd 生成基础增删改查 model
 
@@ -78,6 +82,7 @@
 * base-models/curd
 * antd-form-pro
 * DetailFormDrawer
+* DetailFormModal
 * QueryPanel
 * StandardTable
 
@@ -104,11 +109,19 @@
 | columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | data | StandardTable data | any | {} |
 | fetchLoading | 请求列表 loading | boolean | - |
+| detailLoading | 请求 model 详情 | boolean | - |
 | createLoading | 创建 model loading | boolean | - |
 | updateLoading | 更新 model loading | boolean | - |
-| setFormItemsConfig | 配置新建和更新表单数据 | (detail: {}, mode: string) => any[] | - |
+| setFormItemsConfig | 配置新建、详情和更新表单数据 | (detail: {}, mode: string) => any[] | - |
+| afterPopupNotVisible | 关闭弹窗后事件 | () => void | - |
+| createButtonName | 新建按钮名称 | string | - |
+| createTitle | 新建窗口名称 | string | - |
+| detailTitle | 详情窗口名称 | string | - |
+| updateTitle | 编辑窗口名称 | string | - |
 | dipatch | dva 注入的 dispatch 函数 | Function | - |
 | interceptors | 拦截器 | [interceptors](#interceptors) | - |
+| containerConfig | 弹窗配置，可选择 modal 或 drawer ，并配置 | {} | - |
+| queryPanelProps | 查询面板配置 | QueryPanelProps | - |
 
 ##### interceptors
 
@@ -116,4 +129,5 @@
 | --- | --- | --- | --- |
 | updateFieldsValue | 新建和更新表单处理拦截，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any) => any | - |
 | handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
+| handleUpdateClick | 编辑点击事件拦截 | (record: any) => any | - |
 | handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
