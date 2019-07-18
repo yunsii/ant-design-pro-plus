@@ -6,13 +6,24 @@ import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 export type modelConfig = {
   fetchMethod?: Function;
   createMethod?: Function;
+  afterCreateActions?: string[];
   updateMethod?: Function;
+  afterUpdateActions?: string[];
   deleteMethod?: Function;
+  afterDeleteActions?: string[];
 };
 
 export default (
   namespace: string,
-  { fetchMethod, createMethod, updateMethod, deleteMethod }: modelConfig
+  {
+    fetchMethod,
+    createMethod,
+    afterCreateActions,
+    updateMethod,
+    afterUpdateActions,
+    deleteMethod,
+    afterDeleteActions,
+  }: modelConfig
 ) => ({
   namespace,
 
@@ -31,11 +42,16 @@ export default (
         payload: response,
       });
     },
-    *create({ payload, callback }, { call }) {
+    *create({ payload, callback }, { call, put, select }) {
       const response = yield call(createMethod, payload);
       if (isCommitSuccessNew(response)) {
         message.success('创建成功');
         callFunctionIfFunction(callback)();
+        for (let i = 0; i < afterCreateActions.length; i += 1) {
+          yield put({
+            type: afterCreateActions[i],
+          });
+        }
         return;
       }
       callFunctionIfFunction(callback)(response);
@@ -52,15 +68,25 @@ export default (
           payload: list.map(item => (item.id === data.id ? data : item)),
         });
         callFunctionIfFunction(callback)();
+        for (let i = 0; i < afterUpdateActions.length; i += 1) {
+          yield put({
+            type: afterUpdateActions[i],
+          });
+        }
         return;
       }
       callFunctionIfFunction(callback)(response);
     },
-    *delete({ id, callback }, { call }) {
+    *delete({ id, callback }, { call, put, select }) {
       const response = yield call(deleteMethod, id);
       if (isCommitSuccessNew(response)) {
         message.success('删除成功');
         callFunctionIfFunction(callback)();
+        for (let i = 0; i < afterDeleteActions.length; i += 1) {
+          yield put({
+            type: afterDeleteActions[i],
+          });
+        }
         return;
       }
       callFunctionIfFunction(callback)(response);
