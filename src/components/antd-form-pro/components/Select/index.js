@@ -10,7 +10,7 @@ class CustomSelect extends PureComponent {
       this.props.handleChange(value, option);
     }
     if (this.props.onChange) {
-      this.props.onChange(value);
+      this.props.onChange(value, option);
     }
   };
 
@@ -22,16 +22,17 @@ class CustomSelect extends PureComponent {
     return (
       <Spin spinning={loading || false}>
         <Select value={value} placeholder="请选择" onChange={this.handleChange} {...rest}>
-          {options.map(item => (
-            <Option
-              key={item.value}
-              value={item.value}
-              disabled={item.disabled}
-              style={item.disabled ? disabledStyle : {}}
-            >
-              {item.text}
-            </Option>
-          ))}
+          {options &&
+            options.map(item => (
+              <Option
+                key={item.value}
+                value={item.value}
+                disabled={item.disabled}
+                style={item.disabled ? disabledStyle : {}}
+              >
+                {item.text}
+              </Option>
+            ))}
         </Select>
       </Spin>
     );
