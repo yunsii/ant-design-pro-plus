@@ -14,11 +14,11 @@
 * [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 * [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
-* [DetailFormDrawer 详情抽屉组件](#DetailFormDrawer-详情抽屉组件)
-* [DetailFormModal 详情模态框组件](#DetailFormModal-详情模态框组件)
-* [QueryPanel 查询面板组件](#QueryPanel-查询面板组件)
-* [base-models/curd 生成基础增删改查 model](#base-models/curd-基础增删改查-model)
-* [BasePage/Curd 基础增删改查页面组件](#BasePage/Curd-基础增删改查页面组件)
+* [DetailFormDrawer 详情抽屉](#DetailFormDrawer-详情抽屉)
+* [DetailFormModal 详情模态框](#DetailFormModal-详情模态框)
+* [QueryPanel 查询面板](#QueryPanel-查询面板)
+* [base-models/curd 生成基础增删改查 model](#base-models/curd-生成基础增删改查-model)
+* [BasePage/Curd 基础增删改查页面](#BasePage/Curd-基础增删改查页面)
 
 ## 功能实现概述☁️
 
@@ -58,15 +58,15 @@
 
 新增组件 ant-form-pro ，可配置化实现表单功能。支持的组件与配置方式可参考 [map.js](/src/pages/Enhance/CurdPage/map.js) ，使用方式参考 [DetailFormDrawer 详情表单抽屉组件](#DetailFormDrawer-详情抽屉组件)。
 
-### DetailFormDrawer 详情抽屉组件
+### DetailFormDrawer 详情抽屉
 
 基于 antd-form-pro 实现的详情表单抽屉，参数定义可参见 [DetailFormDrawer/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) ，结合 ant-form-pro 的具体使用可参考 [DetailFormDrawer/index.js](/src/components/DetailFormDrawer/index.js) 。
 
-### DetailFormModal 详情模态框组件
+### DetailFormModal 详情模态框
 
 基于 antd-form-pro 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) 。
 
-### QueryPanel 查询面板组件
+### QueryPanel 查询面板
 
 基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。
 
@@ -74,7 +74,7 @@
 
 通过 `namespace` 和 `modelConfig` 配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。
 
-### BasePage/Curd 基础增删改查页面组件
+### BasePage/Curd 基础增删改查页面
 
 ![base-curd.png](https://i.loli.net/2019/07/12/5d28976248c5c94749.png)
 
