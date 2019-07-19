@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { Model } from 'dva';
 
 import { getTableList /* getData*/, isCommitSuccessNew } from '@/utils/model';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
@@ -12,8 +13,8 @@ export type modelConfig = {
   afterUpdateActions?: string[];
   deleteMethod?: Function;
   afterDeleteActions?: string[];
-  extraEffects?: {};
-  extraReducers?: {};
+  extraEffects?: Model['effects'];
+  extraReducers?: Model['reducers'];
 };
 
 export default (
