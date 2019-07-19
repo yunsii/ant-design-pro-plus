@@ -1,10 +1,12 @@
 import React from 'react';
 import { ModalProps } from 'antd/lib/modal';
+import { FormProps } from 'antd/lib/form';
+import { ItemConfig } from '@/components/antd-form-pro';
 
 export interface DetailFormModalProps {
   modalConfig: ModalProps;
   loading?: boolean;
-  setItemsConfig: (form) => any[];
+  setItemsConfig: (form: FormProps['form']) => ItemConfig[];
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;
