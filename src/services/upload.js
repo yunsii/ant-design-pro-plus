@@ -9,3 +9,15 @@ export default async function uploadFile(file) {
     data: fd,
   });
 }
+
+export function isUploadSuccess(response) {
+  const { data } = response;
+  return data;
+}
+
+export function getValueForFormItemFromResponse(response) {
+  const {
+    data: { path },
+  } = response;
+  return path;
+}

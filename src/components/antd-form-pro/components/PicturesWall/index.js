@@ -1,10 +1,10 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import './index.css';
-import { Icon, Modal } from 'antd';
+import { Icon, Modal, message } from 'antd';
 import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
-import CustomUpload from '../Upload';
+import CustomUpload, { processFileList, filterFileList } from '../Upload';
 
 export function getPicturesLink(fileList) {
   if (_isArray(fileList) && fileList.length === 1) {
@@ -61,17 +61,11 @@ class PicturesWall extends React.Component {
   };
 
   handleChange = ({ fileList }) => {
-    const formatFiles = fileList.map(item => ({
-      uid: item.uid,
-      name: item.name,
-      status: item.status,
-      url: item.response ? item.response.data.path : '', // uploading 状态 无 response 属性
-    }));
-
+    const formatFiles = processFileList(fileList);
     if (this.props.onChange) {
-      this.props.onChange(formatFiles);
+      this.props.onChange(filterFileList(formatFiles));
     } else {
-      this.setState({ fileList: formatFiles });
+      this.setState({ fileList: filterFileList(formatFiles) });
     }
   };
 
@@ -93,6 +87,13 @@ class PicturesWall extends React.Component {
           onChange={this.handleChange}
           listType="picture-card"
           disabled={disabled}
+          onError={() => {
+            message.error('上传失败');
+            const { fileList: afterErrorFileList } = this.state;
+            this.setState({
+              fileList: filterFileList(afterErrorFileList),
+            });
+          }}
         >
           {fileList.length >= 1 ? null : uploadButton}
         </CustomUpload>

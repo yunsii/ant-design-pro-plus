@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
-import { Upload, Icon } from 'antd';
+import { Upload, Icon, message } from 'antd';
 import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
-
-import uploadFile from '@/services/upload';
+import uploadFile, { getValueForFormItemFromResponse, isUploadSuccess } from '@/services/upload';
 
 const { Dragger } = Upload;
 
+export function processFileList(fileList) {
+  return fileList.map(item => {
+    return {
+      ...item,
+      url: item.response ? getValueForFormItemFromResponse(item.response) : '', // uploading 状态 无 response 属性
+    };
+  });
+}
+
+export function filterFileList(fileList) {
+  return fileList.filter(item => item.url);
+}
+
 async function customRequest({ file, onSuccess, onError }) {
   const response = await uploadFile(file);
-  if (response) {
+  if (isUploadSuccess(response)) {
     onSuccess(response, file);
   } else {
     onError(response);
@@ -49,20 +61,12 @@ export class CustomDragger extends Component {
     if (filesLimit <= fileList.length) {
       newFileList = newFileList.slice(-1);
     }
-    const formatFiles = newFileList.map(item => {
-      const path = item.response ? item.response.data.path : '';
-      return {
-        uid: item.uid,
-        name: setFileNameByPath(path),
-        status: item.status,
-        url: path, // uploading 状态 无 response 属性
-      };
-    });
+    const formatFiles = processFileList(newFileList);
 
     if (onChange) {
-      onChange(formatFiles);
+      onChange(filterFileList(formatFiles));
     } else {
-      this.setState({ fileList: formatFiles });
+      this.setState({ fileList: filterFileList(formatFiles) });
     }
   };
 
@@ -76,6 +80,13 @@ export class CustomDragger extends Component {
         customRequest={customRequest}
         onChange={this.handleChange}
         fileList={fileList}
+        onError={() => {
+          message.error('上传失败');
+          const { fileList: afterErrorFileList } = this.state;
+          this.setState({
+            fileList: filterFileList(afterErrorFileList),
+          });
+        }}
       >
         <p className="ant-upload-drag-icon">
           <Icon type="inbox" />
@@ -91,12 +102,12 @@ export class CustomDragger extends Component {
 }
 
 export default function CustomUpload(props) {
-  const { accept, listType, fileList, onPreview, onChange, children, disabled } = props;
+  const { accept, listType, fileList, onPreview, onChange, onError, children, disabled } = props;
   return (
     <Upload
       accept={accept}
       name="image"
-      onError={err => console.log(err)}
+      onError={onError}
       customRequest={customRequest}
       listType={listType || 'text'}
       fileList={fileList}
