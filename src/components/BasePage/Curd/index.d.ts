@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { PaginationConfig } from 'antd/lib/table';
+import { PaginationConfig, ColumnProps } from 'antd/lib/table';
 import { FormProps } from 'antd/lib/form';
 import { QueryPanelProps } from '@/components/QueryPanel';
+import { ItemConfig } from '@/components/antd-form-pro';
 import { DetailFormDrawerProps } from '@/components/DetailFormDrawer';
 import { DetailFormModalProps } from '@/components/DetailFormModal';
 
@@ -45,7 +46,7 @@ export declare type CurdProps = {
   updateLoading: boolean;
   deleteLoading?: boolean;
   dipatch: Function;
-  queryArgsConfig: any[];
+  queryArgsConfig: ItemConfig[];
   createButtonName: string;
   tableConfig: {
     columns: any[];
@@ -59,7 +60,7 @@ export declare type CurdProps = {
     detail: {},
     mode: 'create' | 'detail' | 'update',
     form: FormProps['form']
-  ) => any[];
+  ) => ItemConfig[];
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any) => any;
     handleDetailClick?: (record: any) => any;
