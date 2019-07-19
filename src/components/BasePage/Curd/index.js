@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Icon, Button, Dropdown, Menu } from 'antd';
+import { Card, Form, Button } from 'antd';
 import {
   renderActions,
   transferBoolArrayToStringArray,
@@ -25,6 +25,8 @@ const getValue = obj =>
 
 @Form.create()
 class Curd extends PureComponent {
+  curd;
+
   state = {
     createVisible: false,
     updateVisible: false,
@@ -34,6 +36,7 @@ class Curd extends PureComponent {
   };
 
   componentDidMount() {
+    this.curd = this;
     const { namespace, dispatch } = this.props;
     dispatch({
       type: `${namespace}/fetch`,
@@ -296,6 +299,22 @@ class Curd extends PureComponent {
     return ['create', {}];
   };
 
+  renderChildren() {
+    const { children } = this.props;
+    return React.Children.map(children, child => {
+      if (child) {
+        const { type: childType } = child;
+        if (childType.preventCurd || typeof childType === 'string') {
+          return child;
+        }
+        return React.cloneElement(child, {
+          __curd__: this.curd,
+        });
+      }
+      return child;
+    });
+  }
+
   render() {
     const {
       queryArgsConfig = [],
@@ -314,12 +333,6 @@ class Curd extends PureComponent {
     const { selectedRows } = this.state;
     const { type, ...restContainerConfig } = containerConfig;
     const [mode, detail] = this.setContainerModeAndDetail();
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
 
     const mergeContainerConfig = {
       type: type || 'modal',
@@ -345,16 +358,7 @@ class Curd extends PureComponent {
             <Button icon="plus" type="primary" onClick={() => this.handleVisible('create', true)}>
               {createButtonName}
             </Button>
-            {selectedRows.length > 0 && (
-              <span>
-                <Button>批量操作</Button>
-                <Dropdown overlay={menu}>
-                  <Button>
-                    更多操作 <Icon type="down" />
-                  </Button>
-                </Dropdown>
-              </span>
-            )}
+            {this.renderChildren()}
           </div>
           <StandardTable
             rowKey={row => row.id}
