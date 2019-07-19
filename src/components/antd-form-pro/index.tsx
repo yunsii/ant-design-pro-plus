@@ -37,7 +37,7 @@ function renderInputComponent(inputConfig) {
     case 'datetime':
       return (
         <CustomDatePicker
-          style={inputComponentStyle}
+          style={{ minWidth: 'unset', ...inputComponentStyle }}
           format="YYYY-MM-DD HH:mm:ss"
           showTime
           {...componentProps}
