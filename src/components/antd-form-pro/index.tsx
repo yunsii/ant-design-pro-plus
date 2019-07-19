@@ -134,7 +134,7 @@ export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout
     } = item;
     const { style = {}, dense, extra, wrapperCol, labelCol, ...restFormItemProps } = formItemProps;
     const { rules = [], ...restFieldProps } = fieldProps;
-    const itemLayout = wrapperCol && labelCol ? { wrapperCol, labelCol } : {};
+    const itemLayout = wrapperCol && labelCol ? { wrapperCol, labelCol } : null;
 
     const layout = itemLayout || globalLayout || defaultLayout;
 
