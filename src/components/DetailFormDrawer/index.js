@@ -3,12 +3,7 @@ import { Spin, Button, Drawer, Form } from 'antd';
 import { FormProvider, createFormItems } from '@/components/antd-form-pro';
 
 const DetailFormDrawer = props => {
-  const {
-    drawerConfig: { onOk: handleOk, ...restDrawerConfig },
-    form,
-    itemsConfig,
-    loading,
-  } = props;
+  const { drawerConfig, onOk: handleOk, form, itemsConfig, loading } = props;
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
@@ -19,7 +14,7 @@ const DetailFormDrawer = props => {
   };
 
   return (
-    <Drawer destroyOnClose width={560} {...restDrawerConfig}>
+    <Drawer destroyOnClose width={560} {...drawerConfig}>
       <Spin spinning={!loading ? false : loading}>
         <FormProvider value={form}>{createFormItems(itemsConfig)}</FormProvider>
         {handleOk ? (
@@ -35,7 +30,7 @@ const DetailFormDrawer = props => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={restDrawerConfig.onClose} style={{ marginRight: 8 }}>
+            <Button onClick={drawerConfig.onClose} style={{ marginRight: 8 }}>
               取消
             </Button>
             <Button onClick={okHandle} type="primary">
