@@ -9,10 +9,12 @@ import styles from './index.less';
 
 @connect(({ [Namespace]: namespace, loading }) => ({
   data: namespace.data,
-  fetchLoading: loading.effects[`${namespace}/fetch`],
-  createLoading: loading.effects[`${namespace}/create`],
-  updateLoading: loading.effects[`${namespace}/update`],
-  deleteLoading: loading.effects[`${namespace}/delete`],
+  detail: namespace.detail,
+  fetchLoading: loading.effects[`${Namespace}/fetch`],
+  detailLoading: loading.effects[`${Namespace}/detail`],
+  createLoading: loading.effects[`${Namespace}/create`],
+  updateLoading: loading.effects[`${Namespace}/update`],
+  deleteLoading: loading.effects[`${Namespace}/delete`],
 }))
 class TableList extends PureComponent {
   queryArgsConfig = [

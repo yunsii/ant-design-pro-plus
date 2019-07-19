@@ -1,3 +1,5 @@
+import { delay } from 'roadhog-api-doc';
+
 const getNotices = (req, res) =>
   res.json([
     {
@@ -52,6 +54,20 @@ const getNotices = (req, res) =>
     },
   ]);
 
-export default {
-  'GET /api/enhance/curd-page': getNotices,
+const getDetail = (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  res.json({
+    data: {
+      name: 'XXX',
+      textarea: id,
+    },
+  });
 };
+const proxy = {
+  'GET /api/enhance/curd-page': getNotices,
+  'GET /api/enhance/curd-page/:id': getDetail,
+};
+
+export default delay(proxy, 1200);

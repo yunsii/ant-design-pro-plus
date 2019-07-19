@@ -1,5 +1,11 @@
 import curdModel from '@/base-models/curd';
-import { fetchCurdPage, createCurdPage, updateCurdPage, deleteCurdPage } from '@/services/curdPage';
+import {
+  fetchCurdPage,
+  detailCurdPage,
+  createCurdPage,
+  updateCurdPage,
+  deleteCurdPage,
+} from '@/services/curdPage';
 import { getTableList } from '@/utils/model';
 
 export const Namespace = 'curdPage';
@@ -7,6 +13,7 @@ export const Namespace = 'curdPage';
 const model = curdModel(Namespace, {
   fetchMethod: fetchCurdPage,
   afterFetchActions: ['test'],
+  detailMethod: detailCurdPage,
   createMethod: createCurdPage,
   updateMethod: updateCurdPage,
   deleteMethod: deleteCurdPage,
