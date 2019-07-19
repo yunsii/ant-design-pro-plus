@@ -5,8 +5,17 @@ import { FormProvider, createFormItems } from '@/components/antd-form-pro';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
 
+const RowCount = [1, 2, 3, 4, 6, 8, 12, 24];
+
 const addAllowClearToItemsConfig = itemsConfig =>
   itemsConfig.map(item => ({ ...item, allowClear: true }));
+
+function calculateSpan(rowCount) {
+  if (RowCount.includes(rowCount)) {
+    return 24 / rowCount;
+  }
+  throw new Error(`QueryPanel: rowCount value only one of [${RowCount}]`);
+}
 
 @Form.create()
 class QueryPanel extends PureComponent {
@@ -48,7 +57,7 @@ class QueryPanel extends PureComponent {
       rowProps = {},
       colProps: customColProps,
     } = this.props;
-    let colProps = { span: 24 / rowCount };
+    let colProps = { span: calculateSpan(rowCount) };
     if (customColProps) {
       colProps = customColProps;
     }
