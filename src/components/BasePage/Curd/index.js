@@ -327,23 +327,22 @@ class Curd extends PureComponent {
       setFormItemsConfig,
       form,
       tableConfig: { columns, checkable },
-      containerConfig = {},
+      popupType = 'modal',
+      popupProps = {},
       queryPanelProps = {},
     } = this.props;
     const { selectedRows } = this.state;
-    const { type, ...restContainerConfig } = containerConfig;
     const [mode, detail] = this.setContainerModeAndDetail();
+    const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
 
-    const mergeContainerConfig = {
-      type: type || 'modal',
-      containerConfig: {
-        ...restContainerConfig,
-        title: this.getContainerTitle(),
-        visible: this.getVisibleState().includes('1'),
-        loading: createLoading || detailLoading || updateLoading,
-        onClose: this.setVisibleToFalse,
-        onOk: this.handleOk,
-      },
+    const mergePopupProps = {
+      ...modalConfig,
+      ...drawerConfig,
+      title: this.getContainerTitle(),
+      visible: this.getVisibleState().includes('1'),
+      onCancel: this.setVisibleToFalse,
+      onClose: this.setVisibleToFalse,
+      onOk: this.handleOk,
     };
 
     return (
@@ -371,20 +370,19 @@ class Curd extends PureComponent {
             checkable={checkable}
           />
         </div>
-        {mergeContainerConfig.type === 'modal' ? (
+        {popupType === 'modal' ? (
           <DetailFormModal
-            modalConfig={{
-              ...mergeContainerConfig.containerConfig,
-              onCancel: mergeContainerConfig.containerConfig.onClose,
-            }}
+            modalConfig={mergePopupProps}
+            {...restPopupProps}
+            loading={createLoading || detailLoading || updateLoading}
             itemsConfig={setFormItemsConfig(detail, mode, form)}
-            cols={2}
           />
         ) : (
           <DetailFormDrawer
-            drawerConfig={{
-              ...mergeContainerConfig.containerConfig,
-            }}
+            drawerConfig={mergePopupProps}
+            {...restPopupProps}
+            loading={createLoading || detailLoading || updateLoading}
+            onOk={this.handleOk}
             itemsConfig={setFormItemsConfig(detail, mode, form)}
           />
         )}
