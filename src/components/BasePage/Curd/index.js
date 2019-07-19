@@ -342,7 +342,6 @@ class Curd extends PureComponent {
       visible: this.getVisibleState().includes('1'),
       onCancel: this.setVisibleToFalse,
       onClose: this.setVisibleToFalse,
-      onOk: this.handleOk,
     };
 
     return (
@@ -372,7 +371,10 @@ class Curd extends PureComponent {
         </div>
         {popupType === 'modal' ? (
           <DetailFormModal
-            modalConfig={mergePopupProps}
+            modalConfig={{
+              ...mergePopupProps,
+              onOk: this.handleOk,
+            }}
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
             itemsConfig={setFormItemsConfig(detail, mode, form)}
