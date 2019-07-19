@@ -3,15 +3,16 @@ import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon } from 'antd';
 
 import BaseCurd from '@/components/BasePage/Curd';
+import { Namespace } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
 
-@connect(({ curdPage, loading }) => ({
-  data: curdPage.data,
-  fetchLoading: loading.effects['curdPage/fetch'],
-  createLoading: loading.effects['curdPage/create'],
-  updateLoading: loading.effects['curdPage/update'],
-  deleteLoading: loading.effects['curdPage/delete'],
+@connect(({ [Namespace]: namespace, loading }) => ({
+  data: namespace.data,
+  fetchLoading: loading.effects[`${namespace}/fetch`],
+  createLoading: loading.effects[`${namespace}/create`],
+  updateLoading: loading.effects[`${namespace}/update`],
+  deleteLoading: loading.effects[`${namespace}/delete`],
 }))
 class TableList extends PureComponent {
   queryArgsConfig = [
@@ -78,7 +79,7 @@ class TableList extends PureComponent {
   render() {
     return (
       <BaseCurd
-        namespace="curdPage"
+        namespace={Namespace}
         queryArgsConfig={this.queryArgsConfig}
         setFormItemsConfig={setFormItemsConfig}
         tableConfig={{
