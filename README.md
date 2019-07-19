@@ -128,34 +128,48 @@
 
 #### API
 
-##### BasePage/Curd
-
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | namespace | model 名称空间 | string | - |
-| queryArgsConfig | 查询参数配置，参考 [map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
-| columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | data | StandardTable data | any | {} |
+| columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | fetchLoading | 请求列表 loading | boolean | - |
-| detailLoading | 请求 model 详情 | boolean | - |
 | createLoading | 创建 model loading | boolean | - |
+| detailLoading | 请求 model 详情 | boolean | - |
 | updateLoading | 更新 model loading | boolean | - |
-| setFormItemsConfig | 配置新建、详情和更新表单数据 | (detail: {}, mode: string) => any[] | - |
-| afterPopupNotVisible | 关闭弹窗后事件 | () => void | - |
+| deleteLoading | 删除 model loading | boolean | - |
+| dipatch | dva 注入的 dispatch 函数 | Function | - |
+| queryArgsConfig | 查询参数配置，参考 [map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
+| queryPanelProps | 查询面板配置 | [QueryPanelProps](/src/components/QueryPanel/index.d.ts) | - |
 | createButtonName | 新建按钮名称 | string | - |
+| tableConfig | 表格配置 | [tableConfig](#tableConfig) | - |
+| setFormItemsConfig | 配置表单数据 | (detail: {}, mode: string, form) => any[] | - |
+| interceptors | 拦截器 | [interceptors](#interceptors) | - |
+| afterPopupNotVisible | 关闭弹窗后事件 | () => void | - |
 | createTitle | 新建窗口名称 | string | - |
 | detailTitle | 详情窗口名称 | string | - |
 | updateTitle | 编辑窗口名称 | string | - |
-| dipatch | dva 注入的 dispatch 函数 | Function | - |
-| interceptors | 拦截器 | [interceptors](#interceptors) | - |
-| containerConfig | 弹窗配置，可选择 modal 或 drawer ，并配置 | {} | - |
-| queryPanelProps | 查询面板配置 | QueryPanelProps | - |
+| updateTitle | 编辑窗口名称 | string | - |
+| popupType | 弹窗类型 | 'modal' \| 'drawer' | - |
+| popupProps | 弹窗配置，根据 `popupType` 配置 | [CustomDetailFormDrawerProps](/src/components/BasePage/Curd/CustomDetailFormDrawerProps.d.ts) | [CustomDetailFormModalProps](/src/components/BasePage/Curd/CustomDetailFormModalProps.d.ts) | - |
+| children | 紧跟新建按钮后的 children ，会被注入 `__curd__` 实例属性，可访问控制该页面组件的所有属性 | React.ReactChildren | - |
 
-##### interceptors
+#### tableConfig
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| updateFieldsValue | 新建和更新表单处理拦截，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any) => any | - |
+| columns | 表格列模型配置 | [Column](https://ant.design/components/table-cn/#Column) | - |
+| checkable | 是否开启多选 | boolean | `true` |
+| showActionsCount | 除更多外需要展示的操作个数 | number | 3 |
+| extraActions | 除 **详情（4）**，**编辑（8）**，**删除（12）** 外，可自行配置额外操作。注意，数字是操作的 `key` ，根据 `key` 不同，会按升序排列 | [ActionType](/src/components/BasePage/Curd/ActionType.d.ts) | - |
+| confirmKeys | 需要弹出确认窗口的 `key` 数组 | number[] | `[12]` |
+| hideActions | 隐藏操作的 `key` 数组 | number[] | - |
+
+#### interceptors
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any) => any | - |
 | handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
 | handleUpdateClick | 编辑点击事件拦截 | (record: any) => any | - |
 | handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
