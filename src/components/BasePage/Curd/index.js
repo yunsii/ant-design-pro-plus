@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Form, Button } from 'antd';
+import { Card, Button } from 'antd';
 import {
   renderActions,
   transferBoolArrayToStringArray,
@@ -23,7 +23,6 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
-@Form.create()
 class Curd extends PureComponent {
   curd;
 
@@ -160,11 +159,6 @@ class Curd extends PureComponent {
       type: `${namespace}/fetch`,
       payload: params,
     });
-  };
-
-  handleFormReset = () => {
-    const { form } = this.props;
-    form.resetFields();
   };
 
   handleMenuClick = event => {
@@ -325,7 +319,6 @@ class Curd extends PureComponent {
       detailLoading,
       updateLoading,
       setFormItemsConfig,
-      form,
       tableConfig: { columns, checkable },
       popupType = 'modal',
       popupProps = {},
@@ -377,7 +370,7 @@ class Curd extends PureComponent {
             }}
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
-            itemsConfig={setFormItemsConfig(detail, mode, form)}
+            setItemsConfig={form => setFormItemsConfig(detail, mode, form)}
           />
         ) : (
           <DetailFormDrawer
@@ -385,7 +378,7 @@ class Curd extends PureComponent {
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
             onOk={this.handleOk}
-            itemsConfig={setFormItemsConfig(detail, mode, form)}
+            setItemsConfig={form => setFormItemsConfig(detail, mode, form)}
           />
         )}
       </Card>

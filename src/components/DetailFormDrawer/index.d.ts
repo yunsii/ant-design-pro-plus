@@ -4,7 +4,7 @@ import { DrawerProps } from 'antd/lib/drawer';
 export interface DetailFormDrawerProps {
   drawerConfig: DrawerProps;
   onOk?: Function;
-  itemsConfig: any[];
+  setItemsConfig: (form) => any[];
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;

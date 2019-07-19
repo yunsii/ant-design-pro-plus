@@ -8,7 +8,7 @@ function DetailFormModal(props) {
     modalConfig: { onOk: handleOk, ...restModalConfig },
     cols = 1,
     children,
-    itemsConfig,
+    setItemsConfig,
     itemsLayout,
     itemsWrapperStyle,
     itemsWrapperClassName,
@@ -23,6 +23,7 @@ function DetailFormModal(props) {
       handleOk(fieldsValue);
     });
   };
+  const itemsConfig = setItemsConfig(form);
 
   const colsItems =
     cols === 1 ? (

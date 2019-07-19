@@ -4,7 +4,7 @@ import { ModalProps } from 'antd/lib/modal';
 export interface DetailFormModalProps {
   modalConfig: ModalProps;
   loading?: boolean;
-  itemsConfig: any[];
+  setItemsConfig: (form) => any[];
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;

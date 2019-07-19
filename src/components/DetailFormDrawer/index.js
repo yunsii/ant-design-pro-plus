@@ -3,7 +3,8 @@ import { Spin, Button, Drawer, Form } from 'antd';
 import { FormProvider, createFormItems } from '@/components/antd-form-pro';
 
 const DetailFormDrawer = props => {
-  const { drawerConfig, onOk: handleOk, form, itemsConfig, itemsLayout, loading } = props;
+  const { drawerConfig, onOk: handleOk, form, setItemsConfig, itemsLayout, loading } = props;
+  const itemsConfig = setItemsConfig(form);
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {
