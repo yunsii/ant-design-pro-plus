@@ -5,6 +5,10 @@ export interface DetailFormDrawerProps {
   drawerConfig: DrawerProps;
   onOk?: Function;
   itemsConfig: any[];
+  itemsLayout?: {
+    labelCol?: any;
+    wrapperCol?: any;
+  };
   loading?: boolean;
 }
 

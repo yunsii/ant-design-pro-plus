@@ -3,8 +3,12 @@ import { ModalProps } from 'antd/lib/modal';
 
 export interface DetailFormModalProps {
   modalConfig: ModalProps;
-  itemsConfig: any[];
   loading?: boolean;
+  itemsConfig: any[];
+  itemsLayout?: {
+    labelCol?: any;
+    wrapperCol?: any;
+  };
   itemsWrapperStyle?: StyleSheet;
   itemsWrapperClassName?: string;
   children?: JSX.Element;

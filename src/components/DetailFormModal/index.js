@@ -9,6 +9,7 @@ function DetailFormModal(props) {
     cols = 1,
     children,
     itemsConfig,
+    itemsLayout,
     itemsWrapperStyle,
     itemsWrapperClassName,
     loading,
@@ -25,10 +26,10 @@ function DetailFormModal(props) {
 
   const colsItems =
     cols === 1 ? (
-      createFormItems(itemsConfig)
+      createFormItems(itemsConfig, itemsLayout)
     ) : (
       <Row type="flex">
-        {createFormItems(itemsConfig).map(item => {
+        {createFormItems(itemsConfig, itemsLayout).map(item => {
           return (
             <Col span={24 / cols} key={item.key}>
               {item}
