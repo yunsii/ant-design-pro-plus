@@ -1,8 +1,8 @@
 import React from 'react';
 import { TreeSelect } from 'antd';
 
-export default function setFormItemsConfig(detail = {}, mode, form) {
-  console.log(detail, mode, form);
+export default function setFormItemsConfig(detail = {}, mode) {
+  // console.log(detail, mode, form);
   return [
     {
       type: 'custom',

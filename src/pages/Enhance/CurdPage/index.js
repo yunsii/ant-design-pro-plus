@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Avatar, message } from 'antd';
+import { Avatar, message, Button, Menu, Dropdown, Icon } from 'antd';
 
 import BaseCurd from '@/components/BasePage/Curd';
 import setFormItemsConfig from './map';
@@ -97,9 +97,37 @@ class TableList extends PureComponent {
           maxCount: 2,
         }}
         {...this.props}
-      />
+      >
+        <TableActions />
+      </BaseCurd>
     );
   }
 }
 
 export default TableList;
+
+function TableActions(props) {
+  const { __curd__ } = props;
+  if (!__curd__) return null;
+  const {
+    state: { selectedRows },
+  } = __curd__;
+  const menu = (
+    <Menu>
+      <Menu.Item key="remove">删除</Menu.Item>
+      <Menu.Item key="approval">批量审批</Menu.Item>
+    </Menu>
+  );
+  return (
+    selectedRows.length > 0 && (
+      <span>
+        <Button>批量操作</Button>
+        <Dropdown overlay={menu}>
+          <Button>
+            更多操作 <Icon type="down" />
+          </Button>
+        </Dropdown>
+      </span>
+    )
+  );
+}
