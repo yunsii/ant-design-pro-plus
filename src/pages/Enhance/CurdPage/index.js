@@ -91,7 +91,13 @@ class TableList extends PureComponent {
             },
           ],
         }}
-        containerConfig={{ type: 'drawer' }}
+        popupType="modal"
+        popupProps={{
+          modalConfig: {
+            width: 900,
+          },
+          cols: 3,
+        }}
         queryPanelProps={{
           rowCount: 4,
           maxCount: 2,
