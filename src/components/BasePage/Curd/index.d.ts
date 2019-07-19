@@ -1,38 +1,11 @@
 import * as React from 'react';
 import { PaginationConfig, ColumnProps } from 'antd/lib/table';
 import { FormProps } from 'antd/lib/form';
+import { ActionType } from './ActionType';
 import { QueryPanelProps } from '@/components/QueryPanel';
 import { ItemConfig } from '@/components/antd-form-pro';
-import { DetailFormDrawerProps } from '@/components/DetailFormDrawer';
-import { DetailFormModalProps } from '@/components/DetailFormModal';
-
-export type ActionType = {
-  key: number;
-  title: string;
-  handleClick: (record: any) => void;
-};
-
-export interface CustomDetailFormDrawerProps extends DetailFormDrawerProps {
-  drawerConfig: {
-    title?: never;
-    visible?: never;
-    onClose?: never;
-  };
-  onOk?: never;
-  itemsConfig: never;
-  loading?: never;
-}
-
-export interface CustomDetailFormModalProps extends DetailFormModalProps {
-  modalConfig: {
-    title?: never;
-    visible?: never;
-    onClose?: never;
-    onOk?: never;
-  };
-  itemsConfig: never;
-  loading?: never;
-}
+import { CustomDetailFormDrawerProps } from './CustomDetailFormDrawerProps';
+import { CustomDetailFormModalProps } from './CustomDetailFormModalProps';
 
 export declare type CurdProps = {
   namespace: string;
@@ -47,6 +20,7 @@ export declare type CurdProps = {
   deleteLoading?: boolean;
   dipatch: Function;
   queryArgsConfig: ItemConfig[];
+  queryPanelProps: QueryPanelProps;
   createButtonName: string;
   tableConfig: {
     columns: any[];
@@ -73,7 +47,7 @@ export declare type CurdProps = {
   updateTitle?: string;
   popupType: 'modal' | 'drawer';
   popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
-  queryPanelProps: QueryPanelProps;
+  children?: React.ReactChildren;
 };
 interface CurdState {
   createVisible: boolean;
