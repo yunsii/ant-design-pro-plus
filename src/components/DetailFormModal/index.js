@@ -6,11 +6,11 @@ import { FormProvider, createFormItems } from '@/components/antd-form-pro';
 function DetailFormModal(props) {
   const {
     modalConfig: { onOk: handleOk, ...restModalConfig },
+    cols = 1,
+    children,
     itemsConfig,
     itemsWrapperStyle,
     itemsWrapperClassName,
-    children,
-    cols = 1,
     loading,
     form,
   } = props;
