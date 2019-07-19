@@ -28,6 +28,7 @@ class Curd extends PureComponent {
 
   state = {
     createVisible: false,
+    detailVisible: false,
     updateVisible: false,
     selectedRows: [],
     formValues: {},
@@ -54,6 +55,8 @@ class Curd extends PureComponent {
         extraActions = [],
         hideActions = [],
       },
+      dispatch,
+      namespace,
     } = this.props;
     const { handleDetailClick, handleDeleteClick, handleUpdateClick } = interceptors;
     const actions = [
@@ -61,6 +64,12 @@ class Curd extends PureComponent {
         key: 4,
         title: detailTitle,
         handleClick: () => {
+          if (this.doFetchDetail()) {
+            dispatch({
+              type: `${namespace}/detail`,
+              id: record.id,
+            });
+          }
           if (handleDetailClick) {
             handleDetailClick(record);
             return;
@@ -282,7 +291,11 @@ class Curd extends PureComponent {
     return this.handleCreateOk(fieldsValue);
   };
 
-  setContainerModeAndDetail = () => {
+  doFetchDetail = () => {
+    return 'detail' in this.props && 'detailLoading' in this.props;
+  };
+
+  setContainerModeAndRecord = () => {
     const { record } = this.state;
     if (this.getVisibleState() === DetailVisible) {
       return ['detail', record];
@@ -313,6 +326,7 @@ class Curd extends PureComponent {
     const {
       queryArgsConfig = [],
       data = {},
+      detail = {},
       createButtonName = '新建',
       fetchLoading,
       createLoading,
@@ -325,7 +339,7 @@ class Curd extends PureComponent {
       queryPanelProps = {},
     } = this.props;
     const { selectedRows } = this.state;
-    const [mode, detail] = this.setContainerModeAndDetail();
+    const [mode, record] = this.setContainerModeAndRecord();
     const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
 
     const mergePopupProps = {
@@ -370,7 +384,9 @@ class Curd extends PureComponent {
             }}
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
-            setItemsConfig={form => setFormItemsConfig(detail, mode, form)}
+            setItemsConfig={form =>
+              setFormItemsConfig(this.doFetchDetail() ? detail : record, mode, form)
+            }
           />
         ) : (
           <DetailFormDrawer
@@ -378,7 +394,9 @@ class Curd extends PureComponent {
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
             onOk={this.handleOk}
-            setItemsConfig={form => setFormItemsConfig(detail, mode, form)}
+            setItemsConfig={form =>
+              setFormItemsConfig(this.doFetchDetail() ? detail : record, mode, form)
+            }
           />
         )}
       </Card>
