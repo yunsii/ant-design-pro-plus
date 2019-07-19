@@ -320,7 +320,7 @@ class Curd extends PureComponent {
       updateLoading,
       setFormItemsConfig,
       tableConfig: { columns, checkable },
-      popupType = 'modal',
+      popupType = 'drawer',
       popupProps = {},
       queryPanelProps = {},
     } = this.props;
