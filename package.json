@@ -114,6 +114,7 @@
     "merge-umi-mock-data": "^1.0.4",
     "mockjs": "^1.0.1-beta3",
     "prettier": "^1.17.0",
+    "roadhog-api-doc": "^1.1.2",
     "serverless-http": "^2.0.1",
     "slash2": "^2.0.0",
     "stylelint": "^9.10.1",
