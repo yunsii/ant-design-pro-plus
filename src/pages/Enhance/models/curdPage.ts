@@ -34,6 +34,4 @@ const model = curdModel(Namespace, {
   },
 });
 
-console.log(model);
-
 export default model;
