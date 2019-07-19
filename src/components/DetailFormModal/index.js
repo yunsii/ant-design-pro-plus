@@ -12,7 +12,7 @@ function DetailFormModal(props) {
     itemsLayout,
     itemsWrapperStyle,
     itemsWrapperClassName,
-    loading,
+    loading = false,
     form,
   } = props;
 
@@ -42,7 +42,7 @@ function DetailFormModal(props) {
 
   return (
     <Modal destroyOnClose {...restModalConfig} onOk={onOk}>
-      <Spin spinning={loading || false}>
+      <Spin spinning={loading}>
         <div className={itemsWrapperClassName} style={itemsWrapperStyle}>
           <FormProvider value={form}>{colsItems}</FormProvider>
         </div>
