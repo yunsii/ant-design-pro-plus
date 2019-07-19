@@ -49,10 +49,6 @@ export function renderCode(list, code) {
   return `无类型`;
 }
 
-export function isCommitSuccess(response) {
-  return !response.status_code;
-}
-
-export function isCommitSuccessNew(response) {
+export function isResponseOk(response) {
   return response.status_code === 200;
 }

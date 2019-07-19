@@ -1,12 +1,14 @@
 import { message } from 'antd';
 import { Model } from 'dva';
 
-import { getTableList /* getData*/, isCommitSuccessNew } from '@/utils/model';
+import { getTableList, getData, isResponseOk } from '@/utils/model';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 
 export type modelConfig = {
   fetchMethod?: Function;
   afterFetchActions?: string[];
+  detailMethod?: Function;
+  afterDetailActions?: string[];
   createMethod?: Function;
   afterCreateActions?: string[];
   updateMethod?: Function;
@@ -22,6 +24,8 @@ export default (
   {
     fetchMethod,
     afterFetchActions,
+    detailMethod,
+    afterDetailActions,
     createMethod,
     afterCreateActions,
     updateMethod,
@@ -39,6 +43,7 @@ export default (
       list: [],
       pagination: {},
     },
+    detail: {},
   },
 
   effects: {
@@ -49,9 +54,7 @@ export default (
         type: 'save',
         payload: response,
       });
-      console.log(response);
-      if (response) {
-        console.log(afterFetchActions);
+      if (isResponseOk(response)) {
         for (let i = 0; i < afterFetchActions.length; i += 1) {
           yield put({
             type: afterFetchActions[i],
@@ -59,9 +62,23 @@ export default (
         }
       }
     },
+    *detail({ id }, { call, put }) {
+      const response = yield call(detailMethod, id);
+      yield put({
+        type: 'saveDetail',
+        payload: response,
+      });
+      if (isResponseOk(response)) {
+        for (let i = 0; i < afterDetailActions.length; i += 1) {
+          yield put({
+            type: afterDetailActions[i],
+          });
+        }
+      }
+    },
     *create({ payload, callback }, { call, put, select }) {
       const response = yield call(createMethod, payload);
-      if (isCommitSuccessNew(response)) {
+      if (isResponseOk(response)) {
         message.success('创建成功');
         callFunctionIfFunction(callback)();
         for (let i = 0; i < afterCreateActions.length; i += 1) {
@@ -75,7 +92,7 @@ export default (
     },
     *update({ id, payload, callback }, { call, put, select }) {
       const response = yield call(updateMethod, id, payload);
-      if (isCommitSuccessNew(response)) {
+      if (isResponseOk(response)) {
         message.success('更新成功');
 
         const { data } = response;
@@ -96,7 +113,7 @@ export default (
     },
     *delete({ id, callback }, { call, put, select }) {
       const response = yield call(deleteMethod, id);
-      if (isCommitSuccessNew(response)) {
+      if (isResponseOk(response)) {
         message.success('删除成功');
         callFunctionIfFunction(callback)();
         for (let i = 0; i < afterDeleteActions.length; i += 1) {
@@ -115,7 +132,13 @@ export default (
     save(state, action) {
       return {
         ...state,
-        data: { ...getTableList(action) },
+        data: getTableList(action),
+      };
+    },
+    saveDetail(state, action) {
+      return {
+        ...state,
+        detail: getData(action),
       };
     },
   },
