@@ -1,5 +1,3 @@
-import { modelConfig } from './../../../base-models/curd';
-import { ItemConfig } from './../../antd-form-pro/index';
 import * as React from 'react';
 import { PaginationConfig } from 'antd/lib/table';
 import { QueryPanelProps } from '@/components/QueryPanel';
@@ -24,7 +22,7 @@ export interface CustomDetailFormDrawerProps extends DetailFormDrawerProps {
 }
 
 export interface CustomDetailFormModalProps extends DetailFormModalProps {
-  modelConfig: {
+  modalConfig: {
     title?: never;
     visible?: never;
     onClose?: never;
