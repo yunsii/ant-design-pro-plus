@@ -6,6 +6,8 @@ import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
 import CustomUpload, { processFileList, filterFileList, setFileList } from '../Upload';
 
+const { IMAGE_FORMAT_LIMIT } = process.env;
+
 export function getPicturesLink(fileList) {
   if (_isArray(fileList) && fileList.length === 1) {
     return fileList[0].url;
@@ -63,7 +65,7 @@ class PicturesWall extends React.Component {
     return (
       <div className="clearfix">
         <CustomUpload
-          accept=".jpg,.jpeg,.bmp,.png,.gif"
+          accept={IMAGE_FORMAT_LIMIT}
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
