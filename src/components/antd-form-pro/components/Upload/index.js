@@ -33,11 +33,11 @@ function setFileNameByPath(path) {
   return pathSegment[pathSegment.length - 1];
 }
 
-function setFileList(props) {
+export function setFileList(props) {
   const { value } = props;
   let fileList = [];
   if (value && _isString(value)) {
-    fileList = [{ uid: 1, url: value, name: setFileNameByPath(value) }];
+    fileList = [{ uid: -48, url: value, name: setFileNameByPath(value) }];
   } else if (value && _isArray(value)) {
     fileList = [...value];
   }

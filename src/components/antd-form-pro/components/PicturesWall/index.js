@@ -4,7 +4,7 @@ import './index.css';
 import { Icon, Modal, message } from 'antd';
 import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
-import CustomUpload, { processFileList, filterFileList } from '../Upload';
+import CustomUpload, { processFileList, filterFileList, setFileList } from '../Upload';
 
 export function getPicturesLink(fileList) {
   if (_isArray(fileList) && fileList.length === 1) {
@@ -17,6 +17,12 @@ export function getPicturesLink(fileList) {
 }
 
 class PicturesWall extends React.Component {
+  static getDerivedStateFromProps(props) {
+    return {
+      fileList: setFileList(props),
+    };
+  }
+
   constructor(props) {
     super(props);
     // console.log(props.value);
@@ -25,30 +31,6 @@ class PicturesWall extends React.Component {
       previewImage: '',
       fileList: props.value && _isString(props.value) ? [{ uid: 1, url: props.value }] : [],
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // console.log('nextProps', nextProps.value);
-    if (_isString(nextProps.value)) {
-      this.setState({
-        fileList: [
-          {
-            uid: 1,
-            url: nextProps.value,
-          },
-        ],
-      });
-      return;
-    }
-    if (_isArray(nextProps.value)) {
-      this.setState({
-        fileList: [...nextProps.value],
-      });
-      return;
-    }
-    this.setState({
-      fileList: [],
-    });
   }
 
   handleCancel = () => this.setState({ previewVisible: false });
