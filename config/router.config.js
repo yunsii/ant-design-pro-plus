@@ -300,6 +300,11 @@ export default [
             name: 'curdPage',
             component: './Enhance/CurdPage',
           },
+          {
+            path: '/enhance/curd-custom-page',
+            name: 'curdCustomPage',
+            component: './Enhance/CurdCustomPage',
+          },
         ],
       },
       {
