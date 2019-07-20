@@ -143,7 +143,7 @@
 | columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | fetchLoading | 请求列表 loading | boolean | - |
 | createLoading | 创建 model loading | boolean | - |
-| detailLoading | 请求 model 详情 | boolean | - |
+| detailLoading | 请求 model 详情 loading | boolean | - |
 | updateLoading | 更新 model loading | boolean | - |
 | deleteLoading | 删除 model loading | boolean | - |
 | dipatch | dva 注入的 dispatch 函数 | Function | - |
