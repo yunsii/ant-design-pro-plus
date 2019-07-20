@@ -7,6 +7,7 @@ import {
 } from './utils.tsx';
 
 import StandardTable from '@/components/StandardTable';
+import TableList from '@/components/TableList';
 import QueryPanel from '@/components/QueryPanel';
 import DetailFormDrawer from '@/components/DetailFormDrawer';
 import DetailFormModal from '@/components/DetailFormModal';
@@ -324,6 +325,8 @@ class Curd extends PureComponent {
 
   render() {
     const {
+      type = 'table',
+      renderItem = null,
       queryArgsConfig = [],
       data = {},
       detail = {},
@@ -365,16 +368,30 @@ class Curd extends PureComponent {
             </Button>
             {this.renderChildren()}
           </div>
-          <StandardTable
-            rowKey={row => row.id}
-            selectedRows={selectedRows}
-            loading={fetchLoading}
-            data={data}
-            columns={this.enhanceColumns(columns)}
-            onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-            checkable={checkable}
-          />
+          {type === 'tableList' ? (
+            <TableList
+              rowKey={item => item.id}
+              renderItem={renderItem}
+              selectedRows={selectedRows}
+              loading={fetchLoading}
+              data={data}
+              columns={this.enhanceColumns(columns)}
+              onSelectRow={this.handleSelectRows}
+              // onChange={this.handleStandardTableChange}
+              checkable={checkable}
+            />
+          ) : (
+            <StandardTable
+              rowKey={row => row.id}
+              selectedRows={selectedRows}
+              loading={fetchLoading}
+              data={data}
+              columns={this.enhanceColumns(columns)}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+              checkable={checkable}
+            />
+          )}
         </div>
         {popupType === 'modal' ? (
           <DetailFormModal
