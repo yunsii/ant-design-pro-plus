@@ -82,13 +82,12 @@ class TableList extends PureComponent {
   render() {
     return (
       <BaseCurd
-        type="tableList"
+        dataContainerType="list"
         renderItem={renderCard}
         namespace={Namespace}
         queryArgsConfig={this.queryArgsConfig}
         setFormItemsConfig={setFormItemsConfig}
         tableConfig={{
-          columns: this.columns,
           extraActions: [
             {
               key: 14,
@@ -96,6 +95,7 @@ class TableList extends PureComponent {
               handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
             },
           ],
+          // checkable: false,
         }}
         popupType="drawer"
         popupProps={{
