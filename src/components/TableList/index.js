@@ -54,7 +54,16 @@ class TableList extends PureComponent {
 
   render() {
     const { selectedRowKeys } = this.state;
-    const { data = {}, rowKey, checkable = true, rowClassName, renderItem, ...rest } = this.props;
+    const {
+      data = {},
+      rowKey,
+      checkable = true,
+      rowClassName,
+      renderItem,
+      selectedRows,
+      onSelectRow,
+      ...rest
+    } = this.props;
     const { list = [], pagination } = data;
 
     const paginationProps = {
