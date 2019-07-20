@@ -13,6 +13,8 @@ export declare type CurdProps = {
     list: any[];
     pagination?: PaginationConfig;
   };
+  dataContainerType: 'table' | 'list';
+  renderItem: ({ record, actions, recordSelection }) => React.ReactNode;
   fetchLoading: boolean;
   createLoading: boolean;
   detailLoading?: boolean;

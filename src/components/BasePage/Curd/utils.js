@@ -24,6 +24,9 @@ const generateShowActions = record => (actions, confirmKeys = []) => {
         <Popconfirm
           key={item.key}
           title={`确定${item.title}吗？`}
+          onClick={event => {
+            event.stopPropagation();
+          }}
           onConfirm={() => item.handleClick(record)}
         >
           <a>{item.title}</a>
@@ -31,7 +34,13 @@ const generateShowActions = record => (actions, confirmKeys = []) => {
       );
     }
     return (
-      <a key={item.key} onClick={() => item.handleClick(record)}>
+      <a
+        key={item.key}
+        onClick={event => {
+          event.stopPropagation();
+          item.handleClick(record);
+        }}
+      >
         {item.title}
       </a>
     );
@@ -47,8 +56,17 @@ export const renderActions = record => (actions, moreActions, confirmKeys) => {
     ...generateShowActions(record)(actions, confirmKeys),
     <Dropdown
       key="more"
+      // 阻止 Dropdown 点击事件冒泡，否则会触发 actions 容器点击事件
+      onClick={event => {
+        event.stopPropagation();
+      }}
       overlay={
-        <Menu>
+        // 阻止 Menu 点击事件冒泡，否则会触发 actions 容器点击事件
+        <Menu
+          onClick={({ domEvent }) => {
+            domEvent.stopPropagation();
+          }}
+        >
           {moreActions.map(item => (
             <Menu.Item
               key={item.key}
@@ -73,8 +91,8 @@ export const renderActions = record => (actions, moreActions, confirmKeys) => {
         </Menu>
       }
     >
-      <a>
-        更多 <Icon type="down" />
+      <a style={{ whiteSpace: 'nowrap' }}>
+        更多 <Icon type="down" style={{ width: 24 }} />
       </a>
     </Dropdown>,
   ];

@@ -329,7 +329,7 @@ class Curd extends PureComponent {
 
   render() {
     const {
-      type = 'table',
+      dataContainerType = 'table',
       renderItem = null,
       queryArgsConfig = [],
       data = {},
@@ -372,14 +372,14 @@ class Curd extends PureComponent {
             </Button>
             {this.renderChildren()}
           </div>
-          {type === 'tableList' ? (
+          {dataContainerType === 'list' ? (
             <TableList
               rowKey={item => item.id}
               renderItem={renderItem}
               selectedRows={selectedRows}
               loading={fetchLoading}
               data={data}
-              columns={this.enhanceColumns(columns)}
+              setActions={this.setActions}
               onSelectRow={this.handleSelectRows}
               // onChange={this.handleStandardTableChange}
               checkable={checkable}
