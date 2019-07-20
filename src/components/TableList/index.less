@@ -18,9 +18,15 @@
   }
 }
 
-.CardCover {
-  width: 100%;
-  height: 123px;
-  background-position: center;
-  background-size: cover;
+.checkBox {
+  :global {
+    .ant-checkbox-inner {
+      width: 24px;
+      height: 24px;
+    }
+
+    .ant-checkbox-inner::after {
+      left: 30%;
+    }
+  }
 }

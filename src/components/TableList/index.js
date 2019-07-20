@@ -27,7 +27,7 @@ class TableList extends PureComponent {
   };
 
   cleanSelectedKeys = () => {
-    this.handleRowSelectChange([], []);
+    this.onChange([]);
   };
 
   onCheckAllChange = () => {
@@ -48,7 +48,7 @@ class TableList extends PureComponent {
       selectedRowKeys,
     });
     if (onSelectRow) {
-      onSelectRow(list.map(item => selectedRowKeys.includes(item.id)));
+      onSelectRow(list.filter(item => selectedRowKeys.includes(item.id)));
     }
   };
 
@@ -58,10 +58,9 @@ class TableList extends PureComponent {
       data = {},
       rowKey,
       checkable = true,
-      rowClassName,
       renderItem,
       selectedRows,
-      onSelectRow,
+      setActions,
       ...rest
     } = this.props;
     const { list = [], pagination } = data;
@@ -74,35 +73,38 @@ class TableList extends PureComponent {
       ...pagination,
     };
 
-    // let rowSelection = {
-    //   selectedRowKeys,
-    //   onChange: this.handleRowSelectChange,
-    //   getCheckboxProps: record => ({
-    //     disabled: record.disabled,
-    //   }),
-    // };
-    // if (!checkable) {
-    //   rowSelection = null;
-    // }
+    let recordSelection = {
+      selectedRowKeys,
+      onChange: this.onChange,
+      // getCheckboxProps: record => ({
+      //   disabled: record.disabled,
+      // }),
+    };
+    if (!checkable) {
+      recordSelection = {};
+    }
+
     let renderList = (
       <List
         rowKey="id"
         grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
         {...rest}
         dataSource={list}
-        renderItem={item => (
+        renderItem={record => (
           <List.Item style={{ position: 'relative' }}>
             {checkable ? (
               <Checkbox
-                value={item.id}
+                value={record.id}
+                className={styles.checkBox}
                 style={{
                   position: 'absolute',
                   zIndex: 1,
+                  top: 5,
                   right: 4,
                 }}
               />
             ) : null}
-            {renderItem(item)}
+            {renderItem({ record, actions: setActions(record), recordSelection, checkable })}
           </List.Item>
         )}
       />
