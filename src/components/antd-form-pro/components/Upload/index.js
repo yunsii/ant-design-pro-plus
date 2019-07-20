@@ -16,7 +16,7 @@ export function processFileList(fileList) {
 }
 
 export function filterFileList(fileList) {
-  return fileList.filter(item => item.url);
+  return fileList.filter(item => item.status === 'uploading' || item.url);
 }
 
 async function customRequest({ file, onSuccess, onError }) {
