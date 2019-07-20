@@ -103,7 +103,8 @@
 
 ### BasePage/Curd 基础增删改查页面
 
-![base-curd.png](https://i.loli.net/2019/07/12/5d28976248c5c94749.png)
+![basic.png](https://s2.ax1x.com/2019/07/20/eSNYSx.png)
+![custom.png](https://i.loli.net/2019/07/20/5d3330cda2d3772039.png)
 
 前置工具及组件：
 
@@ -132,6 +133,8 @@
 | --- | --- | --- | --- |
 | namespace | model 名称空间 | string | - |
 | data | StandardTable data | any | {} |
+| dataContainerType | 数据容器类型 | 'table' | 'list' | `'table'` |
+| renderItem | 数据容器类型为 `'list'` 可用，用于自定义渲染组件 | ({ record, actions, recordSelection, checkable }) => React.ReactNode | - |
 | columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | fetchLoading | 请求列表 loading | boolean | - |
 | createLoading | 创建 model loading | boolean | - |
