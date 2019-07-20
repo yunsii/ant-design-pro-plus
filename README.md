@@ -104,7 +104,12 @@
 ### BasePage/Curd 基础增删改查页面
 
 ![basic.png](https://s2.ax1x.com/2019/07/20/eSNYSx.png)
+
+<p align='center'>表格型增删改查</p>
+
 ![custom.png](https://i.loli.net/2019/07/20/5d3330cda2d3772039.png)
+
+<p align='center'>列表型增删改查</p>
 
 前置工具及组件：
 
