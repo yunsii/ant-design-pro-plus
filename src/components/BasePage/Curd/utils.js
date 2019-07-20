@@ -6,7 +6,7 @@ function isConfirmKey(key, confirmKeys) {
   return confirmKeys.includes(key);
 }
 
-function addDivider(actions) {
+export function addDivider(actions) {
   return _flatten(
     actions.map((item, index) => {
       if (index + 1 < actions.length) {
@@ -18,42 +18,38 @@ function addDivider(actions) {
 }
 
 const generateShowActions = record => (actions, confirmKeys = []) => {
-  return [
-    ...actions.map(item => {
-      if (isConfirmKey(item.key, confirmKeys)) {
-        return (
-          <Popconfirm
-            key={item.key}
-            title={`确定${item.title}吗？`}
-            onConfirm={() => item.handleClick(record)}
-          >
-            <a>{item.title}</a>
-          </Popconfirm>
-        );
-      }
+  return actions.map(item => {
+    if (isConfirmKey(item.key, confirmKeys)) {
       return (
-        <a key={item.key} onClick={() => item.handleClick(record)}>
-          {item.title}
-        </a>
+        <Popconfirm
+          key={item.key}
+          title={`确定${item.title}吗？`}
+          onConfirm={() => item.handleClick(record)}
+        >
+          <a>{item.title}</a>
+        </Popconfirm>
       );
-    }),
-  ];
+    }
+    return (
+      <a key={item.key} onClick={() => item.handleClick(record)}>
+        {item.title}
+      </a>
+    );
+  });
 };
 
-export const renderActions = record => (sortedActions, showActionsCount, confirmKeys) => {
-  if (sortedActions.length <= showActionsCount) {
-    return addDivider(generateShowActions(record)(sortedActions, confirmKeys));
+export const renderActions = record => (actions, moreActions, confirmKeys) => {
+  if (!moreActions.length) {
+    return generateShowActions(record)(actions, confirmKeys);
   }
 
-  const showActions = sortedActions.slice(0, showActionsCount);
-  const moreAction = sortedActions.slice(showActionsCount);
-  return addDivider([
-    ...generateShowActions(record)(showActions, confirmKeys),
+  return [
+    ...generateShowActions(record)(actions, confirmKeys),
     <Dropdown
       key="more"
       overlay={
         <Menu>
-          {moreAction.map(item => (
+          {moreActions.map(item => (
             <Menu.Item
               key={item.key}
               onClick={() => {
@@ -81,7 +77,7 @@ export const renderActions = record => (sortedActions, showActionsCount, confirm
         更多 <Icon type="down" />
       </a>
     </Dropdown>,
-  ]);
+  ];
 };
 
 export function transferBoolArrayToStringArray(boolArray = []) {

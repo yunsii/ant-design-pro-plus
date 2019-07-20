@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { Card, Button } from 'antd';
 import {
+  addDivider,
   renderActions,
   transferBoolArrayToStringArray,
   sortAndFilterActionsAsc,
-} from './utils.tsx';
+} from './utils';
 
 import StandardTable from '@/components/StandardTable';
 import TableList from '@/components/TableList';
@@ -44,7 +45,7 @@ class Curd extends PureComponent {
     });
   }
 
-  setActions = (value, record) => {
+  initialActions = record => {
     const {
       interceptors = {},
       tableConfig: {
@@ -52,7 +53,6 @@ class Curd extends PureComponent {
         updateTitle = '编辑',
         deleteTitle = '删除',
         showActionsCount = 3,
-        confirmKeys = [],
         extraActions = [],
         hideActions = [],
       },
@@ -102,12 +102,16 @@ class Curd extends PureComponent {
       },
       ...extraActions,
     ];
-    const orderedActions = sortAndFilterActionsAsc(actions, hideActions);
-    return renderActions(record)(
-      orderedActions,
-      showActionsCount,
-      confirmKeys.length ? confirmKeys : [12]
-    );
+    const sortedActions = sortAndFilterActionsAsc(actions, hideActions);
+    return [sortedActions.slice(0, showActionsCount), sortedActions.slice(showActionsCount)];
+  };
+
+  setActions = record => {
+    const {
+      tableConfig: { confirmKeys = [] },
+    } = this.props;
+    const [actions, moreActions] = this.initialActions(record);
+    return renderActions(record)(actions, moreActions, confirmKeys.length ? confirmKeys : [12]);
   };
 
   handleVisible = (action, visible, record) => {
@@ -257,7 +261,7 @@ class Curd extends PureComponent {
       ...columns,
       {
         title: '操作',
-        render: this.setActions,
+        render: (value, record) => addDivider(this.setActions(record)),
       },
     ];
   };
@@ -402,7 +406,11 @@ class Curd extends PureComponent {
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
             setItemsConfig={form =>
-              setFormItemsConfig(this.doFetchDetail() ? detail : record, mode, form)
+              setFormItemsConfig(
+                mode === 'detail' && this.doFetchDetail() ? detail : record,
+                mode,
+                form
+              )
             }
           />
         ) : (
@@ -412,7 +420,11 @@ class Curd extends PureComponent {
             loading={createLoading || detailLoading || updateLoading}
             onOk={this.handleOk}
             setItemsConfig={form =>
-              setFormItemsConfig(this.doFetchDetail() ? detail : record, mode, form)
+              setFormItemsConfig(
+                mode === 'detail' && this.doFetchDetail() ? detail : record,
+                mode,
+                form
+              )
             }
           />
         )}
