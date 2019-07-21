@@ -23,8 +23,26 @@ export default [
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
     routes: [
+      //  enhance
+      { path: '/', redirect: '/enhance/curd-page', authority: ['admin', 'user'] },
+      {
+        name: 'enhance',
+        icon: 'star',
+        path: '/enhance',
+        routes: [
+          {
+            path: '/enhance/curd-page',
+            name: 'curdPage',
+            component: './Enhance/CurdPage',
+          },
+          {
+            path: '/enhance/curd-custom-page',
+            name: 'curdCustomPage',
+            component: './Enhance/CurdCustomPage',
+          },
+        ],
+      },
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis', authority: ['admin', 'user'] },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -286,24 +304,6 @@ export default [
             path: '/editor/koni',
             name: 'koni',
             component: './Editor/GGEditor/Koni',
-          },
-        ],
-      },
-      //  enhance
-      {
-        name: 'enhance',
-        icon: 'star',
-        path: '/enhance',
-        routes: [
-          {
-            path: '/enhance/curd-page',
-            name: 'curdPage',
-            component: './Enhance/CurdPage',
-          },
-          {
-            path: '/enhance/curd-custom-page',
-            name: 'curdCustomPage',
-            component: './Enhance/CurdCustomPage',
           },
         ],
       },
