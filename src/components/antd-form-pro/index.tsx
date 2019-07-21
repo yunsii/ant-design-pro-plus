@@ -149,8 +149,11 @@ export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout
             {...restFormItemProps}
           >
             {type === 'plain' ? (
-              <span className="ant-form-text">{restFieldProps.initialValue}</span>
+              <span className="ant-form-text">
+                {restFieldProps.initialValue as React.ReactNode}
+              </span>
             ) : (
+              form &&
               form.getFieldDecorator(field, {
                 ...restFieldProps,
                 rules: setDefaultCheckedTypeHint(type, rules),
