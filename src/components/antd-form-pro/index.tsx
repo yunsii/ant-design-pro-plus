@@ -1,6 +1,7 @@
 import React from 'react';
-import { Form, Input, InputNumber, Slider, WrappedFormUtils } from 'antd';
-import { FormItemProps, GetFieldDecoratorOptions, ValidationRule } from 'antd/lib/form';
+import { Form, Input, InputNumber, Slider } from 'antd';
+import { FormItemProps, ValidationRule } from 'antd/lib/form';
+import { WrappedFormUtils, GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 import { ColProps } from 'antd/lib/col';
 
 import CustomDatePicker, { CustomRangePicker } from './components/CustomDatePicker';
