@@ -151,7 +151,7 @@ class Curd extends PureComponent {
     });
   };
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+  handleStandardTableChange = (pagination, filtersArg = {}, sorter = {}) => {
     const { namespace, dispatch } = this.props;
     const { formValues } = this.state;
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
@@ -381,7 +381,7 @@ class Curd extends PureComponent {
               data={data}
               setActions={this.setActions}
               onSelectRow={this.handleSelectRows}
-              // onChange={this.handleStandardTableChange}
+              onChange={paginatioin => this.handleStandardTableChange(paginatioin)}
               checkable={checkable}
             />
           ) : (
