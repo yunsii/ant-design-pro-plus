@@ -138,7 +138,7 @@
 | --- | --- | --- | --- |
 | namespace | model 名称空间 | string | - |
 | data | StandardTable data | any | {} |
-| dataContainerType | 数据容器类型 | 'table' | 'list' | `'table'` |
+| dataContainerType | 数据容器类型 | 'table' \| 'list' | `'table'` |
 | renderItem | 数据容器类型为 `'list'` 可用，用于自定义渲染组件 | ({ record, actions, recordSelection, checkable }) => React.ReactNode | - |
 | columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
 | fetchLoading | 请求列表 loading | boolean | - |
@@ -157,9 +157,8 @@
 | createTitle | 新建窗口名称 | string | - |
 | detailTitle | 详情窗口名称 | string | - |
 | updateTitle | 编辑窗口名称 | string | - |
-| updateTitle | 编辑窗口名称 | string | - |
 | popupType | 弹窗类型 | 'modal' \| 'drawer' | - |
-| popupProps | 弹窗配置，根据 `popupType` 配置 | [CustomDetailFormDrawerProps](/src/components/BasePage/Curd/CustomDetailFormDrawerProps.d.ts) | [CustomDetailFormModalProps](/src/components/BasePage/Curd/CustomDetailFormModalProps.d.ts) | - |
+| popupProps | 弹窗配置，根据 `popupType` 配置 | [CustomDetailFormDrawerProps](/src/components/BasePage/Curd/CustomDetailFormDrawerProps.d.ts) \| [CustomDetailFormModalProps](/src/components/BasePage/Curd/CustomDetailFormModalProps.d.ts) | - |
 | children | 紧跟新建按钮后的 children ，会被注入 `__curd__` 实例属性，可访问控制该页面组件的所有属性 | React.ReactChildren | - |
 
 #### tableConfig
