@@ -137,7 +137,12 @@ export const createFormItems = (itemsConfig: ItemConfig[], globalLayout?: Layout
     const { rules = [], ...restFieldProps } = fieldProps;
     const itemLayout = wrapperCol && labelCol ? { wrapperCol, labelCol } : null;
 
-    const layout = itemLayout || globalLayout || defaultLayout;
+    let layout = itemLayout || globalLayout || defaultLayout;
+    if (!itemLayout && !globalLayout && !restFormItemProps.label) {
+      layout = {
+        wrapperCol: { span: 24 },
+      };
+    }
 
     return (
       <FormConsumer key={field}>
