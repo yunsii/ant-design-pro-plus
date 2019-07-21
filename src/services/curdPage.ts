@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { stringify } from 'qs';
 
 export async function fetchCurdPage(params?: any) {
-  return request(`/api/enhance/curd-page${stringify(params)}`);
+  return request(`/api/enhance/curd-page?${stringify(params)}`);
 }
 
 export async function detailCurdPage(id: number | string) {
