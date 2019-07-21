@@ -6,7 +6,13 @@
 
 </div>
 
-![ant-design-pro-v2-plus-screenshot.png](https://i.loli.net/2019/07/06/5d1ff32b16d2497023.png)
+![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
+
+预览：[https://theprimone.top/ant-design-pro-v2-plus](https://theprimone.top/ant-design-pro-v2-plus)
+
+由于是纯静态页面，所以仅是把**功能示例**和 **Dashboard** 下的**分析页**数据写到了代码中，以便查看页面效果。
+
+由于是部署到非根目录，发现配置了 `base` 后，仅在页面内部路由能正常访问，如果直接使用完整的页面路由会导致访问失败。已提交到 umi 的 issue [项目部署到非根目录，如何配置，让url匹配上？](https://github.com/umijs/umi/issues/231)，待解决。同时，发现了官方仓库没有针对部署到非根目录情况下的登录重定向，已提交 pull request [fix: redirect with deploy on non-root path](https://github.com/ant-design/ant-design-pro/pull/4860)。
 
 ## 新增特性✨
 
@@ -103,11 +109,11 @@
 
 ### BasePage/Curd 基础增删改查页面
 
-![basic.png](https://s2.ax1x.com/2019/07/20/eSNYSx.png)
+![basic.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
 
 <p align='center'>表格型增删改查</p>
 
-![custom.png](https://i.loli.net/2019/07/20/5d3330cda2d3772039.png)
+![custom.png](https://s2.ax1x.com/2019/07/21/eCpcxf.png)
 
 <p align='center'>列表型增删改查</p>
 
