@@ -1,5 +1,8 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import { login } from './mock/user';
+import { usePromise } from './mock/config';
+import getFakeChartData from './mock/chart';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -51,6 +54,13 @@ export async function fakeSubmitForm(params) {
 }
 
 export async function fakeChartData() {
+  if (usePromise) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(getFakeChartData);
+      }, 1200);
+    });
+  }
   return request('/api/fake_chart_data');
 }
 
@@ -104,6 +114,13 @@ export async function updateFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
+  if (usePromise) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(login(params));
+      }, 1200);
+    });
+  }
   return request('/api/login/account', {
     method: 'POST',
     data: params,
