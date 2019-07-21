@@ -46,6 +46,7 @@ const plugins = [
         : {}),
     },
   ],
+  'umi-plugin-gh-pages',
 ];
 
 // 针对 preview.pro.ant.design 的 GA 统计代码
@@ -117,6 +118,6 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  // base: '/demo/ant-design-pro-v2-plus',
-  // publicPath: '/demo/ant-design-pro-v2-plus/',
+  base: '/ant-design-pro-v2-plus/',
+  publicPath: '/ant-design-pro-v2-plus/',
 };

@@ -2,6 +2,7 @@
   "name": "ant-design-pro",
   "version": "2.3.1",
   "private": true,
+  "homepage": "https://theprimone.top/ant-design-pro-v2-plus",
   "description": "An out-of-box UI solution for enterprise applications",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
@@ -30,7 +31,9 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tslint": "npm run tslint:fix",
-    "tslint:fix": "tslint --fix 'src/**/*.ts*'"
+    "tslint:fix": "tslint --fix 'src/**/*.ts*'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "husky": {
     "hooks": {
@@ -127,7 +130,8 @@
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
-    "umi-plugin-ga": "^1.1.3"
+    "umi-plugin-ga": "^1.1.3",
+    "umi-plugin-gh-pages": "^0.1.0"
   },
   "optionalDependencies": {
     "puppeteer": "^1.12.1"
