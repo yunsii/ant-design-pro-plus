@@ -88,11 +88,17 @@ class TableList extends PureComponent {
           columns: this.columns,
           extraActions: [
             {
+              key: 13,
+              title: '外务',
+              handleClick: record => message.info(`调用 ${record.name} 的外务事件`),
+            },
+            {
               key: 14,
               title: '兼职',
               handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
             },
           ],
+          confirmKeys: [[13, record => `确定让 ${record.name} 出外务吗？`], 14],
         }}
         popupType="drawer"
         popupProps={{
