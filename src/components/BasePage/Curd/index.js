@@ -81,15 +81,15 @@ class Curd extends PureComponent {
         key: 4,
         title: detailTitle,
         handleClick: () => {
+          if (handleDetailClick) {
+            handleDetailClick(record);
+            return;
+          }
           if (this.doFetchDetail()) {
             dispatch({
               type: `${namespace}/detail`,
               id: record.id,
             });
-          }
-          if (handleDetailClick) {
-            handleDetailClick(record);
-            return;
           }
           this.handleVisible(DetailName, true, record);
         },
@@ -101,6 +101,12 @@ class Curd extends PureComponent {
           if (handleUpdateClick) {
             handleUpdateClick(record);
             return;
+          }
+          if (this.doFetchDetail()) {
+            dispatch({
+              type: `${namespace}/detail`,
+              id: record.id,
+            });
           }
           this.handleVisible(UpdateName, true, record);
         },
@@ -327,6 +333,7 @@ class Curd extends PureComponent {
     const { selectedRows } = this.state;
     const [mode, record] = this.setContainerModeAndRecord();
     const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
+    const showDetail = [DetailName, UpdateName].includes(mode);
 
     const mergePopupProps = {
       ...modalConfig,
@@ -385,11 +392,7 @@ class Curd extends PureComponent {
             {...restPopupProps}
             loading={createLoading || detailLoading || updateLoading}
             setItemsConfig={form =>
-              setFormItemsConfig(
-                mode === DetailName && this.doFetchDetail() ? detail : record,
-                mode,
-                form
-              )
+              setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
             }
             mode={mode}
           />
@@ -400,11 +403,7 @@ class Curd extends PureComponent {
             loading={createLoading || detailLoading || updateLoading}
             onOk={this.handleOk}
             setItemsConfig={form =>
-              setFormItemsConfig(
-                mode === DetailName && this.doFetchDetail() ? detail : record,
-                mode,
-                form
-              )
+              setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
             }
           />
         )}
