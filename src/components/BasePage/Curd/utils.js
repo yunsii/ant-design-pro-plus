@@ -1,9 +1,26 @@
 import React from 'react';
 import { Icon, Dropdown, Menu, Divider, Popconfirm, Modal } from 'antd';
 import _flatten from 'lodash/flatten';
+import _isArray from 'lodash/isArray';
 
-function isConfirmKey(key, confirmKeys) {
-  return confirmKeys.includes(key);
+function isConfirmKeyAndItem(key, confirmKeys) {
+  for (let i = 0; i < confirmKeys.length; i += 1) {
+    if (_isArray(confirmKeys[i]) && confirmKeys[i][0] === key) {
+      return [true, confirmKeys[i]];
+    }
+    if (confirmKeys[i] === key) {
+      return [true, confirmKeys[i]];
+    }
+  }
+  return [false, null];
+}
+
+function setConfirmTitle(confirmKey, item, record) {
+  if (_isArray(confirmKey)) {
+    const [, setTitle] = confirmKey;
+    return setTitle(record);
+  }
+  return `确定${item.title}吗？`;
 }
 
 export function addDivider(actions) {
@@ -19,11 +36,12 @@ export function addDivider(actions) {
 
 const generateShowActions = record => (actions, confirmKeys = []) => {
   return actions.map(item => {
-    if (isConfirmKey(item.key, confirmKeys)) {
+    const [isConfirmKey, confirmKey] = isConfirmKeyAndItem(item.key, confirmKeys);
+    if (isConfirmKey) {
       return (
         <Popconfirm
           key={item.key}
-          title={`确定${item.title}吗？`}
+          title={setConfirmTitle(confirmKey, item, record)}
           onClick={event => {
             event.stopPropagation();
           }}
@@ -67,27 +85,30 @@ export const renderActions = record => (actions, moreActions, confirmKeys) => {
             domEvent.stopPropagation();
           }}
         >
-          {moreActions.map(item => (
-            <Menu.Item
-              key={item.key}
-              onClick={() => {
-                if (isConfirmKey(item.key, confirmKeys)) {
-                  Modal.confirm({
-                    title: `确定${item.title}吗？`,
-                    onOk() {
-                      item.handleClick(record);
-                    },
-                    okText: '确定',
-                    cancelText: '取消',
-                  });
-                  return;
-                }
-                item.handleClick(record);
-              }}
-            >
-              <a>{item.title}</a>
-            </Menu.Item>
-          ))}
+          {moreActions.map(item => {
+            const [isConfirmKey, confirmKey] = isConfirmKeyAndItem(item.key, confirmKeys);
+            return (
+              <Menu.Item
+                key={item.key}
+                onClick={() => {
+                  if (isConfirmKey) {
+                    Modal.confirm({
+                      title: setConfirmTitle(confirmKey, item, record),
+                      onOk() {
+                        item.handleClick(record);
+                      },
+                      okText: '确定',
+                      cancelText: '取消',
+                    });
+                    return;
+                  }
+                  item.handleClick(record);
+                }}
+              >
+                <a>{item.title}</a>
+              </Menu.Item>
+            );
+          })}
         </Menu>
       }
     >

@@ -29,7 +29,7 @@ export declare type CurdProps = {
     checkable?: boolean;
     showActionsCount?: number;
     extraActions?: ActionType[];
-    confirmKeys: number[];
+    confirmKeys: (number | [number, (record?: any) => string])[];
     hideActions: number[];
   };
   setFormItemsConfig: (

@@ -180,7 +180,7 @@
 | checkable | 是否开启多选 | boolean | `true` |
 | showActionsCount | 除更多外需要展示的操作个数 | number | 3 |
 | extraActions | 除 **详情（4）**，**编辑（8）**，**删除（12）** 外，可自行配置额外操作。注意，数字是操作的 `key` ，根据 `key` 不同，会按升序排列 | [ActionType](/src/components/BasePage/Curd/ActionType.d.ts) | - |
-| confirmKeys | 需要弹出确认窗口的 `key` 数组 | number[] | `[12]` |
+| confirmKeys | 需要弹出确认窗口的 `key` 数组 | (number | [number, (record?: any) => string])[] | `[12]` |
 | hideActions | 隐藏操作的 `key` 数组 | number[] | - |
 
 #### interceptors
