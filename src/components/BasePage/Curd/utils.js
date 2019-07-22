@@ -34,7 +34,7 @@ export function addDivider(actions) {
   );
 }
 
-const generateShowActions = record => (actions, confirmKeys = []) => {
+const renderShowActions = record => (actions, confirmKeys = []) => {
   return actions.map(item => {
     const [isConfirmKey, confirmKey] = isConfirmKeyAndItem(item.key, confirmKeys);
     if (isConfirmKey) {
@@ -67,11 +67,11 @@ const generateShowActions = record => (actions, confirmKeys = []) => {
 
 export const renderActions = record => (actions, moreActions, confirmKeys) => {
   if (!moreActions.length) {
-    return generateShowActions(record)(actions, confirmKeys);
+    return renderShowActions(record)(actions, confirmKeys);
   }
 
   return [
-    ...generateShowActions(record)(actions, confirmKeys),
+    ...renderShowActions(record)(actions, confirmKeys),
     <Dropdown
       key="more"
       // 阻止 Dropdown 点击事件冒泡，否则会触发 actions 容器点击事件
