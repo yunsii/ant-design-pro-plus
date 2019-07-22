@@ -119,7 +119,7 @@ export const renderActions = record => (actions, moreActions, confirmKeys) => {
   ];
 };
 
-export function transferBoolArrayToStringArray(boolArray = []) {
+export function transferBoolArrayToString(boolArray = []) {
   let result = '';
   for (let i = 0; i < boolArray.length; i += 1) {
     result += boolArray[i] ? '1' : '0';
