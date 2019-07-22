@@ -215,6 +215,7 @@ class Curd extends PureComponent {
     console.log('handleCreateOk', fieldsValue);
     const { namespace, dispatch, interceptors = {} } = this.props;
     const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
+    if (!newFieldsValue) return;
     dispatch({
       type: `${namespace}/create`,
       payload: newFieldsValue,
@@ -235,6 +236,7 @@ class Curd extends PureComponent {
     } = this.state;
     const { namespace, dispatch, interceptors = {} } = this.props;
     const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
+    if (!newFieldsValue) return;
     dispatch({
       type: `${namespace}/update`,
       id,
