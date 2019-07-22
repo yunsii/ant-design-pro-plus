@@ -2,6 +2,7 @@
 import React from 'react';
 import { Modal, Form, Row, Col, Spin } from 'antd';
 import { FormProvider, createFormItems } from '@/components/antd-form-pro';
+import { renderChildren } from '@/utils/childrenUtils.ts';
 
 function DetailFormModal(props) {
   const {
@@ -14,6 +15,7 @@ function DetailFormModal(props) {
     itemsWrapperClassName,
     loading = false,
     form,
+    mode,
   } = props;
 
   const onOk = () => {
@@ -46,7 +48,7 @@ function DetailFormModal(props) {
         <div className={itemsWrapperClassName} style={itemsWrapperStyle}>
           <FormProvider value={form}>{colsItems}</FormProvider>
         </div>
-        {children}
+        {renderChildren(children, { mode })}
       </Spin>
     </Modal>
   );
