@@ -3,7 +3,7 @@ import { Card, Button } from 'antd';
 import {
   addDivider,
   renderActions,
-  transferBoolArrayToStringArray,
+  transferBoolArrayToString,
   sortAndFilterActionsAsc,
 } from './utils';
 
@@ -13,8 +13,13 @@ import QueryPanel from '@/components/QueryPanel';
 import DetailFormDrawer from '@/components/DetailFormDrawer';
 import DetailFormModal from '@/components/DetailFormModal';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
+import renderChildren from '@/utils/childrenUtils';
 // import { updateActionName, deleteActionName } from '@/contant';
 import styles from '@/utils/table.less';
+
+const CreateName = 'create';
+const DetailName = 'detail';
+const UpdateName = 'update';
 
 // const CreateVisible = '100';
 const DetailVisible = '010';
@@ -86,7 +91,7 @@ class Curd extends PureComponent {
             handleDetailClick(record);
             return;
           }
-          this.handleVisible('detail', true, record);
+          this.handleVisible(DetailName, true, record);
         },
       },
       {
@@ -97,7 +102,7 @@ class Curd extends PureComponent {
             handleUpdateClick(record);
             return;
           }
-          this.handleVisible('update', true, record);
+          this.handleVisible(UpdateName, true, record);
         },
       },
       {
@@ -186,30 +191,6 @@ class Curd extends PureComponent {
     });
   };
 
-  handleMenuClick = event => {
-    const { namespace, dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (selectedRows.length === 0) return;
-    switch (event.key) {
-      case 'remove':
-        dispatch({
-          type: `${namespace}/remove`,
-          payload: {
-            key: selectedRows.map(row => row.key),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
@@ -240,7 +221,7 @@ class Curd extends PureComponent {
       callback: response => {
         if (!response) {
           const { formValues } = this.state;
-          this.handleVisible('create', false);
+          this.handleVisible(CreateName, false);
           this.handleSearch(formValues);
         }
       },
@@ -260,7 +241,7 @@ class Curd extends PureComponent {
       payload: newFieldsValue,
       callback: response => {
         if (!response) {
-          this.handleVisible('update', false);
+          this.handleVisible(UpdateName, false);
         }
       },
     });
@@ -279,7 +260,7 @@ class Curd extends PureComponent {
 
   getVisibleState = () => {
     const { createVisible, detailVisible, updateVisible } = this.state;
-    return transferBoolArrayToStringArray([createVisible, detailVisible, updateVisible]);
+    return transferBoolArrayToString([createVisible, detailVisible, updateVisible]);
   };
 
   getContainerTitle = () => {
@@ -299,7 +280,7 @@ class Curd extends PureComponent {
 
   handleOk = fieldsValue => {
     if (this.getVisibleState() === DetailVisible) {
-      this.handleVisible('detail', false);
+      this.handleVisible(DetailName, false);
     }
     if (this.getVisibleState() === UpdateVisible) {
       return this.handleUpdateOk(fieldsValue);
@@ -308,35 +289,19 @@ class Curd extends PureComponent {
   };
 
   doFetchDetail = () => {
-    return 'detail' in this.props && 'detailLoading' in this.props;
+    return DetailName in this.props && 'detailLoading' in this.props;
   };
 
   setContainerModeAndRecord = () => {
     const { record } = this.state;
     if (this.getVisibleState() === DetailVisible) {
-      return ['detail', record];
+      return [DetailName, record];
     }
     if (this.getVisibleState() === UpdateVisible) {
-      return ['update', record];
+      return [UpdateName, record];
     }
-    return ['create', {}];
+    return [CreateName, {}];
   };
-
-  renderChildren() {
-    const { children } = this.props;
-    return React.Children.map(children, child => {
-      if (child) {
-        const { type: childType } = child;
-        if (childType.preventCurd || typeof childType === 'string') {
-          return child;
-        }
-        return React.cloneElement(child, {
-          __curd__: this.curd,
-        });
-      }
-      return child;
-    });
-  }
 
   render() {
     const {
@@ -346,15 +311,16 @@ class Curd extends PureComponent {
       data = {},
       detail = {},
       createButtonName = '新建',
-      fetchLoading,
-      createLoading,
-      detailLoading,
-      updateLoading,
+      fetchLoading = false,
+      createLoading = false,
+      detailLoading = false,
+      updateLoading = false,
       setFormItemsConfig,
       tableConfig: { columns, checkable },
       popupType = 'drawer',
       popupProps = {},
       queryPanelProps = {},
+      children,
     } = this.props;
     const { selectedRows } = this.state;
     const [mode, record] = this.setContainerModeAndRecord();
@@ -378,10 +344,10 @@ class Curd extends PureComponent {
             onSearch={this.handleSearch}
           />
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={() => this.handleVisible('create', true)}>
+            <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
               {createButtonName}
             </Button>
-            {this.renderChildren()}
+            {renderChildren(children, { __curd__: this.curd })}
           </div>
           {dataContainerType === 'list' ? (
             <TableList
@@ -418,7 +384,7 @@ class Curd extends PureComponent {
             loading={createLoading || detailLoading || updateLoading}
             setItemsConfig={form =>
               setFormItemsConfig(
-                mode === 'detail' && this.doFetchDetail() ? detail : record,
+                mode === DetailName && this.doFetchDetail() ? detail : record,
                 mode,
                 form
               )
@@ -433,7 +399,7 @@ class Curd extends PureComponent {
             onOk={this.handleOk}
             setItemsConfig={form =>
               setFormItemsConfig(
-                mode === 'detail' && this.doFetchDetail() ? detail : record,
+                mode === DetailName && this.doFetchDetail() ? detail : record,
                 mode,
                 form
               )
