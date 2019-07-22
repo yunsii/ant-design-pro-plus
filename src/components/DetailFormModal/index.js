@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, Form, Row, Col, Spin } from 'antd';
 import { FormProvider, createFormItems } from '@/components/antd-form-pro';
-import { renderChildren } from '@/utils/childrenUtils.ts';
+import renderChildren from '@/utils/childrenUtils.ts';
 
 function DetailFormModal(props) {
   const {
