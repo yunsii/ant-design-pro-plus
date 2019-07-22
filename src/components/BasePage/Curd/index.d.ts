@@ -49,8 +49,8 @@ export declare type CurdProps = {
     form: FormProps['form']
   ) => ItemConfig[];
   interceptors?: {
-    updateFieldsValue?: (fieldsValue: any) => any;
-    updateFieldsValueAsync?: (fieldsValue: any) => any;
+    updateFieldsValue?: (fieldsValue: any, mode?: 'create' | 'update') => any;
+    updateFieldsValueAsync?: (fieldsValue: any, mode?: 'create' | 'update') => any;
     handleDetailClick?: (record: any) => any;
     handleUpdateClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;

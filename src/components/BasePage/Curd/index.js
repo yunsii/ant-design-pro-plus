@@ -25,13 +25,13 @@ const UpdateName = 'update';
 const DetailVisible = '010';
 const UpdateVisible = '001';
 
-async function updateFieldsValueByInterceptors(fieldsValue, interceptors) {
+async function updateFieldsValueByInterceptors(fieldsValue, interceptors, mode) {
   const { updateFieldsValue, updateFieldsValueAsync } = interceptors;
   let newFieldsValue = { ...fieldsValue };
   if (updateFieldsValueAsync) {
-    newFieldsValue = await updateFieldsValueAsync(fieldsValue);
+    newFieldsValue = await updateFieldsValueAsync(fieldsValue, mode);
   } else if (updateFieldsValue) {
-    newFieldsValue = updateFieldsValue(fieldsValue);
+    newFieldsValue = updateFieldsValue(fieldsValue, mode);
   }
   return newFieldsValue;
 }
@@ -220,7 +220,11 @@ class Curd extends PureComponent {
   handleCreateOk = async fieldsValue => {
     console.log('handleCreateOk', fieldsValue);
     const { namespace, dispatch, interceptors = {} } = this.props;
-    const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
+    const newFieldsValue = await updateFieldsValueByInterceptors(
+      fieldsValue,
+      interceptors,
+      CreateName
+    );
     if (!newFieldsValue) return;
     dispatch({
       type: `${namespace}/create`,
@@ -241,7 +245,11 @@ class Curd extends PureComponent {
       record: { id },
     } = this.state;
     const { namespace, dispatch, interceptors = {} } = this.props;
-    const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
+    const newFieldsValue = await updateFieldsValueByInterceptors(
+      fieldsValue,
+      interceptors,
+      UpdateName
+    );
     if (!newFieldsValue) return;
     dispatch({
       type: `${namespace}/update`,
