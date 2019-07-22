@@ -20,6 +20,17 @@ import styles from '@/utils/table.less';
 const DetailVisible = '010';
 const UpdateVisible = '001';
 
+async function updateFieldsValueByInterceptors(fieldsValue, interceptors) {
+  const { updateFieldsValue, updateFieldsValueAsync } = interceptors;
+  let newFieldsValue = { ...fieldsValue };
+  if (updateFieldsValueAsync) {
+    newFieldsValue = await updateFieldsValueAsync(fieldsValue);
+  } else if (updateFieldsValue) {
+    newFieldsValue = updateFieldsValue(fieldsValue);
+  }
+  return newFieldsValue;
+}
+
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -219,13 +230,13 @@ class Curd extends PureComponent {
     });
   };
 
-  handleCreateOk = fieldsValue => {
+  handleCreateOk = async fieldsValue => {
     console.log('handleCreateOk', fieldsValue);
     const { namespace, dispatch, interceptors = {} } = this.props;
-    const { updateFieldsValue } = interceptors;
+    const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
     dispatch({
       type: `${namespace}/create`,
-      payload: updateFieldsValue ? updateFieldsValue(fieldsValue) : fieldsValue,
+      payload: newFieldsValue,
       callback: response => {
         if (!response) {
           const { formValues } = this.state;
@@ -236,17 +247,17 @@ class Curd extends PureComponent {
     });
   };
 
-  handleUpdateOk = fieldsValue => {
+  handleUpdateOk = async fieldsValue => {
     console.log('handleUpdateOk', fieldsValue);
     const {
       record: { id },
     } = this.state;
     const { namespace, dispatch, interceptors = {} } = this.props;
-    const { updateFieldsValue } = interceptors;
+    const newFieldsValue = await updateFieldsValueByInterceptors(fieldsValue, interceptors);
     dispatch({
       type: `${namespace}/update`,
       id,
-      payload: updateFieldsValue ? updateFieldsValue(fieldsValue) : fieldsValue,
+      payload: newFieldsValue,
       callback: response => {
         if (!response) {
           this.handleVisible('update', false);
@@ -412,6 +423,7 @@ class Curd extends PureComponent {
                 form
               )
             }
+            mode={mode}
           />
         ) : (
           <DetailFormDrawer

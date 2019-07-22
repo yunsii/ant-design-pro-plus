@@ -39,6 +39,7 @@ export declare type CurdProps = {
   ) => ItemConfig[];
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any) => any;
+    updateFieldsValueAsync?: (fieldsValue: any) => any;
     handleDetailClick?: (record: any) => any;
     handleUpdateClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;
