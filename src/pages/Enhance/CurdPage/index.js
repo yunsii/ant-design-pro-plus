@@ -98,7 +98,12 @@ class TableList extends PureComponent {
               handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
             },
           ],
-          confirmKeys: [[13, record => `确定让 ${record.name} 出外务吗？`], 14],
+          confirmKeys: [
+            [4, record => `确定查看 ${record.name} 的详情吗？`],
+            [12, () => `确定删除吗？`],
+            [13, record => `确定让 ${record.name} 出外务吗？`],
+            14,
+          ],
         }}
         popupType="drawer"
         popupProps={{
