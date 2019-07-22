@@ -9,21 +9,24 @@ import { CustomDetailFormModalProps } from './CustomDetailFormModalProps';
 
 export declare type CurdProps = {
   namespace: string;
-  data: {
-    list: any[];
-    pagination?: PaginationConfig;
-  };
-  dataContainerType: 'table' | 'list';
-  renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
+  /** popup title of create */
+  createTitle?: string;
+  /** popup title of detail */
+  detailTitle?: string;
+  /** popup title of update */
+  updateTitle?: string;
   fetchLoading: boolean;
   createLoading: boolean;
   detailLoading?: boolean;
   updateLoading: boolean;
   deleteLoading?: boolean;
-  dipatch: Function;
-  queryArgsConfig: ItemConfig[];
-  queryPanelProps: QueryPanelProps;
   createButtonName: string;
+  dipatch: Function;
+  popupType: 'modal' | 'drawer';
+  popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
+  afterPopupNotVisible?: () => void;
+  /** default value is 'table' */
+  dataContainerType: 'table' | 'list';
   tableConfig: {
     columns: any[];
     checkable?: boolean;
@@ -32,6 +35,14 @@ export declare type CurdProps = {
     confirmKeys: (number | [number, (record?: any) => string])[];
     hideActions: number[];
   };
+  /** useful only if dataContainerType is 'list' */
+  renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
+  data: {
+    list: any[];
+    pagination?: PaginationConfig;
+  };
+  queryArgsConfig: ItemConfig[];
+  queryPanelProps: QueryPanelProps;
   setFormItemsConfig: (
     detail: {},
     mode: 'create' | 'detail' | 'update',
@@ -44,12 +55,7 @@ export declare type CurdProps = {
     handleUpdateClick?: (record: any) => any;
     handleDeleteClick?: (record: any) => any;
   };
-  afterPopupNotVisible?: () => void;
-  createTitle?: string;
-  detailTitle?: string;
-  updateTitle?: string;
-  popupType: 'modal' | 'drawer';
-  popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
+  /** injected __curd__ instance of Curd */
   children?: React.ReactChildren;
 };
 interface CurdState {
