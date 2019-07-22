@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon } from 'antd';
-
 import renderCard from './CustomCard';
 import BaseCurd from '@/components/BasePage/Curd';
 import { Namespace } from '../models/curdPage.ts';
@@ -11,11 +10,11 @@ import styles from './index.less';
 @connect(({ [Namespace]: namespace, loading }) => ({
   data: namespace.data,
   detail: namespace.detail,
-  fetchLoading: loading.effects[`${Namespace}/fetch`] || false,
-  detailLoading: loading.effects[`${Namespace}/detail`] || false,
-  createLoading: loading.effects[`${Namespace}/create`] || false,
-  updateLoading: loading.effects[`${Namespace}/update`] || false,
-  deleteLoading: loading.effects[`${Namespace}/delete`] || false,
+  fetchLoading: loading.effects[`${Namespace}/fetch`],
+  detailLoading: loading.effects[`${Namespace}/detail`],
+  createLoading: loading.effects[`${Namespace}/create`],
+  updateLoading: loading.effects[`${Namespace}/update`],
+  deleteLoading: loading.effects[`${Namespace}/delete`],
 }))
 class TableList extends PureComponent {
   queryArgsConfig = [
