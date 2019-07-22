@@ -48,7 +48,7 @@ function DetailFormModal(props) {
         <div className={itemsWrapperClassName} style={itemsWrapperStyle}>
           <FormProvider value={form}>{colsItems}</FormProvider>
         </div>
-        {renderChildren(children, { mode })}
+        {mode ? renderChildren(children, { mode }) : children}
       </Spin>
     </Modal>
   );

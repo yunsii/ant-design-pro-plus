@@ -13,7 +13,7 @@ export interface DetailFormModalProps {
   };
   itemsWrapperStyle?: StyleSheet;
   itemsWrapperClassName?: string;
-  mode: 'detail' | 'create' | 'update';
+  mode?: 'detail' | 'create' | 'update';
   children?: JSX.Element;
   cols?: number;
 }
