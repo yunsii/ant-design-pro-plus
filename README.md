@@ -102,7 +102,7 @@
 
 ### DetailFormModal 详情模态框
 
-基于 antd-form-pro 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) 。
+基于 antd-form-pro 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormModal/index.d.ts) 。
 
 ### QueryPanel 查询面板
 
@@ -110,7 +110,7 @@
 
 ### base-models/curd 生成基础增删改查 model
 
-通过 `namespace` 和 `modelConfig` 即可配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。进阶使用参考 [](/src/pages/Enhance/models/curdPage.ts)
+通过 `namespace` 和 `popupType` 即可配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。进阶使用参考 [](/src/pages/Enhance/models/curdPage.ts)
 
 ### BasePage/Curd 基础增删改查页面
 
@@ -121,6 +121,8 @@
 ![custom.png](https://s2.ax1x.com/2019/07/21/eCpcxf.png)
 
 <p align='center'>列表型增删改查</p>
+
+自定义 `renderItem`。
 
 前置工具及组件：
 
@@ -136,7 +138,7 @@
 * 配置页面路由
 * 编写接口增删改查 service
 * 基于 base-models/curd 配置 model
-* 配置新建和编辑的表单数据映射 map.js
+* 配置对象表单数据映射 map.js
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
 
 具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
@@ -187,7 +189,8 @@
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any) => any | - |
+| updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any, mode?: 'create' | 'update') => any | - |
+| updateFieldsValueAsync | 异步表单数据拦截处理 | (fieldsValue: any, mode?: 'create' | 'update') => any | - |
 | handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
 | handleUpdateClick | 编辑点击事件拦截 | (record: any) => any | - |
 | handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
