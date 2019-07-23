@@ -38,7 +38,7 @@ const renderFooter = ({ tabList, tabActiveKey, onTabChange, tabBarExtraContent }
 const PageHeaderWrapper = ({
   children,
   contentWidth,
-  pageTabs,
+  pageTabs = true,
   fluid,
   wrapperClassName,
   home,

@@ -106,7 +106,7 @@ class BasicLayout extends React.Component {
       navTheme,
       layout: PropsLayout,
       children,
-      pageTabs,
+      pageTabs = true,
       location: { pathname },
       isMobile,
       menuData,
