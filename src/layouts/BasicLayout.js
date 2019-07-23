@@ -131,8 +131,8 @@ class BasicLayout extends React.Component {
         )}
         <Layout
           style={{
-            ...this.getLayoutStyle(),
             minHeight: '100vh',
+            ...this.getLayoutStyle(),
           }}
         >
           <Header
