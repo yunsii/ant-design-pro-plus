@@ -34,12 +34,31 @@
 
 ## 脚本升级指南
 
+```js
+// /scripts/features/copyConfig.js
+exports.features = [
+  'ChildrenTabs',
+  'PageTabs',
+  'StandardTable',
+  'TableList',
+  'antd-form-pro',
+  'DetailFormDrawer',
+  'DetailFormModal',
+  'QueryPanel',
+  'base-models/curd',
+  'BasePage/Curd',
+];
+
+exports.destinationRootPath = 'D:/test/';
+```
+
 1. 提交自己项目的所有修改
-2. 在 [defaultSettings](/src/defaultSettings.js) 中添加 `pageTabs` （不配置默认为 `true` ） 和 `proRootPath` （不配置默认为 `'/'`，当把 `BasicLayout` 作为子路由时需要配置 ） 配置。已配置直接下一步
-3. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra` 。已安装直接下一步
-4. 在 [/scripts/features/copyConfig.js](/scripts/features/copyConfig.js) 选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级）。
-5. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node immigrate.js`
-6. 对比升级的变化，主要是 `BasicLayout` ，自行解决相关冲突代码。
+2. 在 [defaultSettings](/src/defaultSettings.js) 中添加 `pageTabs` （不配置默认为 `true` ） 和 `proRootPath` （不配置默认为 `'/'`，当把 `BasicLayout` 作为子路由时需要配置 ） 配置
+3. 配置环境变量 `'process.env.IMAGE_FORMAT_LIMIT': '.jpg,.jpeg,.bmp,.png,.gif',` 配置图片上传格式限制
+4. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra`
+5. 新建上述 `/scripts/features/copyConfig.js` 配置脚本。选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级，且以 `'/'` 结尾）
+6. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node ./scripts/features/immigrate.js`
+7. 对比升级的变化，主要是 `BasicLayout` ，自行解决相关冲突代码。
 
 
 ## 功能实现概述☁️
