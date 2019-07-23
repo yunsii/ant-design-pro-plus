@@ -82,7 +82,7 @@ export class CustomDragger extends Component {
   };
 
   render() {
-    const { uploadFunction, onChange } = this.props;
+    const { uploadFunction, onChange, ...rest } = this.props;
     const { fileList } = this.state;
 
     return (
@@ -97,6 +97,7 @@ export class CustomDragger extends Component {
           const { fileList: afterErrorFileList } = this.state;
           onChange(filterFileListOnComplete(afterErrorFileList));
         }}
+        {...rest}
       >
         <p className="ant-upload-drag-icon">
           <Icon type="inbox" />
