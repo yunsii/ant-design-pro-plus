@@ -105,8 +105,9 @@ function getInstallDependencies() {
 
 function copyFiles(path) {
   try {
-    fse.copySync(path, path.replace(rootPath, destinationRootPath));
-    console.log(`success! ${path}\t==>\t${path.replace('.', destinationRootPath)}`);
+    const destinationPath = path.replace(rootPath, destinationRootPath);
+    fse.copySync(path, destinationPath);
+    console.log(`success! ${path}\t==>\t${destinationPath}`);
   } catch (err) {
     console.error(`error! ${err.message}`);
   }
