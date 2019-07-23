@@ -96,7 +96,7 @@ class QueryPanel extends PureComponent {
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
         <FormProvider value={form}>
-          <Row gutter={{ md: 8, lg: 24, xl: 48 }} {...rowProps}>
+          <Row type="flex" gutter={{ md: 8, lg: 24, xl: 48 }} {...rowProps}>
             {formItems.map(item => (
               <Col {...colProps} key={item.key}>
                 {item}
