@@ -8,10 +8,13 @@ const { Dragger } = Upload;
 
 export function processFileList(fileList) {
   return fileList.map(item => {
-    return {
-      ...item,
-      url: item.response ? getValueForFormItemFromResponse(item.response) : '', // uploading 状态 无 response 属性
-    };
+    if (item.response) {
+      return {
+        ...item,
+        url: getValueForFormItemFromResponse(item.response), // uploading 状态 无 response 属性
+      };
+    }
+    return item;
   });
 }
 
@@ -19,14 +22,23 @@ export function filterFileList(fileList) {
   return fileList.filter(item => item.status === 'uploading' || item.url);
 }
 
-async function customRequest({ file, onSuccess, onError }) {
-  const response = await uploadFile(file);
+export function filterFileListOnComplete(fileList) {
+  return fileList.filter(item => item.url);
+}
+
+const customRequest = uploadFunction => async ({ file, onSuccess, onError }) => {
+  let response = null;
+  if (uploadFunction) {
+    response = await uploadFunction(file);
+  } else {
+    response = await uploadFile(file);
+  }
   if (isUploadSuccess(response)) {
     onSuccess(response, file);
   } else {
     onError(response);
   }
-}
+};
 
 function setFileNameByPath(path) {
   const pathSegment = path.split(/\//g);
@@ -55,7 +67,8 @@ export class CustomDragger extends Component {
     fileList: setFileList(this.props),
   };
 
-  handleChange = ({ fileList }) => {
+  handleChange = ({ file, fileList }) => {
+    console.log(file);
     const { onChange, filesLimit } = this.props;
     let newFileList = [...fileList];
     if (filesLimit <= fileList.length) {
@@ -65,27 +78,24 @@ export class CustomDragger extends Component {
 
     if (onChange) {
       onChange(filterFileList(formatFiles));
-    } else {
-      this.setState({ fileList: filterFileList(formatFiles) });
     }
   };
 
   render() {
+    const { uploadFunction, onChange } = this.props;
     const { fileList } = this.state;
 
     return (
       <Dragger
         name="file"
         // multiple: true
-        customRequest={customRequest}
+        customRequest={customRequest(uploadFunction)}
         onChange={this.handleChange}
         fileList={fileList}
         onError={() => {
           message.error('上传失败');
           const { fileList: afterErrorFileList } = this.state;
-          this.setState({
-            fileList: filterFileList(afterErrorFileList),
-          });
+          onChange(filterFileListOnComplete(afterErrorFileList));
         }}
       >
         <p className="ant-upload-drag-icon">

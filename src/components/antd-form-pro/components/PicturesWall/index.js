@@ -4,7 +4,12 @@ import './index.css';
 import { Icon, Modal, message } from 'antd';
 import _isString from 'lodash/isString';
 import _isArray from 'lodash/isArray';
-import CustomUpload, { processFileList, filterFileList, setFileList } from '../Upload';
+import CustomUpload, {
+  processFileList,
+  filterFileList,
+  setFileList,
+  filterFileListOnComplete,
+} from '../Upload';
 
 const { IMAGE_FORMAT_LIMIT } = process.env;
 
@@ -48,13 +53,11 @@ class PicturesWall extends React.Component {
     const formatFiles = processFileList(fileList);
     if (this.props.onChange) {
       this.props.onChange(filterFileList(formatFiles));
-    } else {
-      this.setState({ fileList: filterFileList(formatFiles) });
     }
   };
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, onChange } = this.props;
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
       <div>
@@ -74,9 +77,7 @@ class PicturesWall extends React.Component {
           onError={() => {
             message.error('上传失败');
             const { fileList: afterErrorFileList } = this.state;
-            this.setState({
-              fileList: filterFileList(afterErrorFileList),
-            });
+            onChange(filterFileListOnComplete(afterErrorFileList));
           }}
         >
           {fileList.length >= 1 ? null : uploadButton}
