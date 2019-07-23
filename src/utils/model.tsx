@@ -29,13 +29,17 @@ export function getTableList(action) {
     : { list: data || [] };
 }
 
+export function renderBadge(node) {
+  const color = node.status ? { status: node.status } : { color: node.color };
+  return <Badge {...color} text={node.text} />;
+}
+
 export function renderStatus(status, code) {
   if (code) {
     const target = _find(status, { value: code });
     if (!target) return `未编码：${code}`;
 
-    const color = target.status ? { status: target.status } : { color: target.color };
-    return <Badge {...color} text={target.text} />;
+    return renderBadge(target);
   }
   return '无状态';
 }
@@ -43,6 +47,9 @@ export function renderStatus(status, code) {
 export function renderCode(list, code) {
   if (code) {
     const type = _find(list, { value: code });
+    if (type && type.color) {
+      return renderBadge(type);
+    }
     if (type) return type.text;
     return `未编码：${code}`;
   }
