@@ -1,25 +1,30 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const fse = require('fs-extra');
+const path = require('path');
 const union = require('lodash/union');
 const { features: installFeatures, destinationRootPath } = require('./copyConfig');
 
-const rootPath = '../../';
-const layoutsPath = `${rootPath}src/layouts/`;
-const componentsPath = `${rootPath}src/components/`;
-const utilsPath = `${rootPath}src/utils/`;
-const servicesPath = `${rootPath}src/services/`;
+const rootPath =
+  __dirname
+    .split(path.sep)
+    .slice(0, -2)
+    .join(path.sep) + path.sep;
+const layoutsPath = `${rootPath}src${path.sep}layouts${path.sep}`;
+const componentsPath = `${rootPath}src${path.sep}components${path.sep}`;
+const utilsPath = `${rootPath}src${path.sep}utils${path.sep}`;
+const servicesPath = `${rootPath}src${path.sep}services${path.sep}`;
 
 const featuresConfig = [
   {
     name: 'ChildrenTabs',
     path: `${componentsPath}ChildrenTabs`,
-    dependencies: [`${utilsPath}decorators/callFunctionOrNot.js`],
+    dependencies: [`${utilsPath}decorators${path.sep}callFunctionOrNot.js`],
   },
   {
     name: 'PageTabs',
     path: `${componentsPath}PageTabs`,
     dependencies: [
-      `${layoutsPath}/BasicLayout.js`,
+      `${layoutsPath}BasicLayout.js`,
       `${componentsPath}ChildrenTabs`,
       `${componentsPath}PageHeaderWrapper`,
     ],
@@ -50,22 +55,28 @@ const featuresConfig = [
   {
     name: 'QueryPanel',
     path: `${componentsPath}QueryPanel`,
-    dependencies: [`${componentsPath}antd-form-pro`, `${utilsPath}decorators/callFunctionOrNot.js`],
+    dependencies: [
+      `${componentsPath}antd-form-pro`,
+      `${utilsPath}decorators${path.sep}callFunctionOrNot.js`,
+    ],
   },
   {
-    name: 'base-models/curd',
-    path: `${rootPath}src/base-models/curd.ts`,
-    dependencies: [`${utilsPath}model.tsx`, `${utilsPath}decorators/callFunctionOrNot.js`],
+    name: 'base-models${path.sep}curd',
+    path: `${rootPath}src${path.sep}base-models${path.sep}curd.ts`,
+    dependencies: [
+      `${utilsPath}model.tsx`,
+      `${utilsPath}decorators${path.sep}callFunctionOrNot.js`,
+    ],
   },
   {
-    name: 'BasePage/Curd',
+    name: 'BasePage${path.sep}Curd',
     path: `${componentsPath}BasePage`,
     dependencies: [
       `${componentsPath}TableList`,
       `${componentsPath}QueryPanel`,
       `${componentsPath}DetailFormDrawer`,
       `${componentsPath}DetailFormModal`,
-      `${utilsPath}decorators/callFunctionOrNot.js`,
+      `${utilsPath}decorators${path.sep}callFunctionOrNot.js`,
       `${utilsPath}childrenUtils.ts`,
       `${utilsPath}table.less`,
     ],
@@ -103,11 +114,14 @@ function getInstallDependencies() {
   return union(result);
 }
 
-function copyFiles(path) {
+function copyFiles(filePath) {
   try {
-    const destinationPath = path.replace(rootPath, destinationRootPath);
-    fse.copySync(path, destinationPath);
-    console.log(`success! ${path}\t==>\t${destinationPath}`);
+    const destinationPath = filePath.replace(
+      rootPath,
+      destinationRootPath.replace(/\//g, path.sep)
+    );
+    fse.copySync(filePath, destinationPath);
+    console.log(`success! ${filePath.replace(rootPath, '')}\t==>\t${destinationPath}`);
   } catch (err) {
     console.error(`error! ${err.message}`);
   }
