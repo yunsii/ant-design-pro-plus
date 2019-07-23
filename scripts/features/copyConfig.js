@@ -11,4 +11,4 @@ exports.features = [
   'BasePage/Curd',
 ];
 
-exports.destinationRootPath = 'D:/test';
+exports.destinationRootPath = 'D:/test/';

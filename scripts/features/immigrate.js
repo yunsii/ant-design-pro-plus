@@ -4,6 +4,7 @@ const union = require('lodash/union');
 const { features: installFeatures, destinationRootPath } = require('./copyConfig');
 
 const rootPath = '../../';
+const layoutsPath = `${rootPath}src/layouts/`;
 const componentsPath = `${rootPath}src/components/`;
 const utilsPath = `${rootPath}src/utils/`;
 const servicesPath = `${rootPath}src/services/`;
@@ -17,7 +18,11 @@ const featuresConfig = [
   {
     name: 'PageTabs',
     path: `${componentsPath}PageTabs`,
-    dependencies: [`${componentsPath}ChildrenTabs`, `${componentsPath}PageHeaderWrapper`],
+    dependencies: [
+      `${layoutsPath}/BasicLayout.js`,
+      `${componentsPath}ChildrenTabs`,
+      `${componentsPath}PageHeaderWrapper`,
+    ],
   },
   {
     name: 'StandardTable',
