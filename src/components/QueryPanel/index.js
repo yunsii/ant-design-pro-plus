@@ -57,6 +57,7 @@ class QueryPanel extends PureComponent {
       rowProps = {},
       colProps: customColProps,
     } = this.props;
+    if (!queryArgsConfig.length) return null;
     let colProps = { span: calculateSpan(rowCount) };
     if (customColProps) {
       colProps = customColProps;
