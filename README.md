@@ -6,7 +6,7 @@
 
 </div>
 
-![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
+![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/23/eAJjgJ.png)
 
 [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/stargazers)
@@ -148,11 +148,11 @@ exports.destinationRootPath = 'D:/test/';
 
 ### BasePage/Curd 基础增删改查页面
 
-![basic.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
+[![eA1tzR.png](https://s2.ax1x.com/2019/07/23/eA1tzR.png)](https://imgchr.com/i/eA1tzR)
 
 <p align='center'>表格型增删改查</p>
 
-![custom.png](https://s2.ax1x.com/2019/07/21/eCpcxf.png)
+[![eA1UQ1.png](https://s2.ax1x.com/2019/07/23/eA1UQ1.png)](https://imgchr.com/i/eA1UQ1)
 
 <p align='center'>列表型增删改查</p>
 <p align='center'>自定义 <code>renderItem</code> ，这里自定义为 <code>Card</code></p>
