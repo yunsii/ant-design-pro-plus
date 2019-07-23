@@ -113,13 +113,23 @@ export class CustomDragger extends Component {
 }
 
 export default function CustomUpload(props) {
-  const { accept, listType, fileList, onPreview, onChange, onError, children, disabled } = props;
+  const {
+    accept,
+    listType,
+    fileList,
+    onPreview,
+    onChange,
+    onError,
+    children,
+    disabled,
+    uploadFunction,
+  } = props;
   return (
     <Upload
       accept={accept}
       name="image"
       onError={onError}
-      customRequest={customRequest}
+      customRequest={customRequest(uploadFunction)}
       listType={listType || 'text'}
       fileList={fileList}
       onPreview={onPreview}
