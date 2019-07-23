@@ -39,12 +39,12 @@
 3. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra` 。已安装直接下一步
 4. 在 [/scripts/features/copyConfig.js](/scripts/features/copyConfig.js) 选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级）。
 5. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node immigrate.js`
-6. 对比升级的变化，主要是 `BasicLayout` ，可自行还原相关已修改代码。
+6. 对比升级的变化，主要是 `BasicLayout` ，自行解决相关冲突代码。
 
 
 ## 功能实现概述☁️
 
-除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用了 `any` 。
+除 UI 组件外，尽量使用 TypeScript 开发。
 
 ### ChildrenTabs 根据 children 实现标签页切换
 
@@ -125,7 +125,7 @@
 
 ### base-models/curd 生成基础增删改查 model
 
-通过 `namespace` 和 `popupType` 即可配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。进阶使用参考 [](/src/pages/Enhance/models/curdPage.ts)
+通过 `namespace` 和 `modelConfig` 即可配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。进阶使用参考 [Enhance/models/curdPage.ts](/src/pages/Enhance/models/curdPage.ts)
 
 ### BasePage/Curd 基础增删改查页面
 
@@ -136,8 +136,7 @@
 ![custom.png](https://s2.ax1x.com/2019/07/21/eCpcxf.png)
 
 <p align='center'>列表型增删改查</p>
-
-自定义 `renderItem`。
+<p align='center'>自定义 <code>renderItem</code> ，这里自定义为 <code>Card</code></p>
 
 前置工具及组件：
 
@@ -147,18 +146,20 @@
 * DetailFormModal
 * QueryPanel
 * StandardTable
+* TableList
 
 如果需要新建一个类似**基础增删改查**的页面，快速开发指南：
 
 * 配置页面路由
 * 编写接口增删改查 service
 * 基于 base-models/curd 配置 model
+* 根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 方法，以便 model 能正确获取相关数据
 * 配置对象表单数据映射 map.js
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
 
 具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
 
-相较于之前一个个去复制粘贴修改代码，通过配置化的方式快速实现一个页面 demo 看起来已经好了不少。另外，本想着用 umi 里的区块试试的，后来意识到即使写了一个页面的区块，还是得去修改代码，索性自己把这些逻辑全都抽出来，通过配置实现页面扩展。
+相较于之前一个个页面去复制粘贴修改代码，通过配置化的方式即实现了快速实现页面的需求，同时也提供了较为灵活的 API 去扩展特定页面的特定需求。另外，本想着用 umi 里的区块来写页面，后来意识到即使写了一个页面的区块，如果页面逻辑差不多，还是得去一遍遍的修改代码，索性将这些逻辑全都抽象出来，通过配置实现页面扩展。
 
 #### API
 
@@ -197,15 +198,15 @@
 | checkable | 是否开启多选 | boolean | `true` |
 | showActionsCount | 除更多外需要展示的操作个数 | number | 3 |
 | extraActions | 除 **详情（4）**，**编辑（8）**，**删除（12）** 外，可自行配置额外操作。注意，数字是操作的 `key` ，根据 `key` 不同，会按升序排列 | [ActionType](/src/components/BasePage/Curd/ActionType.d.ts) | - |
-| confirmKeys | 需要弹出确认窗口的 `key` 数组 | (number | [number, (record?: any) => string])[] | `[12]` |
+| confirmKeys | 需要弹出确认窗口的 `key` 数组 | (number \| [number, (record?: any) => string])[] | `[12]` |
 | hideActions | 隐藏操作的 `key` 数组 | number[] | - |
 
 #### interceptors
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any, mode?: 'create' | 'update') => any | - |
-| updateFieldsValueAsync | 异步表单数据拦截处理 | (fieldsValue: any, mode?: 'create' | 'update') => any | - |
+| updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any, mode?: 'create' \| 'update') => any | - |
+| updateFieldsValueAsync | 异步表单数据拦截处理 | (fieldsValue: any, mode?: 'create' \| 'update') => any | - |
 | handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
 | handleUpdateClick | 编辑点击事件拦截 | (record: any) => any | - |
 | handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
