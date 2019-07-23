@@ -297,6 +297,7 @@ class Curd extends PureComponent {
   handleOk = fieldsValue => {
     if (this.getVisibleState() === DetailVisible) {
       this.handleVisible(DetailName, false);
+      return null;
     }
     if (this.getVisibleState() === UpdateVisible) {
       return this.handleUpdateOk(fieldsValue);
