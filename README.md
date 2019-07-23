@@ -32,6 +32,16 @@
 * [base-models/curd 生成基础增删改查 model](#base-models/curd-生成基础增删改查-model)
 * [BasePage/Curd 基础增删改查页面](#BasePage/Curd-基础增删改查页面)
 
+## 脚本升级指南
+
+1. 提交自己项目的所有修改
+2. 在 [defaultSettings](/src/defaultSettings.js) 中添加 `pageTabs` （不配置默认为 `true` ） 和 `proRootPath` （不配置默认为 `'/'`，当把 `BasicLayout` 作为子路由时需要配置 ） 配置。已配置直接下一步
+3. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra` 。已安装直接下一步
+4. 在 [/scripts/features/copyConfig.js](/scripts/features/copyConfig.js) 选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级）。
+5. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node immigrate.js`
+6. 对比升级的变化，主要是 `BasicLayout` ，可自行还原相关已修改代码。
+
+
 ## 功能实现概述☁️
 
 除页面外，尽量使用 TypeScript 开发。由于对类型检验还不太熟练，所以部分类型检验直接使用了 `any` 。
