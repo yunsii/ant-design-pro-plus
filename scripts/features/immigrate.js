@@ -61,7 +61,7 @@ const featuresConfig = [
     ],
   },
   {
-    name: 'base-models${path.sep}curd',
+    name: 'base-models/curd',
     path: `${rootPath}src${path.sep}base-models${path.sep}curd.ts`,
     dependencies: [
       `${utilsPath}model.tsx`,
@@ -69,7 +69,7 @@ const featuresConfig = [
     ],
   },
   {
-    name: 'BasePage${path.sep}Curd',
+    name: 'BasePage/Curd',
     path: `${componentsPath}BasePage`,
     dependencies: [
       `${componentsPath}TableList`,
