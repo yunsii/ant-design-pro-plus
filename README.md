@@ -6,7 +6,7 @@
 
 </div>
 
-![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
+![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/23/eAJjgJ.png)
 
 [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/stargazers)
@@ -17,7 +17,7 @@
 
 为了实现基于 Github Page 的在线预览的功能，将**功能示例**和 **Dashboard** 下的**分析页**数据写到了代码中，以便查看页面效果。
 
-由于是部署到非根目录，发现配置了 `base` 后，仅在页面内部路由能正常访问，如果直接使用完整的页面路由会导致访问失败。已反馈到 umi 的 issue [项目部署到非根目录，如何配置，让url匹配上？](https://github.com/umijs/umi/issues/231)，待解决。同时，发现了官方仓库没有针对部署到非根目录情况下的登录重定向，已提交 pull request [fix: redirect with deploy on non-root path](https://github.com/ant-design/ant-design-pro/pull/4860)。
+由于是部署到非根目录，发现配置了 `base` 后，仅在页面内部路由能正常访问，如果直接使用完整的页面路由会导致访问失败。已反馈到 umi 的 issue [项目部署到非根目录，如何配置，让url匹配上？](https://github.com/umijs/umi/issues/231)，待解决。同时，发现了官方仓库没有针对部署到非根目录情况下的登录重定向，已提交 pull request [fix: redirect with deploy on non-root path](https://github.com/ant-design/ant-design-pro/pull/4887)。
 
 ## 新增特性✨
 
@@ -34,12 +34,31 @@
 
 ## 脚本升级指南
 
+```js
+// /scripts/features/copyConfig.js
+exports.features = [
+  'ChildrenTabs',
+  'PageTabs',
+  'StandardTable',
+  'TableList',
+  'antd-form-pro',
+  'DetailFormDrawer',
+  'DetailFormModal',
+  'QueryPanel',
+  'base-models/curd',
+  'BasePage/Curd',
+];
+
+exports.destinationRootPath = 'D:/test/';
+```
+
 1. 提交自己项目的所有修改
-2. 在 [defaultSettings](/src/defaultSettings.js) 中添加 `pageTabs` （不配置默认为 `true` ） 和 `proRootPath` （不配置默认为 `'/'`，当把 `BasicLayout` 作为子路由时需要配置 ） 配置。已配置直接下一步
-3. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra` 。已安装直接下一步
-4. 在 [/scripts/features/copyConfig.js](/scripts/features/copyConfig.js) 选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级）。
-5. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node immigrate.js`
-6. 对比升级的变化，主要是 `BasicLayout` ，自行解决相关冲突代码。
+2. 在 [defaultSettings](/src/defaultSettings.js) 中添加 `pageTabs` （不配置默认为 `true` ） 和 `proRootPath` （不配置默认为 `'/'`，当把 `BasicLayout` 作为子路由时需要配置 ） 配置
+3. 配置环境变量 `'process.env.IMAGE_FORMAT_LIMIT': '.jpg,.jpeg,.bmp,.png,.gif',` 配置图片上传格式限制
+4. 安装脚本依赖 `fs-extra` ： `npm install -g fs-extra`
+5. 新建上述 `/scripts/features/copyConfig.js` 配置脚本。选择需要的相关特性（不需要的直接注释），并配置好 `destinationRootPath` ，即自己项目所在的根目录（src 上一级，且以 `'/'` 结尾）
+6. 运行 [/scripts/features/immigrate.js](/scripts/features/immigrate.js) ： `node ./scripts/features/immigrate.js`
+7. 对比升级的变化，主要是 `BasicLayout` ，自行解决相关冲突代码。
 
 
 ## 功能实现概述☁️
@@ -129,11 +148,11 @@
 
 ### BasePage/Curd 基础增删改查页面
 
-![basic.png](https://s2.ax1x.com/2019/07/21/eCpFEj.png)
+[![eA1tzR.png](https://s2.ax1x.com/2019/07/23/eA1tzR.png)](https://imgchr.com/i/eA1tzR)
 
 <p align='center'>表格型增删改查</p>
 
-![custom.png](https://s2.ax1x.com/2019/07/21/eCpcxf.png)
+[![eA1UQ1.png](https://s2.ax1x.com/2019/07/23/eA1UQ1.png)](https://imgchr.com/i/eA1UQ1)
 
 <p align='center'>列表型增删改查</p>
 <p align='center'>自定义 <code>renderItem</code> ，这里自定义为 <code>Card</code></p>
