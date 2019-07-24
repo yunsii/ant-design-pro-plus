@@ -21,14 +21,14 @@ export function getTableList(action) {
   const { data } = payload;
   return data.data
     ? {
-        list: data.data || [],
+        list: _isArray(data.data) ? data.data : [],
         pagination: {
           current: data.current_page,
           pageSize: data.per_page,
           total: data.total,
         },
       }
-    : { list: data || [] };
+    : { list: _isArray(data) ? data : [] };
 }
 
 function isValidCode(code) {
