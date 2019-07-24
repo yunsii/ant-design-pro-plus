@@ -2,6 +2,8 @@ import React from 'react';
 import { Badge } from 'antd';
 import _find from 'lodash/find';
 import _isArray from 'lodash/isArray';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
 import _partial from 'lodash/partial';
 
 export function getData(action) {
@@ -29,13 +31,16 @@ export function getTableList(action) {
     : { list: data || [] };
 }
 
+function isValidCode(code) {
+  return isNumber(code) || isString(code);
+}
 export function renderBadge(node) {
   const color = node.status ? { status: node.status } : { color: node.color };
   return <Badge {...color} text={node.text} />;
 }
 
 export function renderStatus(status, code) {
-  if (code) {
+  if (isValidCode(code)) {
     const target = _find(status, { value: code });
     if (!target) return `未编码：${code}`;
 
@@ -45,7 +50,7 @@ export function renderStatus(status, code) {
 }
 
 export function renderCode(list, code) {
-  if (code) {
+  if (isValidCode(code)) {
     const type = _find(list, { value: code });
     if (type && type.color) {
       return renderBadge(type);
