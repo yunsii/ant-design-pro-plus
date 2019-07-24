@@ -78,7 +78,6 @@ const featuresConfig = [
       `${componentsPath}DetailFormModal`,
       `${utilsPath}decorators${path.sep}callFunctionOrNot.js`,
       `${utilsPath}childrenUtils.ts`,
-      `${utilsPath}table.less`,
     ],
   },
 ];

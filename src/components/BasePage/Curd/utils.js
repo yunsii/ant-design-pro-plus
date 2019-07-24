@@ -127,9 +127,9 @@ export function transferBoolArrayToString(boolArray = []) {
   return result;
 }
 
-export function sortAndFilterActionsAsc(actions, hideActions) {
+export function sortAndFilterActionsAsc(actions, hideActions = []) {
   return [...actions]
-    .filter(item => hideActions && !hideActions.includes(item.key))
+    .filter(item => !hideActions.includes(item.key))
     .sort((x, y) => {
       if (x.key > y.key) return 1;
       if (x.key < y.key) return -1;

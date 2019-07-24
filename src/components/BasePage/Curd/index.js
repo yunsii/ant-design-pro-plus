@@ -14,8 +14,7 @@ import DetailFormDrawer from '@/components/DetailFormDrawer';
 import DetailFormModal from '@/components/DetailFormModal';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import renderChildren from '@/utils/childrenUtils';
-// import { updateActionName, deleteActionName } from '@/contant';
-import styles from '@/utils/table.less';
+import styles from './index.less';
 
 const CreateName = 'create';
 const DetailName = 'detail';
@@ -43,7 +42,7 @@ const getValue = obj =>
 
 class Curd extends PureComponent {
   static defaultProps = {
-    dataContainerType: 'table',
+    containerType: 'table',
     renderItem: null,
     queryArgsConfig: [],
     data: {},
@@ -57,15 +56,7 @@ class Curd extends PureComponent {
     detailLoading: false,
     updateLoading: false,
     setFormItemsConfig: () => {},
-    tableConfig: {
-      detailActionTitle: '详情',
-      updateActionTitle: '编辑',
-      deleteActionTitle: '删除',
-      showActionsCount: 3,
-      extraActions: [],
-      hideActions: [],
-      confirmKeys: [12],
-    },
+    actionsConfig: {},
     popupType: 'drawer',
     popupProps: {},
     queryPanelProps: {},
@@ -95,13 +86,13 @@ class Curd extends PureComponent {
   initialActions = record => {
     const {
       interceptors = {},
-      tableConfig: {
-        detailActionTitle,
-        updateActionTitle,
-        deleteActionTitle,
-        showActionsCount,
-        extraActions,
-        hideActions,
+      actionsConfig: {
+        detailActionTitle = '详情',
+        updateActionTitle = '编辑',
+        deleteActionTitle = '删除',
+        showActionsCount = 3,
+        extraActions = [],
+        hideActions = [],
       },
       dispatch,
       namespace,
@@ -161,7 +152,7 @@ class Curd extends PureComponent {
 
   setActions = record => {
     const {
-      tableConfig: { confirmKeys },
+      actionsConfig: { confirmKeys = [12] },
     } = this.props;
     const [actions, moreActions] = this.initialActions(record);
     return renderActions(record)(actions, moreActions, confirmKeys);
@@ -299,7 +290,8 @@ class Curd extends PureComponent {
     });
   };
 
-  enhanceColumns = columns => {
+  enhanceColumns = () => {
+    const { columns } = this.props;
     if (!columns) return [];
     return [
       ...columns,
@@ -354,8 +346,6 @@ class Curd extends PureComponent {
 
   render() {
     const {
-      dataContainerType,
-      renderItem,
       queryArgsConfig,
       data,
       detail,
@@ -365,19 +355,22 @@ class Curd extends PureComponent {
       detailLoading,
       updateLoading,
       setFormItemsConfig,
-      tableConfig,
       popupType,
       popupProps,
       queryPanelProps,
-      children,
+      operators,
+      containerType,
+      container,
+      checkable,
+      renderItem,
     } = this.props;
-    const { selectedRows } = this.state;
-    const { columns, checkable } = tableConfig;
-    const [mode, record] = this.setContainerModeAndRecord();
     const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
+    const loading = createLoading || detailLoading || updateLoading;
+    const { selectedRows } = this.state;
+    const [mode, record] = this.setContainerModeAndRecord();
     const showDetail = [DetailName, UpdateName].includes(mode);
 
-    const mergePopupProps = {
+    const composePopupProps = {
       ...modalConfig,
       ...drawerConfig,
       title: this.getContainerTitle(),
@@ -386,69 +379,78 @@ class Curd extends PureComponent {
       onClose: this.setVisibleToFalse,
     };
 
+    let popup = null;
+    if (popupType === 'drawer') {
+      popup = (
+        <DetailFormDrawer
+          drawerConfig={composePopupProps}
+          {...restPopupProps}
+          loading={loading}
+          onOk={this.handleOk}
+          setItemsConfig={form =>
+            setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
+          }
+        />
+      );
+    } else if (popupType === 'modal') {
+      popup = (
+        <DetailFormModal
+          modalConfig={{
+            ...composePopupProps,
+            onOk: this.handleOk,
+          }}
+          {...restPopupProps}
+          loading={loading}
+          setItemsConfig={form =>
+            setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
+          }
+          mode={mode}
+        />
+      );
+    }
+
+    const composeQueryPanelProps = {
+      ...queryPanelProps,
+      queryArgsConfig,
+      onSearch: this.handleSearch,
+    };
+
+    const composeCommenContainerProps = {
+      rowKey: row => row.id,
+      selectedRows,
+      loading: fetchLoading,
+      data,
+      onSelectRow: this.handleSelectRows,
+      onChange: this.handleStandardTableChange,
+      checkable,
+    };
+
+    let buildInContainer = null;
+    if (containerType === 'table') {
+      buildInContainer = (
+        <StandardTable {...composeCommenContainerProps} columns={this.enhanceColumns()} />
+      );
+    } else if (containerType === 'list') {
+      buildInContainer = (
+        <TableList
+          {...composeCommenContainerProps}
+          setActions={this.setActions}
+          renderItem={renderItem}
+        />
+      );
+    }
+
     return (
       <Card bordered={false}>
-        <div className={styles.tableList}>
-          <QueryPanel
-            {...queryPanelProps}
-            queryArgsConfig={queryArgsConfig}
-            onSearch={this.handleSearch}
-          />
-          <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
-              {createButtonName}
-            </Button>
-            {renderChildren(children, { __curd__: this.curd })}
-          </div>
-          {dataContainerType === 'list' ? (
-            <TableList
-              rowKey={item => item.id}
-              renderItem={renderItem}
-              selectedRows={selectedRows}
-              loading={fetchLoading}
-              data={data}
-              setActions={this.setActions}
-              onSelectRow={this.handleSelectRows}
-              onChange={paginatioin => this.handleStandardTableChange(paginatioin)}
-              checkable={checkable}
-            />
-          ) : (
-            <StandardTable
-              rowKey={row => row.id}
-              selectedRows={selectedRows}
-              loading={fetchLoading}
-              data={data}
-              columns={this.enhanceColumns(columns)}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-              checkable={checkable}
-            />
-          )}
+        <QueryPanel {...composeQueryPanelProps} />
+        <div className={styles.tableListOperator}>
+          <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
+            {createButtonName}
+          </Button>
+          {renderChildren(operators, { __curd__: this.curd })}
         </div>
-        {popupType === 'modal' ? (
-          <DetailFormModal
-            modalConfig={{
-              ...mergePopupProps,
-              onOk: this.handleOk,
-            }}
-            {...restPopupProps}
-            loading={createLoading || detailLoading || updateLoading}
-            setItemsConfig={form =>
-              setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
-            }
-            mode={mode}
-          />
-        ) : (
-          <DetailFormDrawer
-            drawerConfig={mergePopupProps}
-            {...restPopupProps}
-            loading={createLoading || detailLoading || updateLoading}
-            onOk={this.handleOk}
-            setItemsConfig={form =>
-              setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
-            }
-          />
-        )}
+        {container ? renderChildren(container, composeCommenContainerProps) : buildInContainer}
+        {popup}
       </Card>
     );
   }

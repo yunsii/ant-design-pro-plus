@@ -26,10 +26,10 @@ export declare type CurdProps = {
   popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
   afterPopupNotVisible?: () => void;
   /** default value is 'table' */
-  dataContainerType: 'table' | 'list';
-  tableConfig: {
-    columns: any[];
-    checkable?: boolean;
+  containerType: 'table' | 'list';
+  columns: any[];
+  checkable?: boolean;
+  actionsConfig: {
     showActionsCount?: number;
     extraActions?: ActionType[];
     confirmKeys: (number | [number, (record?: any) => string])[];
@@ -60,7 +60,7 @@ export declare type CurdProps = {
     handleDeleteClick?: (record: any) => void;
   };
   /** injected __curd__ instance of Curd */
-  children?: React.ReactChildren;
+  operators?: React.ReactNode[];
 };
 interface CurdState {
   createVisible: boolean;

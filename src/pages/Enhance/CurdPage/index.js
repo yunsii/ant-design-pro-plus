@@ -83,8 +83,8 @@ class TableList extends PureComponent {
         namespace={Namespace}
         queryArgsConfig={this.queryArgsConfig}
         setFormItemsConfig={setFormItemsConfig}
-        tableConfig={{
-          columns: this.columns,
+        columns={this.columns}
+        actionsConfig={{
           extraActions: [
             {
               key: 13,
@@ -115,9 +115,8 @@ class TableList extends PureComponent {
           maxCount: 2,
         }}
         {...this.props}
-      >
-        <TableActions />
-      </BaseCurd>
+        operators={[<TableActions />]}
+      />
     );
   }
 }

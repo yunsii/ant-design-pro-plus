@@ -81,12 +81,12 @@ class TableList extends PureComponent {
   render() {
     return (
       <BaseCurd
-        dataContainerType="list"
+        containerType="list"
         renderItem={renderCard}
         namespace={Namespace}
         queryArgsConfig={this.queryArgsConfig}
         setFormItemsConfig={setFormItemsConfig}
-        tableConfig={{
+        actionsConfig={{
           extraActions: [
             {
               key: 14,
@@ -107,9 +107,8 @@ class TableList extends PureComponent {
           maxCount: 2,
         }}
         {...this.props}
-      >
-        <TableActions />
-      </BaseCurd>
+        operators={[<TableActions />]}
+      />
     );
   }
 }
