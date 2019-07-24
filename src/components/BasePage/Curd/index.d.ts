@@ -54,9 +54,10 @@ export declare type CurdProps = {
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any, mode?: 'create' | 'update') => any;
     updateFieldsValueAsync?: (fieldsValue: any, mode?: 'create' | 'update') => any;
-    handleDetailClick?: (record: any) => any;
-    handleUpdateClick?: (record: any) => any;
-    handleDeleteClick?: (record: any) => any;
+    handleCreateClick?: () => void;
+    handleDetailClick?: (record: any) => void;
+    handleUpdateClick?: (record: any) => void;
+    handleDeleteClick?: (record: any) => void;
   };
   /** injected __curd__ instance of Curd */
   children?: React.ReactChildren;

@@ -137,7 +137,12 @@ class Curd extends PureComponent {
   };
 
   handleVisible = (action, visible, record) => {
-    const { afterPopupNotVisible } = this.props;
+    const { afterPopupNotVisible, interceptors = {} } = this.props;
+    const { handleCreateClick } = interceptors;
+    if (handleCreateClick && action === CreateName) {
+      this.handleCreateClick();
+      return;
+    }
     const actionVisible = `${action}Visible`;
     this.setState({
       [actionVisible]: !!visible,
