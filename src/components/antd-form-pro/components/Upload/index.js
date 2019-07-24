@@ -67,8 +67,7 @@ export class CustomDragger extends Component {
     fileList: setFileList(this.props),
   };
 
-  handleChange = ({ file, fileList }) => {
-    console.log(file);
+  handleChange = ({ fileList }) => {
     const { onChange, filesLimit } = this.props;
     let newFileList = [...fileList];
     if (filesLimit <= fileList.length) {
