@@ -42,6 +42,25 @@ const getValue = obj =>
     .join(',');
 
 class Curd extends PureComponent {
+  static defaultProps = {
+    dataContainerType: 'table',
+    renderItem: null,
+    queryArgsConfig: [],
+    data: {},
+    detail: {},
+    createButtonName: '新建',
+    fetchLoading: false,
+    createLoading: false,
+    detailLoading: false,
+    updateLoading: false,
+    setFormItemsConfig: () => {},
+    tableConfig: {},
+    popupType: 'drawer',
+    popupProps: {},
+    queryPanelProps: {},
+    dispatch: () => {},
+  };
+
   curd;
 
   state = {
@@ -327,24 +346,25 @@ class Curd extends PureComponent {
 
   render() {
     const {
-      dataContainerType = 'table',
-      renderItem = null,
-      queryArgsConfig = [],
-      data = {},
-      detail = {},
-      createButtonName = '新建',
-      fetchLoading = false,
-      createLoading = false,
-      detailLoading = false,
-      updateLoading = false,
+      dataContainerType,
+      renderItem,
+      queryArgsConfig,
+      data,
+      detail,
+      createButtonName,
+      fetchLoading,
+      createLoading,
+      detailLoading,
+      updateLoading,
       setFormItemsConfig,
-      tableConfig: { columns, checkable },
-      popupType = 'drawer',
-      popupProps = {},
-      queryPanelProps = {},
+      tableConfig,
+      popupType,
+      popupProps,
+      queryPanelProps,
       children,
     } = this.props;
     const { selectedRows } = this.state;
+    const { columns, checkable } = tableConfig;
     const [mode, record] = this.setContainerModeAndRecord();
     const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
     const showDetail = [DetailName, UpdateName].includes(mode);
