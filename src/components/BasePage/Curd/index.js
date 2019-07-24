@@ -1,11 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Card, Button } from 'antd';
-import {
-  addDivider,
-  renderActions,
-  transferBoolArrayToString,
-  sortAndFilterActionsAsc,
-} from './utils';
+import { addDivider, transferBoolArrayToString } from './utils';
 
 import StandardTable from '@/components/StandardTable';
 import TableList from '@/components/TableList';
@@ -15,14 +10,8 @@ import DetailFormModal from '@/components/DetailFormModal';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import renderChildren from '@/utils/childrenUtils';
 import styles from './index.less';
-
-const CreateName = 'create';
-const DetailName = 'detail';
-const UpdateName = 'update';
-
-// const CreateVisible = '100';
-const DetailVisible = '010';
-const UpdateVisible = '001';
+import { CreateName, DetailName, UpdateName, DetailVisible, UpdateVisible } from './constant';
+import { setActions } from './actions';
 
 async function updateFieldsValueByInterceptors(fieldsValue, interceptors, mode) {
   const { updateFieldsValue, updateFieldsValueAsync } = interceptors;
@@ -84,81 +73,6 @@ class Curd extends PureComponent {
       type: `${namespace}/fetch`,
     });
   }
-
-  initialActions = record => {
-    const {
-      interceptors = {},
-      actionsConfig: {
-        detailActionTitle = '详情',
-        updateActionTitle = '编辑',
-        deleteActionTitle = '删除',
-        showActionsCount = 3,
-        extraActions = [],
-        hideActions = [],
-      },
-      dispatch,
-      namespace,
-    } = this.props;
-    const { handleDetailClick, handleDeleteClick, handleUpdateClick } = interceptors;
-    const actions = [
-      {
-        key: 4,
-        title: detailActionTitle,
-        handleClick: () => {
-          if (handleDetailClick) {
-            handleDetailClick(record);
-            return;
-          }
-          if (this.doFetchDetail()) {
-            dispatch({
-              type: `${namespace}/detail`,
-              id: record.id,
-            });
-          }
-          this.handleVisible(DetailName, true, record);
-        },
-      },
-      {
-        key: 8,
-        title: updateActionTitle,
-        handleClick: () => {
-          if (handleUpdateClick) {
-            handleUpdateClick(record);
-            return;
-          }
-          if (this.doFetchDetail()) {
-            dispatch({
-              type: `${namespace}/detail`,
-              id: record.id,
-            });
-          }
-          this.handleVisible(UpdateName, true, record);
-        },
-      },
-      {
-        key: 12,
-        title: deleteActionTitle,
-        handleClick: () => {
-          if (handleDeleteClick) {
-            handleDeleteClick(record);
-            return;
-          }
-          this.deleteModel(record.id);
-        },
-      },
-      ...extraActions,
-    ];
-    const sortedActions = sortAndFilterActionsAsc(actions, hideActions);
-    return [sortedActions.slice(0, showActionsCount), sortedActions.slice(showActionsCount)];
-  };
-
-  setActions = record => {
-    const {
-      actionsConfig: { confirmKeys = [12] },
-    } = this.props;
-    const [actions, moreActions] = this.initialActions(record);
-    return renderActions(record)(actions, moreActions, confirmKeys);
-  };
 
   handleVisible = (action, visible, record) => {
     const { afterPopupNotVisible, interceptors } = this.props;
@@ -299,7 +213,7 @@ class Curd extends PureComponent {
       ...columns,
       {
         title: '操作',
-        render: (value, record) => addDivider(this.setActions(record)),
+        render: (value, record) => addDivider(setActions(record, this, this.props)),
       },
     ];
   };
@@ -346,29 +260,71 @@ class Curd extends PureComponent {
     return [CreateName, {}];
   };
 
-  render() {
-    const {
+  renderQueryPanel = () => {
+    const { queryArgsConfig, queryPanelProps } = this.props;
+
+    const composeQueryPanelProps = {
+      ...queryPanelProps,
       queryArgsConfig,
+      onSearch: this.handleSearch,
+    };
+    return <QueryPanel {...composeQueryPanelProps} />;
+  };
+
+  renderOperators = () => {
+    const { createButtonName, operators } = this.props;
+    return (
+      <div className={styles.tableListOperator}>
+        <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
+          {createButtonName}
+        </Button>
+        {renderChildren(operators, { __curd__: this.curd })}
+      </div>
+    );
+  };
+
+  renderContainer = () => {
+    let result = null;
+    const { data, fetchLoading, containerType, container, checkable, renderItem } = this.props;
+    const { selectedRows } = this.state;
+
+    const composeCommenContainerProps = {
+      rowKey: row => row.id,
+      selectedRows,
+      loading: fetchLoading,
       data,
+      onSelectRow: this.handleSelectRows,
+      onChange: this.handleStandardTableChange,
+      checkable,
+    };
+
+    if (containerType === 'table') {
+      result = <StandardTable {...composeCommenContainerProps} columns={this.enhanceColumns()} />;
+    } else if (containerType === 'list') {
+      result = (
+        <TableList
+          {...composeCommenContainerProps}
+          setActions={record => setActions(record, this, this.props)}
+          renderItem={renderItem}
+        />
+      );
+    }
+    return container ? renderChildren(container, composeCommenContainerProps) : result;
+  };
+
+  renderPopup = () => {
+    let result = null;
+    const {
       detail,
-      createButtonName,
-      fetchLoading,
       createLoading,
       detailLoading,
       updateLoading,
       setFormItemsConfig,
       popupType,
       popupProps,
-      queryPanelProps,
-      operators,
-      containerType,
-      container,
-      checkable,
-      renderItem,
     } = this.props;
     const { drawerConfig, modalConfig, ...restPopupProps } = popupProps;
     const loading = createLoading || detailLoading || updateLoading;
-    const { selectedRows } = this.state;
     const [mode, record] = this.setContainerModeAndRecord();
     const showDetail = [DetailName, UpdateName].includes(mode);
 
@@ -381,9 +337,8 @@ class Curd extends PureComponent {
       onClose: this.setVisibleToFalse,
     };
 
-    let popup = null;
     if (popupType === 'drawer') {
-      popup = (
+      result = (
         <DetailFormDrawer
           drawerConfig={composePopupProps}
           {...restPopupProps}
@@ -395,7 +350,7 @@ class Curd extends PureComponent {
         />
       );
     } else if (popupType === 'modal') {
-      popup = (
+      result = (
         <DetailFormModal
           modalConfig={{
             ...composePopupProps,
@@ -410,49 +365,16 @@ class Curd extends PureComponent {
         />
       );
     }
+    return result;
+  };
 
-    const composeQueryPanelProps = {
-      ...queryPanelProps,
-      queryArgsConfig,
-      onSearch: this.handleSearch,
-    };
-
-    const composeCommenContainerProps = {
-      rowKey: row => row.id,
-      selectedRows,
-      loading: fetchLoading,
-      data,
-      onSelectRow: this.handleSelectRows,
-      onChange: this.handleStandardTableChange,
-      checkable,
-    };
-
-    let buildInContainer = null;
-    if (containerType === 'table') {
-      buildInContainer = (
-        <StandardTable {...composeCommenContainerProps} columns={this.enhanceColumns()} />
-      );
-    } else if (containerType === 'list') {
-      buildInContainer = (
-        <TableList
-          {...composeCommenContainerProps}
-          setActions={this.setActions}
-          renderItem={renderItem}
-        />
-      );
-    }
-
+  render() {
     return (
       <Card bordered={false}>
-        <QueryPanel {...composeQueryPanelProps} />
-        <div className={styles.tableListOperator}>
-          <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
-            {createButtonName}
-          </Button>
-          {renderChildren(operators, { __curd__: this.curd })}
-        </div>
-        {container ? renderChildren(container, composeCommenContainerProps) : buildInContainer}
-        {popup}
+        {this.renderQueryPanel()}
+        {this.renderOperators()}
+        {this.renderContainer()}
+        {this.renderPopup()}
       </Card>
     );
   }
