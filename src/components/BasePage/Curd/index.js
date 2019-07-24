@@ -48,17 +48,29 @@ class Curd extends PureComponent {
     queryArgsConfig: [],
     data: {},
     detail: {},
+    createTitle: '新建对象',
+    detailTitle: '对象详情',
+    updateTitle: '编辑对象',
     createButtonName: '新建',
     fetchLoading: false,
     createLoading: false,
     detailLoading: false,
     updateLoading: false,
     setFormItemsConfig: () => {},
-    tableConfig: {},
+    tableConfig: {
+      detailActionTitle: '详情',
+      updateActionTitle: '编辑',
+      deleteActionTitle: '删除',
+      showActionsCount: 3,
+      extraActions: [],
+      hideActions: [],
+      confirmKeys: [12],
+    },
     popupType: 'drawer',
     popupProps: {},
     queryPanelProps: {},
     dispatch: () => {},
+    interceptors: {},
   };
 
   curd;
@@ -84,12 +96,12 @@ class Curd extends PureComponent {
     const {
       interceptors = {},
       tableConfig: {
-        detailActionTitle = '详情',
-        updateActionTitle = '编辑',
-        deleteActionTitle = '删除',
-        showActionsCount = 3,
-        extraActions = [],
-        hideActions = [],
+        detailActionTitle,
+        updateActionTitle,
+        deleteActionTitle,
+        showActionsCount,
+        extraActions,
+        hideActions,
       },
       dispatch,
       namespace,
@@ -149,14 +161,14 @@ class Curd extends PureComponent {
 
   setActions = record => {
     const {
-      tableConfig: { confirmKeys = [] },
+      tableConfig: { confirmKeys },
     } = this.props;
     const [actions, moreActions] = this.initialActions(record);
-    return renderActions(record)(actions, moreActions, confirmKeys.length ? confirmKeys : [12]);
+    return renderActions(record)(actions, moreActions, confirmKeys);
   };
 
   handleVisible = (action, visible, record) => {
-    const { afterPopupNotVisible, interceptors = {} } = this.props;
+    const { afterPopupNotVisible, interceptors } = this.props;
     const { handleCreateClick } = interceptors;
     if (handleCreateClick && action === CreateName) {
       this.handleCreateClick();
@@ -243,7 +255,7 @@ class Curd extends PureComponent {
 
   handleCreateOk = async fieldsValue => {
     console.log('handleCreateOk', fieldsValue);
-    const { namespace, dispatch, interceptors = {} } = this.props;
+    const { namespace, dispatch, interceptors } = this.props;
     const newFieldsValue = await updateFieldsValueByInterceptors(
       fieldsValue,
       interceptors,
@@ -268,7 +280,7 @@ class Curd extends PureComponent {
     const {
       record: { id },
     } = this.state;
-    const { namespace, dispatch, interceptors = {} } = this.props;
+    const { namespace, dispatch, interceptors } = this.props;
     const newFieldsValue = await updateFieldsValueByInterceptors(
       fieldsValue,
       interceptors,
@@ -304,11 +316,7 @@ class Curd extends PureComponent {
   };
 
   getContainerTitle = () => {
-    const {
-      createTitle = '新建对象',
-      detailTitle = '对象详情',
-      updateTitle = '编辑对象',
-    } = this.props;
+    const { createTitle, detailTitle, updateTitle } = this.props;
     if (this.getVisibleState() === DetailVisible) {
       return detailTitle;
     }
