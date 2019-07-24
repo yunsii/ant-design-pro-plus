@@ -21,14 +21,22 @@ export declare type CurdProps = {
   updateLoading: boolean;
   deleteLoading?: boolean;
   createButtonName: string;
+  checkable?: boolean;
+  detail?: any;
   dipatch: Function;
-  popupType: 'modal' | 'drawer';
-  popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
-  afterPopupNotVisible?: () => void;
+  queryArgsConfig: ItemConfig[];
+  queryPanelProps: QueryPanelProps;
   /** default value is 'table' */
   containerType: 'table' | 'list';
+  /** injected __curd__ instance of Curd */
+  operators?: React.ReactNode[];
   columns: any[];
-  checkable?: boolean;
+  /** useful only if dataContainerType is 'list' */
+  renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
+  data: {
+    list: any[];
+    pagination?: PaginationConfig;
+  };
   actionsConfig: {
     showActionsCount?: number;
     extraActions?: ActionType[];
@@ -38,19 +46,14 @@ export declare type CurdProps = {
     updateActionTitle: string;
     deleteActionTitle: string;
   };
-  /** useful only if dataContainerType is 'list' */
-  renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
-  data: {
-    list: any[];
-    pagination?: PaginationConfig;
-  };
-  queryArgsConfig: ItemConfig[];
-  queryPanelProps: QueryPanelProps;
+  popupType: 'modal' | 'drawer';
+  popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
   setFormItemsConfig: (
     detail: {},
     mode: 'create' | 'detail' | 'update',
     form: FormProps['form']
   ) => ItemConfig[];
+  afterPopupNotVisible?: () => void;
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any, mode?: 'create' | 'update') => any;
     updateFieldsValueAsync?: (fieldsValue: any, mode?: 'create' | 'update') => any;
@@ -59,8 +62,6 @@ export declare type CurdProps = {
     handleUpdateClick?: (record: any) => void;
     handleDeleteClick?: (record: any) => void;
   };
-  /** injected __curd__ instance of Curd */
-  operators?: React.ReactNode[];
 };
 interface CurdState {
   createVisible: boolean;
