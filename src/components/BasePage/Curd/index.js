@@ -65,9 +65,9 @@ class Curd extends PureComponent {
     const {
       interceptors = {},
       tableConfig: {
-        detailTitle = '详情',
-        updateTitle = '编辑',
-        deleteTitle = '删除',
+        detailActionTitle = '详情',
+        updateActionTitle = '编辑',
+        deleteActionTitle = '删除',
         showActionsCount = 3,
         extraActions = [],
         hideActions = [],
@@ -79,7 +79,7 @@ class Curd extends PureComponent {
     const actions = [
       {
         key: 4,
-        title: detailTitle,
+        title: detailActionTitle,
         handleClick: () => {
           if (handleDetailClick) {
             handleDetailClick(record);
@@ -96,7 +96,7 @@ class Curd extends PureComponent {
       },
       {
         key: 8,
-        title: updateTitle,
+        title: updateActionTitle,
         handleClick: () => {
           if (handleUpdateClick) {
             handleUpdateClick(record);
@@ -113,7 +113,7 @@ class Curd extends PureComponent {
       },
       {
         key: 12,
-        title: deleteTitle,
+        title: deleteActionTitle,
         handleClick: () => {
           if (handleDeleteClick) {
             handleDeleteClick(record);

@@ -34,6 +34,9 @@ export declare type CurdProps = {
     extraActions?: ActionType[];
     confirmKeys: (number | [number, (record?: any) => string])[];
     hideActions: number[];
+    detailActionTitle: string;
+    updateActionTitle: string;
+    deleteActionTitle: string;
   };
   /** useful only if dataContainerType is 'list' */
   renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
