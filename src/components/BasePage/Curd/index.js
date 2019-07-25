@@ -299,7 +299,6 @@ class Curd extends PureComponent {
     const { selectedRows } = this.state;
 
     const composeCommenContainerProps = {
-      rowKey: row => row.id,
       selectedRows,
       loading: fetchLoading,
       data,
@@ -312,6 +311,7 @@ class Curd extends PureComponent {
       result = (
         <StandardTable
           {...containerProps}
+          rowKey={row => row.id}
           {...composeCommenContainerProps}
           columns={this.enhanceColumns()}
         />
@@ -320,6 +320,7 @@ class Curd extends PureComponent {
       result = (
         <TableList
           {...containerProps}
+          rowKey={row => row.id}
           {...composeCommenContainerProps}
           setActions={record => setActions(record, this, this.props)}
           renderItem={renderItem}
