@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { PaginationConfig, ColumnProps } from 'antd/lib/table';
+import { PaginationConfig, ColumnProps, TableProps } from 'antd/lib/table';
 import { FormProps } from 'antd/lib/form';
+import { ListProps } from 'antd/lib/list';
 import { ActionType } from './ActionType';
 import { QueryPanelProps } from '@/components/QueryPanel';
 import { ItemConfig } from '@/components/antd-form-pro';
@@ -28,6 +29,7 @@ export declare type CurdProps = {
   queryPanelProps: QueryPanelProps;
   /** default value is 'table' */
   containerType: 'table' | 'list';
+  containerProps?: TableProps<any> | ListProps<any>;
   /** injected __curd__ instance of Curd */
   operators?: React.ReactNode[];
   columns: any[];

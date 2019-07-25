@@ -285,7 +285,15 @@ class Curd extends PureComponent {
 
   renderContainer = () => {
     let result = null;
-    const { data, fetchLoading, containerType, container, checkable, renderItem } = this.props;
+    const {
+      data,
+      fetchLoading,
+      containerType,
+      container,
+      containerProps,
+      checkable,
+      renderItem,
+    } = this.props;
     const { selectedRows } = this.state;
 
     const composeCommenContainerProps = {
@@ -299,10 +307,17 @@ class Curd extends PureComponent {
     };
 
     if (containerType === 'table') {
-      result = <StandardTable {...composeCommenContainerProps} columns={this.enhanceColumns()} />;
+      result = (
+        <StandardTable
+          {...containerProps}
+          {...composeCommenContainerProps}
+          columns={this.enhanceColumns()}
+        />
+      );
     } else if (containerType === 'list') {
       result = (
         <TableList
+          {...containerProps}
           {...composeCommenContainerProps}
           setActions={record => setActions(record, this, this.props)}
           renderItem={renderItem}
