@@ -55,6 +55,7 @@ class TableList extends PureComponent {
   state = {
     selectedRowKeys: [],
     pagination: {},
+    showPagination: true,
   };
 
   cleanSelectedKeys = () => {
@@ -107,10 +108,38 @@ class TableList extends PureComponent {
     this.handlePageChange(current, pageSize);
   };
 
+  renderPagination = () => {
+    const { pagination } = this.props;
+    const { pagination: currentPagination } = this.state;
+
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      hideOnSinglePage: true,
+      showTotal: (total, range) => `${range[0]}-${range[1]}，总计 ${total} 条`,
+      ...currentPagination,
+    };
+
+    let paginationComponent = (
+      <Pagination
+        style={{ float: 'right' }}
+        {...paginationProps}
+        onChange={this.handlePageChange}
+        onShowSizeChange={this.handleShowSizeChange}
+      />
+    );
+    if (_.isBoolean(pagination) && !pagination) {
+      paginationComponent = null;
+      this.setState({
+        showPagination: false,
+      });
+    }
+    return paginationComponent;
+  };
+
   render() {
     const {
       data = {},
-      rowKey,
       checkable = true,
       renderItem,
       selectedRows,
@@ -118,19 +147,12 @@ class TableList extends PureComponent {
       onSelectRow,
       loading,
       onChange,
+      pagination,
       ...rest
     } = this.props;
-    const { selectedRowKeys, pagination } = this.state;
-    const { current, pageSize } = pagination;
+    const { selectedRowKeys, pagination: currentPagination, showPagination } = this.state;
+    const { current, pageSize } = currentPagination;
     const { list = [] } = data;
-
-    const paginationProps = {
-      showSizeChanger: true,
-      showQuickJumper: true,
-      hideOnSinglePage: true,
-      showTotal: (total, range) => `${range[0]}-${range[1]}，总计 ${total} 条`,
-      ...pagination,
-    };
 
     let recordSelection = {
       selectedRowKeys,
@@ -149,7 +171,9 @@ class TableList extends PureComponent {
           rowKey="id"
           grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
           {...rest}
-          dataSource={list.slice((current - 1) * pageSize, current * pageSize)}
+          dataSource={
+            showPagination ? list.slice((current - 1) * pageSize, current * pageSize) : list
+          }
           renderItem={record => (
             <List.Item style={{ position: 'relative' }}>
               {checkable ? (
@@ -168,12 +192,7 @@ class TableList extends PureComponent {
             </List.Item>
           )}
         />
-        <Pagination
-          style={{ float: 'right' }}
-          {...paginationProps}
-          onChange={this.handlePageChange}
-          onShowSizeChange={this.handleShowSizeChange}
-        />
+        {this.renderPagination()}
       </Spin>
     );
     if (checkable) {
