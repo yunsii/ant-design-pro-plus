@@ -48,7 +48,7 @@ export declare type CurdProps = {
     updateActionTitle: string;
     deleteActionTitle: string;
   };
-  popupType: 'modal' | 'drawer';
+  popupType: 'modal' | 'drawer' | null;
   popupProps: CustomDetailFormDrawerProps | CustomDetailFormModalProps;
   setFormItemsConfig: (
     detail: {},
