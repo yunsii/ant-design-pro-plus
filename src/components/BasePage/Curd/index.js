@@ -45,7 +45,7 @@ class Curd extends PureComponent {
     queryArgsConfig: [],
     queryPanelProps: {},
     containerType: 'table',
-    columns: [],
+    containerProps: {},
     renderItem: () => {},
     data: {},
     actionsConfig: {},
@@ -207,7 +207,9 @@ class Curd extends PureComponent {
   };
 
   enhanceColumns = () => {
-    const { columns } = this.props;
+    const {
+      containerProps: { columns },
+    } = this.props;
     if (!columns) return [];
     return [
       ...columns,
