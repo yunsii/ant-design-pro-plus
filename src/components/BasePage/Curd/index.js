@@ -277,9 +277,11 @@ class Curd extends PureComponent {
     const { createButtonName, operators } = this.props;
     return (
       <div className={styles.tableListOperator}>
-        <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
-          {createButtonName}
-        </Button>
+        {createButtonName ? (
+          <Button icon="plus" type="primary" onClick={() => this.handleVisible(CreateName, true)}>
+            {createButtonName}
+          </Button>
+        ) : null}
         {renderChildren(operators, { __curd__: this.curd })}
       </div>
     );
