@@ -83,7 +83,9 @@ class TableList extends PureComponent {
         namespace={Namespace}
         queryArgsConfig={this.queryArgsConfig}
         setFormItemsConfig={setFormItemsConfig}
-        columns={this.columns}
+        containerProps={{
+          columns: this.columns,
+        }}
         actionsConfig={{
           extraActions: [
             {
