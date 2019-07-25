@@ -1,31 +1,45 @@
 import React, { PureComponent, Fragment } from 'react';
 import { List, Alert, Pagination, Checkbox, Spin } from 'antd';
-import _isEqual from 'lodash/isEqual';
+import _ from 'lodash';
 // import classNames from 'classnames';
 import styles from './index.less';
 
+function isValidPagination(pagination) {
+  const filterPagination = _.pickBy(pagination, _.isNumber);
+  return _.keys(filterPagination).length;
+}
+
 class TableList extends PureComponent {
+  static defaultProps = {
+    data: {},
+  };
+
   static getDerivedStateFromProps(nextProps, state) {
-    let result = null;
-    const { checkable, data = {} } = nextProps;
-    const { propsPaination } = state;
+    let result = {};
+    const { checkable, data } = nextProps;
     const { pagination, list } = data;
-    console.log(pagination, propsPaination);
-    console.log(!pagination && !propsPaination);
-    console.log(pagination && !_isEqual(propsPaination, pagination));
-    if (!pagination && !propsPaination) {
+    const { pagination: currentPagination } = state;
+    // console.log(list);
+    // console.log(currentPagination);
+    if (list.length && !isValidPagination(pagination) && !isValidPagination(currentPagination)) {
       result = {
-        propsPaination: pagination,
         pagination: {
           current: 1,
           pageSize: 10,
           total: list.length,
         },
       };
-    }
-    if (pagination && !_isEqual(propsPaination, pagination)) {
+    } else if (
+      list.length &&
+      !isValidPagination(pagination) &&
+      isValidPagination(currentPagination)
+    ) {
       result = {
-        propsPaination: pagination,
+        pagination: currentPagination,
+      };
+    } else if (list.length && isValidPagination(pagination)) {
+      return {
+        ...result,
         pagination,
       };
     }
@@ -35,24 +49,16 @@ class TableList extends PureComponent {
         selectedRowKeys: [],
       };
     }
-    return result;
+    return Object.keys(result).length ? result : null;
   }
 
   state = {
     selectedRowKeys: [],
-    propsPaination: null,
     pagination: {},
   };
 
-  handleTableChange = (pagination, filters, sorter) => {
-    const { onChange } = this.props;
-    if (onChange) {
-      onChange(pagination, filters, sorter);
-    }
-  };
-
   cleanSelectedKeys = () => {
-    this.onChange([]);
+    this.handleSelectChange([]);
   };
 
   onCheckAllChange = () => {
@@ -60,13 +66,13 @@ class TableList extends PureComponent {
     const { list = [] } = data;
     const { selectedRowKeys } = this.state;
     if (selectedRowKeys.length < list.length) {
-      this.onChange(list.map(item => item.id));
+      this.handleSelectChange(list.map(item => item.id));
       return;
     }
-    this.onChange([]);
+    this.handleSelectChange([]);
   };
 
-  onChange = selectedRowKeys => {
+  handleSelectChange = selectedRowKeys => {
     const { data = {}, onSelectRow } = this.props;
     const { list = [] } = data;
     this.setState({
@@ -77,21 +83,24 @@ class TableList extends PureComponent {
     }
   };
 
-  handlePageChange = (current, pageSize) => {
-    const { onChange } = this.props;
-    const { pagination } = this.state;
+  handlePageChange = (page, pageSize) => {
+    const { onChange, data } = this.props;
+    const { pagination } = data;
+    const { pagination: thisPagination } = this.state;
     // console.log(pagination);
     this.setState({
       pagination: {
-        current,
+        ...thisPagination,
+        current: page,
         pageSize,
-        ...pagination,
       },
     });
-    onChange({
-      current,
-      pageSize,
-    });
+    if (isValidPagination(pagination)) {
+      onChange({
+        current: page,
+        pageSize,
+      });
+    }
   };
 
   handleShowSizeChange = (current, pageSize) => {
@@ -108,9 +117,11 @@ class TableList extends PureComponent {
       setActions,
       onSelectRow,
       loading,
+      onChange,
       ...rest
     } = this.props;
     const { selectedRowKeys, pagination } = this.state;
+    const { current, pageSize } = pagination;
     const { list = [] } = data;
 
     const paginationProps = {
@@ -120,14 +131,13 @@ class TableList extends PureComponent {
       showTotal: (total, range) => `${range[0]}-${range[1]}，总计 ${total} 条`,
       ...pagination,
     };
-    console.log(pagination);
 
     let recordSelection = {
       selectedRowKeys,
-      onChange: this.onChange,
-      // getCheckboxProps: record => ({
-      //   disabled: record.disabled,
-      // }),
+      onChange: this.handleSelectChange,
+      getCheckboxProps: record => ({
+        disabled: record.disabled,
+      }),
     };
     if (!checkable) {
       recordSelection = {};
@@ -139,7 +149,7 @@ class TableList extends PureComponent {
           rowKey="id"
           grid={{ gutter: 24, lg: 3, md: 2, sm: 1, xs: 1 }}
           {...rest}
-          dataSource={list}
+          dataSource={list.slice((current - 1) * pageSize, current * pageSize)}
           renderItem={record => (
             <List.Item style={{ position: 'relative' }}>
               {checkable ? (
@@ -168,7 +178,11 @@ class TableList extends PureComponent {
     );
     if (checkable) {
       renderList = (
-        <Checkbox.Group style={{ width: '100%' }} onChange={this.onChange} value={selectedRowKeys}>
+        <Checkbox.Group
+          style={{ width: '100%' }}
+          onChange={this.handleSelectChange}
+          value={selectedRowKeys}
+        >
           {renderList}
         </Checkbox.Group>
       );
