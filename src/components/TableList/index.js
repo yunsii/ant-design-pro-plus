@@ -12,16 +12,25 @@ function isValidPagination(pagination) {
 class TableList extends PureComponent {
   static defaultProps = {
     data: {},
+    loading: false,
   };
 
   static getDerivedStateFromProps(nextProps, state) {
     let result = {};
-    const { checkable, data } = nextProps;
-    const { pagination, list } = data;
+    const { checkable, data, pagination } = nextProps;
+    const { pagination: listPagination, list } = data;
     const { pagination: currentPagination } = state;
     // console.log(list);
     // console.log(currentPagination);
-    if (list.length && !isValidPagination(pagination) && !isValidPagination(currentPagination)) {
+    if (_.isBoolean(pagination) && !pagination) {
+      result = {
+        showPagination: false,
+      };
+    } else if (
+      list.length &&
+      !isValidPagination(listPagination) &&
+      !isValidPagination(currentPagination)
+    ) {
       result = {
         pagination: {
           current: 1,
@@ -31,18 +40,19 @@ class TableList extends PureComponent {
       };
     } else if (
       list.length &&
-      !isValidPagination(pagination) &&
+      !isValidPagination(listPagination) &&
       isValidPagination(currentPagination)
     ) {
       result = {
         pagination: currentPagination,
       };
-    } else if (list.length && isValidPagination(pagination)) {
+    } else if (list.length && isValidPagination(listPagination)) {
       return {
         ...result,
-        pagination,
+        pagination: listPagination,
       };
     }
+
     if (checkable && nextProps.selectedRows.length === 0) {
       result = {
         ...result,
@@ -109,8 +119,7 @@ class TableList extends PureComponent {
   };
 
   renderPagination = () => {
-    const { pagination } = this.props;
-    const { pagination: currentPagination } = this.state;
+    const { pagination: currentPagination, showPagination } = this.state;
 
     const paginationProps = {
       showSizeChanger: true,
@@ -128,11 +137,8 @@ class TableList extends PureComponent {
         onShowSizeChange={this.handleShowSizeChange}
       />
     );
-    if (_.isBoolean(pagination) && !pagination) {
+    if (!showPagination) {
       paginationComponent = null;
-      this.setState({
-        showPagination: false,
-      });
     }
     return paginationComponent;
   };
@@ -188,7 +194,12 @@ class TableList extends PureComponent {
                   }}
                 />
               ) : null}
-              {renderItem({ record, actions: setActions(record), recordSelection, checkable })}
+              {renderItem({
+                record,
+                actions: setActions ? setActions(record) : null,
+                recordSelection,
+                checkable,
+              })}
             </List.Item>
           )}
         />
