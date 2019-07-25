@@ -54,8 +54,8 @@ export function initialActions(record, instance, props) {
       title: detailActionTitle,
       handleClick: () => {
         if (handleDetailClick) {
-          handleDetailClick(record);
-          return;
+          const isBreak = handleDetailClick(record);
+          if (isBreak) return;
         }
         if (instance.doFetchDetail()) {
           dispatch({
@@ -71,8 +71,8 @@ export function initialActions(record, instance, props) {
       title: updateActionTitle,
       handleClick: () => {
         if (handleUpdateClick) {
-          handleUpdateClick(record);
-          return;
+          const isBreak = handleUpdateClick(record);
+          if (isBreak) return;
         }
         if (instance.doFetchDetail()) {
           dispatch({
