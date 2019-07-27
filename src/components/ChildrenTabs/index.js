@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, Dropdown, Menu, Icon } from 'antd';
+import { Tabs, Dropdown, Menu } from 'antd';
 import _findIndex from 'lodash/findIndex';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
@@ -35,13 +35,21 @@ function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, 
 
 export default class ChildrenTabs extends React.Component {
   static getDerivedStateFromProps(props, state) {
-    // children 可能用于新建 tab ，切换并更新 tab ，切换到被删除 tab 的相邻 tab
+    // children 可能用于新建 tab ，切换并更新 tab
     const { children, activeKey, activeTitle, extraTabProperties } = props;
-    const { activedTabs } = state;
+    const { activedTabs, nextTabKey } = state;
+    // return state after delete tab
+    if (nextTabKey) {
+      return {
+        activedTabs,
+        activeKey: nextTabKey,
+        nextTabKey: null,
+      };
+    }
 
     const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
+    // return state after switch or update tab
     if (activedTabIndex > -1) {
-      // return state after switch or delete tab
       return {
         activedTabs: switchAndUpdateTab(
           activedTabIndex,
@@ -53,6 +61,7 @@ export default class ChildrenTabs extends React.Component {
         activeKey,
       };
     }
+    // return state to add tab
     const newTab = {
       tab: activeTitle,
       key: activeKey,
@@ -65,9 +74,12 @@ export default class ChildrenTabs extends React.Component {
     };
   }
 
+  tabMenu = null;
+
   state = {
     activedTabs: [],
     activeKey: null,
+    nextTabKey: null,
   };
 
   handleSwitch = keyToSwitch => {
@@ -81,25 +93,42 @@ export default class ChildrenTabs extends React.Component {
   };
 
   remove = key => {
-    const { handleRemoveTab } = this.props;
-    const { activedTabs } = this.state;
+    const { afterRemoveTab } = this.props;
+    const { activedTabs, activeKey } = this.state;
+    if (key !== activeKey) {
+      this.setState(
+        {
+          activedTabs: activedTabs.filter(item => item.key !== key),
+          nextTabKey: activeKey,
+        },
+        () => {
+          callFunctionIfFunction(afterRemoveTab)(key, activeKey, activedTabs);
+        }
+      );
+      return;
+    }
     const targetIndex = _findIndex(activedTabs, { key });
     const nextIndex = targetIndex > 0 ? targetIndex - 1 : targetIndex + 1;
     const nextTabKey = activedTabs[nextIndex].key;
-    callFunctionIfFunction(handleRemoveTab)(key, nextTabKey, activedTabs);
-    this.setState({
-      activedTabs: activedTabs.filter(item => item.key !== key),
-    });
+    this.setState(
+      {
+        activedTabs: activedTabs.filter(item => item.key !== key),
+        nextTabKey,
+      },
+      () => {
+        callFunctionIfFunction(afterRemoveTab)(key, nextTabKey, activedTabs);
+      }
+    );
   };
 
-  handleTabsMenuClick = event => {
+  handleTabsMenuClick = tabKey => event => {
     const { key } = event;
-    const { activeKey, activedTabs } = this.state;
+    const { activedTabs } = this.state;
 
     if (key === closeCurrentTabMenuKey) {
-      this.remove(activeKey);
+      this.remove(tabKey);
     } else if (key === closeOthersTabMenuKey) {
-      const currentTab = activedTabs.filter(item => item.key === activeKey);
+      const currentTab = activedTabs.filter(item => item.key === tabKey);
       this.setState({
         activedTabs: currentTab.map(item => ({ ...item, closable: false })),
       });
@@ -111,24 +140,27 @@ export default class ChildrenTabs extends React.Component {
     const { activedTabs, activeKey } = this.state;
     // console.log(activedTabs);
 
-    const menu = (
-      <Menu onClick={this.handleTabsMenuClick}>
+    const setMenu = key => (
+      <Menu onClick={this.handleTabsMenuClick(key)} onContextMenu={event => event.preventDefault()}>
         <Menu.Item disabled={activedTabs.length === 1} key={closeCurrentTabMenuKey}>
-          关闭当前标签页
+          关闭页签
         </Menu.Item>
         <Menu.Item disabled={activedTabs.length === 1} key={closeOthersTabMenuKey}>
-          关闭其他标签页
+          关闭其他页签
         </Menu.Item>
       </Menu>
     );
-    const operations = (
-      <Dropdown overlay={menu}>
-        <a className={styles.tabsMenu}>
-          标签菜单&nbsp;
-          <Icon type="down" />
-        </a>
+
+    const setTab = (tab, key) => (
+      <Dropdown
+        overlay={setMenu(key)}
+        trigger={['contextMenu']}
+        onVisibleChange={this.handleDropMenuVisibleChange}
+      >
+        <span className={styles.tabTitle}>{tab}</span>
       </Dropdown>
     );
+
     return (
       <Tabs
         tabPosition="top"
@@ -136,7 +168,6 @@ export default class ChildrenTabs extends React.Component {
         tabBarStyle={{ margin: 0 }}
         tabBarGutter={0}
         hideAdd
-        tabBarExtraContent={operations}
         {...tabsConfig}
         activeKey={activeKey}
         onEdit={this.handleTabEdit}
@@ -145,7 +176,12 @@ export default class ChildrenTabs extends React.Component {
         {activedTabs && activedTabs.length
           ? activedTabs.map(item => {
               return (
-                <TabPane tab={item.tab} key={item.key} closable={item.closable}>
+                <TabPane
+                  tab={setTab(item.tab, item.key)}
+                  key={item.key}
+                  closable={item.closable}
+                  onContextMenu={event => event.preventDefault()}
+                >
                   {item.content}
                 </TabPane>
               );

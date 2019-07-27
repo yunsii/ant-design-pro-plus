@@ -1,3 +1,12 @@
-.tabsMenu {
-  margin-right: 8px;
+.tabTitle {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: -12px;
+    right: -16px;
+    bottom: -12px;
+    left: -16px;
+    content: '';
+  }
 }
