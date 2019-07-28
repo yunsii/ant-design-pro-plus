@@ -6,6 +6,7 @@ import { ColProps } from 'antd/lib/col';
 
 import CustomDatePicker, { CustomRangePicker } from './components/CustomDatePicker';
 import CustomSelect from './components/Select';
+import LocationPicker from './components/LocationPicker';
 import PicturesWall from './components/PicturesWall';
 import CustomSwitch from './components/CustomSwitch';
 import { CustomDragger } from './components/Upload';
@@ -77,6 +78,8 @@ function renderInputComponent(inputConfig) {
       return <Slider {...componentProps} />;
     case 'file-dragger':
       return <CustomDragger {...componentProps} />;
+    case 'location':
+      return <LocationPicker {...componentProps} />;
     default:
       return <Input style={inputComponentStyle} placeholder="请输入" {...componentProps} />;
   }
