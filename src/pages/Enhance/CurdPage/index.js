@@ -19,7 +19,7 @@ class TableList extends PureComponent {
   queryArgsConfig = [
     {
       type: 'string',
-      field: 'name',
+      field: 'username',
       formItemProps: {
         label: '姓名',
       },
@@ -109,7 +109,7 @@ class TableList extends PureComponent {
         popupType="drawer"
         popupProps={{
           drawerConfig: {
-            width: 600,
+            width: 560,
           },
         }}
         queryPanelProps={{

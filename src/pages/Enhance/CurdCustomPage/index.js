@@ -99,7 +99,7 @@ class TableList extends PureComponent {
         popupType="drawer"
         popupProps={{
           drawerConfig: {
-            width: 600,
+            width: 560,
           },
         }}
         queryPanelProps={{

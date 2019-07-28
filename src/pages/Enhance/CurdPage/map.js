@@ -151,6 +151,16 @@ export default function setFormItemsConfig(detail = {}, mode) {
       },
     },
     {
+      type: 'location',
+      field: 'location',
+      formItemProps: {
+        label: '地址',
+      },
+      fieldProps: {
+        initialValue: detail.location,
+      },
+    },
+    {
       type: 'default/string',
       field: 'name',
       formItemProps: {
