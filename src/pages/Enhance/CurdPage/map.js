@@ -11,15 +11,10 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '所属团体',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择所属团体' }],
         initialValue: detail.organ_id,
       },
       component: (
-        <TreeSelect
-          style={{ width: '100%' }}
-          placeholder="请选择所属团体"
-          disabled={mode === 'update'}
-        />
+        <TreeSelect style={{ width: '100%' }} placeholder="请选择所属团体" disabled={!mode} />
       ),
     },
     {
@@ -29,8 +24,10 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '日期',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择日期！' }],
         initialValue: detail.date,
+      },
+      componentProps: {
+        onChange: value => console.log(value),
       },
     },
     {
@@ -40,7 +37,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '日期时间',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择日期时间！' }],
         initialValue: detail.datetime,
       },
     },
@@ -51,7 +47,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '数字',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请输入数字！' }],
         initialValue: detail.number,
       },
     },
@@ -62,7 +57,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '选择',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择选择！' }],
         initialValue: detail.select,
       },
       componentProps: {
@@ -81,7 +75,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '文本框',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请输入文本框！' }],
         initialValue: detail.textarea,
       },
       componentProps: {
@@ -95,7 +88,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '密码',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请输入密码！' }],
         initialValue: detail.password,
       },
     },
@@ -106,7 +98,6 @@ export default function setFormItemsConfig(detail = {}, mode) {
         label: '图片',
       },
       fieldProps: {
-        rules: [{ required: true, message: '请选择图片！' }],
         initialValue: detail.picture,
       },
     },
