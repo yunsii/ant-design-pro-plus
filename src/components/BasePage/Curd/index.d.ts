@@ -32,7 +32,6 @@ export declare type CurdProps = {
   containerProps?: TableProps<any> | ListProps<any>;
   /** injected __curd__ instance of Curd */
   operators?: React.ReactNode[];
-  columns: any[];
   /** useful only if containerType is 'list' */
   renderItem: ({ record, actions, recordSelection, checkable }) => React.ReactNode;
   data: {
