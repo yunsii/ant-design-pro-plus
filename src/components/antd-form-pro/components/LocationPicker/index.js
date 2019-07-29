@@ -4,14 +4,18 @@ import AMap from '@/components/AMap';
 // import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 
 export default class LocationPicker extends Component {
+  map = null;
+
   state = {
     mapVisible: false,
     position: undefined,
     formattedAddress: undefined,
   };
 
-  // handleMapCreated = () => {
-  // }
+  handleMapCreated = map => {
+    console.log('amap is created.');
+    if (map) this.map = map;
+  };
 
   handleMapClick = (longitude, latitude) => {
     this.setState({
@@ -39,6 +43,9 @@ export default class LocationPicker extends Component {
       position: undefined,
       formattedAddress: undefined,
     });
+    if (this.map) {
+      this.map.clearMap();
+    }
   };
 
   render() {
@@ -65,7 +72,7 @@ export default class LocationPicker extends Component {
           <AMap
             position={position}
             formattedAddress={formattedAddress}
-            // onCreated={this.handleMapCreated}
+            onCreated={this.handleMapCreated}
             onClick={this.handleMapClick}
             getFormattedAddress={address => {
               if (!address) {
