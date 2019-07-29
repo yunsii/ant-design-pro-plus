@@ -362,9 +362,9 @@ class Curd extends PureComponent {
           {...restPopupProps}
           loading={loading}
           onOk={this.handleOk}
-          setItemsConfig={form =>
-            setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
-          }
+          setItemsConfig={setFormItemsConfig}
+          detail={this.doFetchDetail() && showDetail ? detail : record}
+          mode={mode}
         />
       );
     } else if (popupType === 'modal') {
@@ -376,9 +376,8 @@ class Curd extends PureComponent {
           }}
           {...restPopupProps}
           loading={loading}
-          setItemsConfig={form =>
-            setFormItemsConfig(this.doFetchDetail() && showDetail ? detail : record, mode, form)
-          }
+          setItemsConfig={setFormItemsConfig}
+          detail={this.doFetchDetail() && showDetail ? detail : record}
           mode={mode}
         />
       );

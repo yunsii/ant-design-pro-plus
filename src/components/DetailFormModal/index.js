@@ -10,12 +10,13 @@ function DetailFormModal(props) {
     cols = 1,
     children,
     setItemsConfig,
+    detail,
+    mode,
     itemsLayout,
     itemsWrapperStyle,
     itemsWrapperClassName,
     loading = false,
     form,
-    mode,
   } = props;
 
   const onOk = () => {
@@ -25,7 +26,7 @@ function DetailFormModal(props) {
       handleOk(fieldsValue);
     });
   };
-  const itemsConfig = setItemsConfig(form);
+  const itemsConfig = setItemsConfig(detail, mode, form);
 
   const colsItems =
     cols === 1 ? (

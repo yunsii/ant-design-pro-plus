@@ -7,11 +7,13 @@ const DetailFormDrawer = props => {
     drawerConfig,
     onOk: handleOk,
     form,
+    detail,
+    mode,
     setItemsConfig,
     itemsLayout,
     loading = false,
   } = props;
-  const itemsConfig = setItemsConfig(form);
+  const itemsConfig = setItemsConfig(detail, mode, form);
 
   const okHandle = () => {
     form.validateFields((err, fieldsValue) => {

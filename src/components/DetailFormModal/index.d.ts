@@ -6,14 +6,15 @@ import { ItemConfig } from '@/components/antd-form-pro';
 export interface DetailFormModalProps {
   modalConfig: ModalProps;
   loading?: boolean;
-  setItemsConfig: (form: FormProps['form']) => ItemConfig[];
+  setItemsConfig: (detail: any, mode: string, form: FormProps['form']) => ItemConfig[];
+  detail: any;
+  mode: string;
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;
   };
   itemsWrapperStyle?: StyleSheet;
   itemsWrapperClassName?: string;
-  mode?: 'detail' | 'create' | 'update';
   children?: JSX.Element;
   cols?: number;
 }

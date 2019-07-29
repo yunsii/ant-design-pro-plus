@@ -6,7 +6,9 @@ import { ItemConfig } from '@/components/antd-form-pro';
 export interface DetailFormDrawerProps {
   drawerConfig: DrawerProps;
   onOk?: Function;
-  setItemsConfig: (form: FormProps['form']) => ItemConfig[];
+  setItemsConfig: (detail: any, mode: string, form: FormProps['form']) => ItemConfig[];
+  detail: any;
+  mode: string;
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;
