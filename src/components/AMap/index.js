@@ -40,8 +40,8 @@ export function AMap(props) {
   } = props;
   const [locationPosition, setLocationPosition] = useState({});
 
-  const handleCreatedMap = () => {
-    callFunctionIfFunction(onCreated)();
+  const handleCreatedMap = map => {
+    callFunctionIfFunction(onCreated)(map);
     if (!geocoder) {
       geocoder = new window.AMap.Geocoder({
         // city: '010', // 城市设为北京，默认：“全国”
