@@ -89,6 +89,7 @@ export default class ChildrenTabs extends React.Component {
   };
 
   handleTabEdit = (targetKey, action) => {
+    // console.log('handleTabEdit', targetKey);
     this[action](targetKey);
   };
 
