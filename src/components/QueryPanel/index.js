@@ -8,7 +8,16 @@ import styles from './index.less';
 const RowCount = [1, 2, 3, 4, 6, 8, 12, 24];
 
 const addAllowClearToItemsConfig = itemsConfig =>
-  itemsConfig.map(item => ({ ...item, allowClear: true }));
+  itemsConfig.map(item => {
+    const { componentProps = {}, ...rest } = item;
+    return {
+      componentProps: {
+        ...componentProps,
+        allowClear: true,
+      },
+      ...rest,
+    };
+  });
 
 function calculateSpan(rowCount) {
   if (RowCount.includes(rowCount)) {
