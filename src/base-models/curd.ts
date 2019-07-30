@@ -15,6 +15,7 @@ export type modelConfig = {
   afterUpdateActions?: string[];
   deleteMethod?: Function;
   afterDeleteActions?: string[];
+  extraState?: Model['state'];
   extraEffects?: Model['effects'];
   extraReducers?: Model['reducers'];
 };
@@ -32,6 +33,7 @@ export default (
     afterUpdateActions,
     deleteMethod,
     afterDeleteActions,
+    extraState,
     extraEffects,
     extraReducers,
   }: modelConfig
@@ -44,6 +46,7 @@ export default (
       pagination: {},
     },
     detail: {},
+    ...extraState,
   },
 
   effects: {
