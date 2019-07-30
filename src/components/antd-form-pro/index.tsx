@@ -110,6 +110,7 @@ export type ComponentType =
   | 'switch'
   | 'slider'
   | 'file-dragger'
+  | 'location'
   | string;
 
 export interface ItemConfig {
