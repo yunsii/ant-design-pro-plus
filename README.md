@@ -118,6 +118,7 @@ exports.destinationRootPath = 'D:/test/';
 11. slider 滑动输入
 12. file-dragger
 13. string 默认类型
+14. location 地址，基于高德地图
 
 #### API
 
@@ -140,7 +141,7 @@ exports.destinationRootPath = 'D:/test/';
 
 ### QueryPanel 查询面板
 
-基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。参数定义可参见 [QueryPanel/index.d.ts](/src/components/QueryPanel/index.d.ts) 。
+基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。参数定义可参考 [QueryPanel/index.d.ts](/src/components/QueryPanel/index.d.ts) 。
 
 ### base-models/curd 生成基础增删改查 model
 
@@ -167,58 +168,59 @@ exports.destinationRootPath = 'D:/test/';
 * StandardTable
 * TableList
 
-如果需要新建一个类似**基础增删改查**的页面，快速开发指南：
+如果需要新建一个类似[**基础增删改查**](src/pages/Enhance/CurdPage)的页面，快速开发指南：
 
 * 配置页面路由
 * 编写接口增删改查 service
 * 基于 base-models/curd 配置 model
-* 根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 方法，以便 model 能正确获取相关数据
+* 根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
 * 配置对象表单数据映射 map.js
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
 
-具体使用参考 [src/pages/Enhance/CurdPage](src/pages/Enhance/CurdPage) 的实现。
-
-相较于之前一个个页面去复制粘贴修改代码，通过配置化的方式即实现了快速实现页面的需求，同时也提供了较为灵活的 API 去扩展特定页面的特定需求。另外，本想着用 umi 里的区块来写页面，后来意识到即使写了一个页面的区块，如果页面逻辑差不多，还是得去一遍遍的修改代码，索性将这些逻辑全都抽象出来，通过配置实现页面扩展。
+相较于之前一个个页面去复制粘贴修改代码，通过配置化的方式即实现了快速实现页面的需求，同时也提供了较为灵活的 API 去扩展特定页面的特定需求。
 
 #### API
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | namespace | model 名称空间 | string | - |
-| data | StandardTable data | any | {} |
-| dataContainerType | 数据容器类型 | 'table' \| 'list' | `'table'` |
-| renderItem | 数据容器类型为 `'list'` 可用，用于自定义渲染组件 | ({ record, actions, recordSelection, checkable }) => React.ReactNode | - |
-| columns | table [columns](https://ant.design/components/table-cn/#Column) | [ColumnProps](https://git.io/vMMXC)[] | [] |
+| createTitle | 新建窗口名称 | string | - |
+| detailTitle | 详情窗口名称 | string | - |
+| updateTitle | 编辑窗口名称 | string | - |
 | fetchLoading | 请求列表 loading | boolean | - |
 | createLoading | 创建 model loading | boolean | - |
 | detailLoading | 请求 model 详情 loading | boolean | - |
 | updateLoading | 更新 model loading | boolean | - |
 | deleteLoading | 删除 model loading | boolean | - |
+| createButtonName | 新建按钮名称，为空时隐藏按钮 | string | - |
+| checkable | 多选功能，默认开启 | boolean | - |
+| detail | model 详情 | any | - |
 | dipatch | dva 注入的 dispatch 函数 | Function | - |
 | queryArgsConfig | 查询参数配置，参考 [map.js](/src/pages/Enhance/CurdPage/map.js) | any[] | [] |
 | queryPanelProps | 查询面板配置 | [QueryPanelProps](/src/components/QueryPanel/index.d.ts) | - |
-| createButtonName | 新建按钮名称 | string | - |
-| tableConfig | 表格配置 | [tableConfig](#tableConfig) | - |
-| setFormItemsConfig | 配置表单数据 | (detail: {}, mode: string, form) => any[] | - |
-| interceptors | 拦截器 | [interceptors](#interceptors) | - |
-| afterPopupNotVisible | 关闭弹窗后事件 | () => void | - |
-| createTitle | 新建窗口名称 | string | - |
-| detailTitle | 详情窗口名称 | string | - |
-| updateTitle | 编辑窗口名称 | string | - |
+| containerType | 数据容器类型 | 'table' \| 'list' | `'table'` |
+| containerProps | 数据容器属性， 针对 Table 容器的 `columns` 也配置在其中 | [TableProps](https://ant.design/components/table-cn/#Table) \| [ListProps](https://ant.design/components/list-cn/#List) | - |
+| operators | 类似新增按钮的功能，会注入 BasePage/Curd 的组件实例（可访问控制该页面组件的所有属性）用于扩展功能，如新增批量删除的功能 | React.ReactNode[] | - |
+| renderItem | 数据容器类型为 `'list'` 可用，用于自定义渲染组件 | ({ record, actions, recordSelection, checkable }) => React.ReactNode | - |
+| data | StandardTable data | any | {} |
+| actionsConfig | 表格配置 | [actionsConfig](#actionsConfig) | - |
 | popupType | 弹窗类型 | 'modal' \| 'drawer' | - |
 | popupProps | 弹窗配置，根据 `popupType` 配置 | [CustomDetailFormDrawerProps](/src/components/BasePage/Curd/CustomDetailFormDrawerProps.d.ts) \| [CustomDetailFormModalProps](/src/components/BasePage/Curd/CustomDetailFormModalProps.d.ts) | - |
-| children | 紧跟新建按钮后的 children ，会被注入 `__curd__` 实例属性，可访问控制该页面组件的所有属性 | React.ReactChildren | - |
+| setFormItemsConfig | 配置表单数据 | (detail: {}, mode: `'create' | 'detail' | 'update'`, form) => any[] | - |
+| afterPopupNotVisible | 关闭弹窗后回调函数 | () => void | - |
+| interceptors | 拦截器 | [interceptors](#interceptors) | - |
 
-#### tableConfig
+#### actionsConfig
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| columns | 表格列模型配置 | [Column](https://ant.design/components/table-cn/#Column) | - |
-| checkable | 是否开启多选 | boolean | `true` |
 | showActionsCount | 除更多外需要展示的操作个数 | number | 3 |
 | extraActions | 除 **详情（4）**，**编辑（8）**，**删除（12）** 外，可自行配置额外操作。注意，数字是操作的 `key` ，根据 `key` 不同，会按升序排列 | [ActionType](/src/components/BasePage/Curd/ActionType.d.ts) | - |
 | confirmKeys | 需要弹出确认窗口的 `key` 数组 | (number \| [number, (record?: any) => string])[] | `[12]` |
 | hideActions | 隐藏操作的 `key` 数组 | number[] | - |
+| detailActionTitle | 详情 action 名称 | string | `'详情'` |
+| updateActionTitle | 编辑 action 名称 | string | `'编辑'` |
+| deleteActionTitle | 删除 action 名称 | string | `'删除'` |
 
 #### interceptors
 
@@ -226,6 +228,11 @@ exports.destinationRootPath = 'D:/test/';
 | --- | --- | --- | --- |
 | updateFieldsValue | 表单数据拦截处理，类似时间区间这样的数据，需要单独处理后再提交 | (fieldsValue: any, mode?: 'create' \| 'update') => any | - |
 | updateFieldsValueAsync | 异步表单数据拦截处理 | (fieldsValue: any, mode?: 'create' \| 'update') => any | - |
+| handleCreateClick | 新建点击事件拦截 | () => any | - |
 | handleDetailClick | 详情点击事件拦截，可通过路由跳转到自定义的对象详情页面 | (record: any) => any | - |
 | handleUpdateClick | 编辑点击事件拦截 | (record: any) => any | - |
 | handleDeleteClick | 删除点击事件拦截 | (record: any) => any | - |
+
+##### 注意事项
+
+handle**Click 事件默认不会中断后续的弹窗事件，如果需要中断， `return true` 即可。
