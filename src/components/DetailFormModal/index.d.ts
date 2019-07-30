@@ -7,8 +7,8 @@ export interface DetailFormModalProps {
   modalConfig: ModalProps;
   loading?: boolean;
   setItemsConfig: (detail: any, mode: string, form: FormProps['form']) => ItemConfig[];
-  detail: any;
-  mode: string;
+  detail?: any;
+  mode?: string;
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;

@@ -7,7 +7,7 @@ const DetailFormDrawer = props => {
     drawerConfig,
     onOk: handleOk,
     form,
-    detail,
+    detail = {},
     mode,
     setItemsConfig,
     itemsLayout,

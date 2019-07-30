@@ -7,8 +7,8 @@ export interface DetailFormDrawerProps {
   drawerConfig: DrawerProps;
   onOk?: Function;
   setItemsConfig: (detail: any, mode: string, form: FormProps['form']) => ItemConfig[];
-  detail: any;
-  mode: string;
+  detail?: any;
+  mode?: string;
   itemsLayout?: {
     labelCol?: any;
     wrapperCol?: any;

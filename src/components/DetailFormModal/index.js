@@ -10,7 +10,7 @@ function DetailFormModal(props) {
     cols = 1,
     children,
     setItemsConfig,
-    detail,
+    detail = {},
     mode,
     itemsLayout,
     itemsWrapperStyle,
