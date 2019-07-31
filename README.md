@@ -172,7 +172,7 @@ exports.destinationRootPath = 'D:/test/';
 
 * 配置页面路由
 * 编写接口增删改查 service
-* 基于 base-models/curd 配置 model
+* 基于 [base-models/curd.ts](/src/base-models/curd.ts) 配置 model
 * 根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
 * 配置对象表单数据映射 map.js
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
