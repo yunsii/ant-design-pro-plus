@@ -207,8 +207,10 @@ class Curd extends PureComponent {
   enhanceColumns = () => {
     const {
       containerProps: { columns },
+      actionsConfig,
     } = this.props;
     if (!columns) return [];
+    if (!actionsConfig) return columns;
     return [
       ...columns,
       {
