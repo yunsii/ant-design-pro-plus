@@ -7,6 +7,4 @@ curdModel.curdModelConfig({
   isResponseOk,
 })
 
-console.log(curdModel);
-
 export default curdModel.setCurdModel;
