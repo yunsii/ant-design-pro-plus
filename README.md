@@ -33,8 +33,8 @@
 
 ## 新增依赖
 
-* [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation)
-* [dva-base-models](https://github.com/theprimone/dva-base-models)
+* [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation) 自定义高德地图定位组件
+* [dva-base-models](https://github.com/theprimone/dva-base-models) 基于 dva 的基础 model 配置
 
 ## 脚本升级指南
 
