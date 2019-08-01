@@ -29,8 +29,12 @@
 * [DetailFormDrawer 详情抽屉](#DetailFormDrawer-详情抽屉)
 * [DetailFormModal 详情模态框](#DetailFormModal-详情模态框)
 * [QueryPanel 查询面板](#QueryPanel-查询面板)
-* [base-models/curd 生成基础增删改查 model](#base-models/curd-生成基础增删改查-model)
 * [BasePage/Curd 基础增删改查页面](#BasePage/Curd-基础增删改查页面)
+
+## 新增依赖
+
+* [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation)
+* [dva-base-models](https://github.com/theprimone/dva-base-models)
 
 ## 脚本升级指南
 
@@ -45,7 +49,6 @@ exports.features = [
   'DetailFormDrawer',
   'DetailFormModal',
   'QueryPanel',
-  'base-models/curd',
   'BasePage/Curd',
 ];
 
@@ -142,10 +145,6 @@ exports.destinationRootPath = 'D:/test/';
 ### QueryPanel 查询面板
 
 基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。参数定义可参考 [QueryPanel/index.d.ts](/src/components/QueryPanel/index.d.ts) 。
-
-### base-models/curd 生成基础增删改查 model
-
-通过 `namespace` 和 `modelConfig` 即可配置一个基础的增删改查 model ，参考 [base-models/curd.ts](/src/base-models/curd.ts) 。进阶使用参考 [Enhance/models/curdPage.ts](/src/pages/Enhance/models/curdPage.ts)
 
 ### BasePage/Curd 基础增删改查页面
 
