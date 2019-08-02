@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function renderChildren(children, properties) {
+export default function injectChildren(children, properties) {
   return React.Children.map(children, child => {
     if (child) {
       const { type: childType } = child;
