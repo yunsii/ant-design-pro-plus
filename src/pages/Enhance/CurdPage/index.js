@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Avatar, message, Button, Menu, Dropdown, Icon } from 'antd';
+import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import BaseCurd from '@/components/BasePage/Curd';
 import { Namespace } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
@@ -16,6 +16,10 @@ import styles from './index.less';
   deleteLoading: loading.effects[`${Namespace}/delete`],
 }))
 class TableList extends PureComponent {
+  state = {
+    customModelVisible: false,
+  }
+
   queryArgsConfig = [
     {
       type: 'string',
@@ -78,6 +82,8 @@ class TableList extends PureComponent {
   ];
 
   render() {
+    const { customModelVisible } = this.state;
+
     return (
       <BaseCurd
         namespace={Namespace}
@@ -97,6 +103,11 @@ class TableList extends PureComponent {
               key: 14,
               title: '兼职',
               handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
+            },
+            {
+              key: 15,
+              title: '弹出子组件',
+              handleClick: () => this.setState({ customModelVisible: true }),
             },
           ],
           confirmKeys: [
@@ -118,7 +129,14 @@ class TableList extends PureComponent {
         }}
         {...this.props}
         operators={[<TableActions />]}
-      />
+      >
+        <CustomModal
+          title='弹出子组件'
+          visible={customModelVisible}
+          onCancel={() => this.setState({ customModelVisible: false })}
+          okButtonProps={{ style: { display: 'none' } }}
+        />
+      </BaseCurd>
     );
   }
 }
@@ -149,4 +167,20 @@ function TableActions(props) {
       </span>
     )
   );
+}
+
+function CustomModal(props) {
+  const { __curd__, ...rest } = props;
+  if (!__curd__) return null;
+  return (
+    <Modal {...rest}>
+      <Button onClick={() => {
+        __curd__.reSearch();
+        rest.onCancel();
+      }}
+      >
+        重新搜索
+      </Button>
+    </Modal>
+  )
 }
