@@ -8,14 +8,14 @@ import QueryPanel from '@/components/QueryPanel';
 import DetailFormDrawer from '@/components/DetailFormDrawer';
 import DetailFormModal from '@/components/DetailFormModal';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
-import renderChildren from '@/utils/childrenUtils';
+import injectChildren from '@/utils/childrenUtils';
 import styles from './index.less';
 import { CreateName, DetailName, UpdateName, DetailVisible, UpdateVisible } from './constant';
 import { setActions } from './actions';
 
 async function updateFieldsValueByInterceptors(fieldsValue, interceptors, mode) {
   const { updateFieldsValue } = interceptors;
-  let newFieldsValue;
+  let newFieldsValue = { ...fieldsValue };
   if (updateFieldsValue) {
     newFieldsValue = await updateFieldsValue(fieldsValue, mode);
   }
@@ -24,7 +24,7 @@ async function updateFieldsValueByInterceptors(fieldsValue, interceptors, mode) 
 
 async function updateSearchValueByInterceptors(fieldsValue, interceptors, mode) {
   const { updateSearchValue } = interceptors;
-  let newFieldsValue;
+  let newFieldsValue = { ...fieldsValue };
   if (updateSearchValue) {
     newFieldsValue = await updateSearchValue(fieldsValue, mode);
   }
@@ -114,8 +114,7 @@ class Curd extends PureComponent {
       id,
       callback: response => {
         if (!response) {
-          const { formValues } = this.state;
-          this.handleSearch(formValues);
+          this.reSearch();
         }
       },
     });
@@ -163,6 +162,16 @@ class Curd extends PureComponent {
     });
   };
 
+  reSearch = async () => {
+    const { namespace, dispatch, interceptors } = this.props;
+    const { formValues } = this.state;
+    const newSearchValue = await updateSearchValueByInterceptors(formValues, interceptors);
+    dispatch({
+      type: `${namespace}/fetch`,
+      payload: { ...newSearchValue },
+    });
+  }
+
   handleCreateOk = async fieldsValue => {
     console.log('handleCreateOk', fieldsValue);
     const { namespace, dispatch, interceptors } = this.props;
@@ -177,9 +186,8 @@ class Curd extends PureComponent {
       payload: newFieldsValue,
       callback: response => {
         if (!response) {
-          const { formValues } = this.state;
           this.handleVisible(CreateName, false);
-          this.handleSearch(formValues);
+          this.reSearch();
         }
       },
     });
@@ -286,7 +294,7 @@ class Curd extends PureComponent {
             {createButtonName}
           </Button>
         ) : null}
-        {renderChildren(operators, { __curd__: this.curd })}
+        {injectChildren(operators, { __curd__: this.curd })}
       </div>
     );
   };
@@ -333,7 +341,7 @@ class Curd extends PureComponent {
         />
       );
     }
-    return container ? renderChildren(container, composeCommenContainerProps) : result;
+    return container ? injectChildren(container, composeCommenContainerProps) : result;
   };
 
   renderPopup = () => {
@@ -391,6 +399,11 @@ class Curd extends PureComponent {
     return result;
   };
 
+  renderChildren = () => {
+    const { children } = this.props;
+    return injectChildren(children, { __curd__: this.curd })
+  }
+
   render() {
     return (
       <Card bordered={false}>
@@ -398,6 +411,7 @@ class Curd extends PureComponent {
         {this.renderOperators()}
         {this.renderContainer()}
         {this.renderPopup()}
+        {this.renderChildren()}
       </Card>
     );
   }
