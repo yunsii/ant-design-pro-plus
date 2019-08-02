@@ -57,7 +57,7 @@ export declare type CurdProps = {
   afterPopupNotVisible?: () => void;
   interceptors?: {
     updateFieldsValue?: (fieldsValue: any, mode?: 'create' | 'update') => any;
-    updateFieldsValueAsync?: (fieldsValue: any, mode?: 'create' | 'update') => any;
+    updateSearchValue?: (fieldsValue: any) => any;
     handleCreateClick?: () => void;
     handleDetailClick?: (record: any) => void;
     handleUpdateClick?: (record: any) => void;

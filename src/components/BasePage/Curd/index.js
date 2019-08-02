@@ -14,12 +14,19 @@ import { CreateName, DetailName, UpdateName, DetailVisible, UpdateVisible } from
 import { setActions } from './actions';
 
 async function updateFieldsValueByInterceptors(fieldsValue, interceptors, mode) {
-  const { updateFieldsValue, updateFieldsValueAsync } = interceptors;
-  let newFieldsValue = { ...fieldsValue };
-  if (updateFieldsValueAsync) {
-    newFieldsValue = await updateFieldsValueAsync(fieldsValue, mode);
-  } else if (updateFieldsValue) {
-    newFieldsValue = updateFieldsValue(fieldsValue, mode);
+  const { updateFieldsValue } = interceptors;
+  let newFieldsValue;
+  if (updateFieldsValue) {
+    newFieldsValue = await updateFieldsValue(fieldsValue, mode);
+  }
+  return newFieldsValue;
+}
+
+async function updateSearchValueByInterceptors(fieldsValue, interceptors, mode) {
+  const { updateSearchValue } = interceptors;
+  let newFieldsValue;
+  if (updateSearchValue) {
+    newFieldsValue = await updateSearchValue(fieldsValue, mode);
   }
   return newFieldsValue;
 }
@@ -39,17 +46,17 @@ class Curd extends PureComponent {
     updateLoading: false,
     deleteLoading: false,
     createButtonName: '新建',
-    dispatch: () => {},
+    dispatch: () => { },
     queryArgsConfig: [],
     queryPanelProps: {},
     containerType: 'table',
     containerProps: {},
-    renderItem: () => {},
+    renderItem: () => { },
     data: {},
     actionsConfig: {},
     popupType: 'drawer',
     popupProps: {},
-    setFormItemsConfig: () => {},
+    setFormItemsConfig: () => { },
     interceptors: {},
   };
 
@@ -144,17 +151,15 @@ class Curd extends PureComponent {
     });
   };
 
-  handleSearch = values => {
-    const { namespace, dispatch } = this.props;
+  handleSearch = async values => {
+    const { namespace, dispatch, interceptors } = this.props;
     this.setState({
       formValues: values,
     });
+    const newSearchValue = await updateSearchValueByInterceptors(values, interceptors);
     dispatch({
       type: `${namespace}/fetch`,
-      payload: {
-        ...values,
-        org_ids: values.org_ids && values.org_ids.map(item => item.value),
-      },
+      payload: { ...newSearchValue },
     });
   };
 
@@ -264,7 +269,6 @@ class Curd extends PureComponent {
 
   renderQueryPanel = () => {
     const { queryArgsConfig, queryPanelProps } = this.props;
-
     const composeQueryPanelProps = {
       ...queryPanelProps,
       queryArgsConfig,
