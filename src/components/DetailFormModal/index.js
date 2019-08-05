@@ -1,8 +1,9 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
 import { Modal, Form, Row, Col, Spin } from 'antd';
-import { FormProvider, createFormItems } from '@/components/antd-form-pro';
+import { FormProvider, createFormItems } from '@/components/antd-form-mate';
 import injectChildren from '@/utils/childrenUtils.ts';
+
 
 function DetailFormModal(props) {
   const {

@@ -15,7 +15,7 @@ export function isUploadSuccess(response) {
   return data;
 }
 
-export function getValueForFormItemFromResponse(response) {
+export function getUrl(response) {
   const {
     data: { path },
   } = response;

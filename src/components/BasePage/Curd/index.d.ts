@@ -4,7 +4,7 @@ import { FormProps } from 'antd/lib/form';
 import { ListProps } from 'antd/lib/list';
 import { ActionType } from './ActionType';
 import { QueryPanelProps } from '@/components/QueryPanel';
-import { ItemConfig } from '@/components/antd-form-pro';
+import { ItemConfig } from 'antd-form-mate';
 import { CustomDetailFormDrawerProps } from './CustomDetailFormDrawerProps';
 import { CustomDetailFormModalProps } from './CustomDetailFormModalProps';
 

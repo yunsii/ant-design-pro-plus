@@ -25,7 +25,6 @@
 * [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 * [TableList 数据列表渲染](#TableList-数据列表渲染)
-* [antd-form-pro 表单功能增强](#antd-form-pro-表单功能增强)
 * [DetailFormDrawer 详情抽屉](#DetailFormDrawer-详情抽屉)
 * [DetailFormModal 详情模态框](#DetailFormModal-详情模态框)
 * [QueryPanel 查询面板](#QueryPanel-查询面板)
@@ -35,6 +34,7 @@
 
 * [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation) 自定义高德地图定位组件
 * [dva-base-models](https://github.com/theprimone/dva-base-models) 基于 dva 的基础 model 配置
+* [antd-form-mate](https://github.com/theprimone/antd-form-mate) 基于 ant design 的表单组件
 
 ## 脚本升级指南
 
@@ -45,7 +45,6 @@ exports.features = [
   'PageTabs',
   'StandardTable',
   'TableList',
-  'antd-form-pro',
   'DetailFormDrawer',
   'DetailFormModal',
   'QueryPanel',
@@ -102,49 +101,17 @@ exports.destinationRootPath = 'D:/test/';
 
 与 StandardTable 类似，只是将容器从 [Table](https://ant.design/components/table-cn/) 替换为 [List](https://ant.design/components/list-cn/) ，并自定义组件（比如 [Card](https://ant.design/components/card-cn/) ）渲染每条记录。
 
-### antd-form-pro 表单功能增强
-
-可配置化实现表单功能。支持的组件与配置方式可参考 [map.js](/src/pages/Enhance/CurdPage/map.js) 。
-
-#### 可配置类型
-
-1. custom 自定义组件类型
-2. date 日期
-3. datetime 日期时间
-4. datetime-range 时间范围
-5. number
-6. select
-7. textarea
-8. password
-9. picture
-10. switch
-11. slider 滑动输入
-12. file-dragger
-13. string 默认类型
-14. location 地址，基于高德地图
-
-#### API
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| type | 上述类型 | string | 'string' |
-| field | 字段名 | string | - |
-| formItemProps | Form.Item 支持的配置，新增 `dense` 属性配置 Form.Item `marginBottom` 为 0 | 扩展 [FormItemProps](https://ant.design/components/form-cn/#Form.Item) | - |
-| fieldProps | 字段值配置  | [GetFieldDecoratorOptions](https://ant.design/components/form-cn/#getFieldDecorator(id,-options)-%E5%8F%82%E6%95%B0) | - |
-| component | 自定义的组件，仅当 `type` 为 `'custom'` 时可用 | React.ElementType | - |
-
-
 ### DetailFormDrawer 详情抽屉
 
-基于 antd-form-pro 实现的详情表单抽屉，参数定义可参见 [DetailFormDrawer/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) 。
+基于 antd-form-mate 实现的详情表单抽屉，参数定义可参见 [DetailFormDrawer/index.d.ts](/src/components/DetailFormDrawer/index.d.ts) 。
 
 ### DetailFormModal 详情模态框
 
-基于 antd-form-pro 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormModal/index.d.ts) 。
+基于 antd-form-mate 实现的详情模态框，参数定义可参见 [DetailFormModal/index.d.ts](/src/components/DetailFormModal/index.d.ts) 。
 
 ### QueryPanel 查询面板
 
-基于 antd-form-pro 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。参数定义可参考 [QueryPanel/index.d.ts](/src/components/QueryPanel/index.d.ts) 。
+基于 antd-form-mate 实现的查询面板组件，具体实现可参考 [QueryPanel/index.js](/src/components/QueryPanel/index.js) ，只需传入表单配置和 `onSearch` 方法即可使用。同时提供了重置表单后的 `onReset` 函数。参数定义可参考 [QueryPanel/index.d.ts](/src/components/QueryPanel/index.d.ts) 。
 
 ### BasePage/Curd 基础增删改查页面
 
@@ -160,7 +127,6 @@ exports.destinationRootPath = 'D:/test/';
 前置工具及组件：
 
 * base-models/curd
-* antd-form-pro
 * DetailFormDrawer
 * DetailFormModal
 * QueryPanel

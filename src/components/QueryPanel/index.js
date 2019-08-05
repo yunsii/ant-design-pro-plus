@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Row, Col, Form, Icon, Button } from 'antd';
 
-import { FormProvider, createFormItems } from '@/components/antd-form-pro';
+import { FormProvider, createFormItems } from '@/components/antd-form-mate';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
+
 
 const RowCount = [1, 2, 3, 4, 6, 8, 12, 24];
 
@@ -85,9 +86,9 @@ class QueryPanel extends PureComponent {
       </a>
     ) : (
       <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-        展开 <Icon type="down" />
+          展开 <Icon type="down" />
       </a>
-    );
+      );
     const actions = (
       <div style={{ overflow: 'hidden' }}>
         <div style={{ marginBottom: 24 }}>

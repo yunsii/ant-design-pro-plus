@@ -12,7 +12,6 @@ const rootPath =
 const layoutsPath = `${rootPath}src${path.sep}layouts${path.sep}`;
 const componentsPath = `${rootPath}src${path.sep}components${path.sep}`;
 const utilsPath = `${rootPath}src${path.sep}utils${path.sep}`;
-const servicesPath = `${rootPath}src${path.sep}services${path.sep}`;
 
 const featuresConfig = [
   {
@@ -38,25 +37,18 @@ const featuresConfig = [
     path: `${componentsPath}TableList`,
   },
   {
-    name: 'antd-form-pro',
-    path: `${componentsPath}TableList`,
-    dependencies: [`${servicesPath}upload.js`],
-  },
-  {
     name: 'DetailFormDrawer',
     path: `${componentsPath}DetailFormDrawer`,
-    dependencies: [`${componentsPath}antd-form-pro`],
   },
   {
     name: 'DetailFormModal',
     path: `${componentsPath}DetailFormModal`,
-    dependencies: [`${componentsPath}antd-form-pro`, `${utilsPath}childrenUtils.ts`],
+    dependencies: [`${utilsPath}childrenUtils.ts`],
   },
   {
     name: 'QueryPanel',
     path: `${componentsPath}QueryPanel`,
     dependencies: [
-      `${componentsPath}antd-form-pro`,
       `${utilsPath}decorators${path.sep}callFunctionOrNot.js`,
     ],
   },

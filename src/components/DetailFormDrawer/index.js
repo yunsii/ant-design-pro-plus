@@ -1,6 +1,7 @@
 import React from 'react';
 import { Spin, Button, Drawer, Form } from 'antd';
-import { FormProvider, createFormItems } from '@/components/antd-form-pro';
+import { FormProvider, createFormItems } from '@/components/antd-form-mate';
+
 
 const DetailFormDrawer = props => {
   const {

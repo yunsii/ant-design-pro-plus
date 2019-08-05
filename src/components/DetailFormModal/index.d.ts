@@ -1,7 +1,7 @@
 import React from 'react';
 import { ModalProps } from 'antd/lib/modal';
 import { FormProps } from 'antd/lib/form';
-import { ItemConfig } from '@/components/antd-form-pro';
+import { ItemConfig } from 'antd-form-mate';
 
 export interface DetailFormModalProps {
   modalConfig: ModalProps;
