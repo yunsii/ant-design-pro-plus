@@ -40,6 +40,11 @@ export default [
             name: 'curdCustomPage',
             component: './Enhance/CurdCustomPage',
           },
+          {
+            path: '/enhance/curd-package',
+            name: 'curdPackage',
+            component: './Enhance/CurdPackage',
+          },
         ],
       },
       // dashboard

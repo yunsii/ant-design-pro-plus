@@ -46,4 +46,5 @@ export default {
   'menu.enhance': 'Enhance Demo',
   'menu.enhance.curdPage': 'Base Curd',
   'menu.enhance.curdCustomPage': 'Custom Curd',
+  'menu.enhance.curdPackage': 'Curd Package',
 };
