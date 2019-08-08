@@ -145,6 +145,7 @@ const getMembers = (req, res, u) => {
       per_page: limit,
       total: members.length,
     },
+    status_code: 200,
   });
 };
 
