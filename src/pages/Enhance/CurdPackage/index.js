@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
+import { Curd, FormMateContext } from 'antd-curd';
 import { FormProvider, createFormItems } from '@/components/antd-form-mate';
 import { modelName } from '../models/curdPackage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
-import { Curd, FormMateContext } from '@/utils/dist';
 
 @connect(({ [modelName]: model, loading }) => ({
   data: model.data,
@@ -19,6 +19,7 @@ import { Curd, FormMateContext } from '@/utils/dist';
 class TableList extends PureComponent {
   state = {
     customModelVisible: false,
+    selectedRows: [],
   };
 
   queryArgsConfig = [
@@ -83,7 +84,33 @@ class TableList extends PureComponent {
   ];
 
   render() {
-    const { customModelVisible } = this.state;
+    const { customModelVisible, selectedRows } = this.state;
+    const actionsConfig = {
+      extraActions: [
+        {
+          key: 13,
+          title: '外务',
+          handleClick: record => message.info(`调用 ${record.name} 的外务事件`),
+        },
+        {
+          key: 14,
+          title: '兼职',
+          handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
+        },
+        {
+          key: 15,
+          title: '弹出子组件',
+          handleClick: () => this.setState({ customModelVisible: true }),
+        },
+      ],
+      confirmKeys: [
+        [4, record => `确定查看 ${record.name} 的详情吗？`],
+        [12, () => `确定删除吗？`],
+        [13, record => `确定让 ${record.name} 出外务吗？`],
+        14,
+      ],
+    }
+    
     return (
       <FormMateContext.Provider
         value={{
@@ -91,7 +118,10 @@ class TableList extends PureComponent {
           createFormItems,
         }}
       >
-        <Curd>
+        <Curd
+          modelName={modelName}
+          {...this.props}
+        >
           <Curd.QueryPanel
             queryArgsConfig={this.queryArgsConfig}
             queryPanelProps={{
@@ -100,42 +130,19 @@ class TableList extends PureComponent {
             }}
           />
           <Curd.CurdTable
-            modelName={modelName}
+            columns={this.columns}
+            actionsConfig={actionsConfig}
             setFormItemsConfig={setFormItemsConfig}
-            actionsConfig={{
-              extraActions: [
-                {
-                  key: 13,
-                  title: '外务',
-                  handleClick: record => message.info(`调用 ${record.name} 的外务事件`),
-                },
-                {
-                  key: 14,
-                  title: '兼职',
-                  handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
-                },
-                {
-                  key: 15,
-                  title: '弹出子组件',
-                  handleClick: () => this.setState({ customModelVisible: true }),
-                },
-              ],
-              confirmKeys: [
-                [4, record => `确定查看 ${record.name} 的详情吗？`],
-                [12, () => `确定删除吗？`],
-                [13, record => `确定让 ${record.name} 出外务吗？`],
-                14,
-              ],
-            }}
             popupType="drawer"
             popupProps={{
               drawerConfig: {
                 width: 560,
               },
             }}
+            operators={[<TableActions key="more" selectedRows={selectedRows} />]}
+            selectedRows={selectedRows}
+            onSelectRow={(rows) => this.setState({ selectedRows: rows })}
             {...this.props}
-            columns={this.columns}
-            operators={[<TableActions key="more" />]}
           />
           <CustomModal
             title="弹出子组件"
@@ -152,11 +159,7 @@ class TableList extends PureComponent {
 export default TableList;
 
 function TableActions(props) {
-  const { __curd__ } = props;
-  if (!__curd__) return null;
-  const {
-    state: { selectedRows },
-  } = __curd__;
+  const { selectedRows } = props;
   const menu = (
     <Menu>
       <Menu.Item key="remove">删除</Menu.Item>
@@ -184,7 +187,7 @@ function CustomModal(props) {
     <Modal {...rest}>
       <Button
         onClick={() => {
-          __curd__.reSearch();
+          __curd__.handleSearch();
           rest.onCancel();
         }}
       >
