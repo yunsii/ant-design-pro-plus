@@ -17,14 +17,16 @@ const model = curdModel(Namespace, {
   createMethod: createCurdPage,
   updateMethod: updateCurdPage,
   deleteMethod: deleteCurdPage,
+  extraState: {
+    testData: [],
+  },
   extraEffects: {
     *test({ payload }, { call, put, select }) {
       console.log(`call ${Namespace}/test`);
-      console.log('refetch');
       const response = yield call(fetchCurdPage, payload);
       yield put({
         type: 'testSave',
-        payload: response,
+        payload: getTableList(response),
       });
       const testData = yield select(state => state[Namespace].testData);
       console.log('testData', testData);
@@ -35,7 +37,7 @@ const model = curdModel(Namespace, {
       console.log(`call ${Namespace}/testSave`);
       return {
         ...state,
-        testData: { ...getTableList(action) },
+        testData: { ...action.payload },
       };
     },
   },

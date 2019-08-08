@@ -18,7 +18,7 @@ import styles from './index.less';
 class TableList extends PureComponent {
   state = {
     customModelVisible: false,
-  }
+  };
 
   queryArgsConfig = [
     {
@@ -83,7 +83,6 @@ class TableList extends PureComponent {
 
   render() {
     const { customModelVisible } = this.state;
-
     return (
       <BaseCurd
         namespace={Namespace}
@@ -131,7 +130,7 @@ class TableList extends PureComponent {
         operators={[<TableActions />]}
       >
         <CustomModal
-          title='弹出子组件'
+          title="弹出子组件"
           visible={customModelVisible}
           onCancel={() => this.setState({ customModelVisible: false })}
           okButtonProps={{ style: { display: 'none' } }}
@@ -174,13 +173,14 @@ function CustomModal(props) {
   if (!__curd__) return null;
   return (
     <Modal {...rest}>
-      <Button onClick={() => {
-        __curd__.reSearch();
-        rest.onCancel();
-      }}
+      <Button
+        onClick={() => {
+          __curd__.reSearch();
+          rest.onCancel();
+        }}
       >
         重新搜索
       </Button>
     </Modal>
-  )
+  );
 }

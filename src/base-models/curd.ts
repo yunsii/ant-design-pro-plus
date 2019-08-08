@@ -5,6 +5,6 @@ curdModel.config({
   getTableList,
   getData,
   isResponseOk,
-})
+});
 
 export default curdModel.set;
