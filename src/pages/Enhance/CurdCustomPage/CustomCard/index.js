@@ -4,7 +4,7 @@ import Ellipsis from '@/components/Ellipsis';
 import styles from './index.less';
 
 export default function({ record, actions, recordSelection, checkable }) {
-  const { selectedRowKeys, onChange } = recordSelection;
+  const { selectedRowKeys, onSelectChange } = recordSelection;
   return (
     <Card
       hoverable
@@ -21,9 +21,9 @@ export default function({ record, actions, recordSelection, checkable }) {
       onClick={() => {
         if (!checkable) return;
         if (selectedRowKeys.includes(record.id)) {
-          onChange(selectedRowKeys.filter(item => item !== record.id));
+          onSelectChange(selectedRowKeys.filter(item => item !== record.id));
         } else {
-          onChange([...selectedRowKeys, record.id]);
+          onSelectChange([...selectedRowKeys, record.id]);
         }
       }}
     >

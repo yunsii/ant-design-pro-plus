@@ -1,22 +1,28 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Avatar, message, Button, Menu, Dropdown, Icon } from 'antd';
+import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
+import { Curd, FormMateContext } from 'antd-curd';
+import { FormProvider, createFormItems } from '@/components/antd-form-mate';
 import renderCard from './CustomCard';
-import BaseCurd from '@/components/BasePage/Curd';
-import { Namespace } from '../models/curdPage.ts';
+import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
 
-@connect(({ [Namespace]: namespace, loading }) => ({
-  data: namespace.data,
-  detail: namespace.detail,
-  fetchLoading: loading.effects[`${Namespace}/fetch`],
-  detailLoading: loading.effects[`${Namespace}/detail`],
-  createLoading: loading.effects[`${Namespace}/create`],
-  updateLoading: loading.effects[`${Namespace}/update`],
-  deleteLoading: loading.effects[`${Namespace}/delete`],
+@connect(({ [modelName]: model, loading }) => ({
+  data: model.data,
+  detail: model.detail,
+  fetchLoading: loading.effects[`${modelName}/fetch`],
+  detailLoading: loading.effects[`${modelName}/detail`],
+  createLoading: loading.effects[`${modelName}/create`],
+  updateLoading: loading.effects[`${modelName}/update`],
+  deleteLoading: loading.effects[`${modelName}/delete`],
 }))
 class TableList extends PureComponent {
+  state = {
+    customModelVisible: false,
+    selectedRows: [],
+  };
+
   queryArgsConfig = [
     {
       type: 'string',
@@ -79,36 +85,68 @@ class TableList extends PureComponent {
   ];
 
   render() {
+    const { customModelVisible, selectedRows } = this.state;
+    const actionsConfig = {
+      extraActions: [
+        {
+          key: 13,
+          title: '外务',
+          handleClick: record => message.info(`调用 ${record.name} 的外务事件`),
+        },
+        {
+          key: 14,
+          title: '兼职',
+          handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
+        },
+        {
+          key: 15,
+          title: '弹出子组件',
+          handleClick: () => this.setState({ customModelVisible: true }),
+        },
+      ],
+      confirmKeys: [
+        [4, record => `确定查看 ${record.name} 的详情吗？`],
+        [12, () => `确定删除吗？`],
+        [13, record => `确定让 ${record.name} 出外务吗？`],
+        14,
+      ],
+    };
+
+    console.log(this.props);
+
     return (
-      <BaseCurd
-        containerType="list"
-        renderItem={renderCard}
-        namespace={Namespace}
-        queryArgsConfig={this.queryArgsConfig}
-        setFormItemsConfig={setFormItemsConfig}
-        actionsConfig={{
-          extraActions: [
-            {
-              key: 14,
-              title: '兼职',
-              handleClick: record => message.info(`调用 ${record.name} 的兼职事件`),
-            },
-          ],
-          // checkable: false,
+      <FormMateContext.Provider
+        value={{
+          FormProvider,
+          createFormItems,
         }}
-        popupType="drawer"
-        popupProps={{
-          drawerConfig: {
-            width: 560,
-          },
-        }}
-        queryPanelProps={{
-          rowCount: 4,
-          maxCount: 2,
-        }}
-        {...this.props}
-        operators={[<TableActions />]}
-      />
+      >
+        <Curd modelName={modelName} {...this.props}>
+          <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} rowCount={4} maxCount={2} />
+          <Curd.CurdBox
+            type="list"
+            renderItem={renderCard}
+            actionsConfig={actionsConfig}
+            setFormItemsConfig={setFormItemsConfig}
+            popupType="drawer"
+            popupProps={{
+              drawerConfig: {
+                width: 560,
+              },
+            }}
+            operators={[<TableActions key="more" selectedRows={selectedRows} />]}
+            selectedRows={selectedRows}
+            onSelectRow={rows => this.setState({ selectedRows: rows })}
+            {...this.props}
+          />
+          <CustomModal
+            title="弹出子组件"
+            visible={customModelVisible}
+            onCancel={() => this.setState({ customModelVisible: false })}
+            okButtonProps={{ style: { display: 'none' } }}
+          />
+        </Curd>
+      </FormMateContext.Provider>
     );
   }
 }
@@ -138,5 +176,22 @@ function TableActions(props) {
         </Dropdown>
       </span>
     )
+  );
+}
+
+function CustomModal(props) {
+  const { __curd__, ...rest } = props;
+  if (!__curd__) return null;
+  return (
+    <Modal {...rest}>
+      <Button
+        onClick={() => {
+          __curd__.handleSearch();
+          rest.onCancel();
+        }}
+      >
+        重新搜索
+      </Button>
+    </Modal>
   );
 }
