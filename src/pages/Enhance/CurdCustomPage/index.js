@@ -123,14 +123,13 @@ class TableList extends PureComponent {
       >
         <Curd modelName={modelName} {...this.props}>
           <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} rowCount={4} maxCount={2} />
-          <Curd.CurdBox
-            type="list"
+          <Curd.CurdList
             renderItem={renderCard}
             actionsConfig={actionsConfig}
             setFormItemsConfig={setFormItemsConfig}
-            popupType="drawer"
+            popupType="model"
             popupProps={{
-              drawerConfig: {
+              modelConfig: {
                 width: 560,
               },
             }}
