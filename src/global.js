@@ -1,7 +1,14 @@
 import React from 'react';
 import { notification, Button, message } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
+import { FormMate } from 'antd-curd';
 import defaultSettings from './defaultSettings';
+
+
+const { setDefaultExtra } = FormMate;
+setDefaultExtra({
+  picture: '自定义图片默认提示',
+});
 
 const { pwa } = defaultSettings;
 // if pwa is true

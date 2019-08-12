@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
-import { Curd, FormMateContext } from 'antd-curd';
-import { FormProvider, createFormItems } from '@/components/antd-form-mate';
+import { Curd } from 'antd-curd';
 import renderCard from './CustomCard';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
@@ -113,39 +112,31 @@ class TableList extends PureComponent {
     };
 
     console.log(this.props);
-
     return (
-      <FormMateContext.Provider
-        value={{
-          FormProvider,
-          createFormItems,
-        }}
-      >
-        <Curd modelName={modelName} {...this.props}>
-          <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} rowCount={4} maxCount={2} />
-          <Curd.CurdList
-            renderItem={renderCard}
-            actionsConfig={actionsConfig}
-            setFormItemsConfig={setFormItemsConfig}
-            popupType="model"
-            popupProps={{
-              modelConfig: {
-                width: 560,
-              },
-            }}
-            operators={[<TableActions key="more" selectedRows={selectedRows} />]}
-            selectedRows={selectedRows}
-            onSelectRow={rows => this.setState({ selectedRows: rows })}
-            {...this.props}
-          />
-          <CustomModal
-            title="弹出子组件"
-            visible={customModelVisible}
-            onCancel={() => this.setState({ customModelVisible: false })}
-            okButtonProps={{ style: { display: 'none' } }}
-          />
-        </Curd>
-      </FormMateContext.Provider>
+      <Curd modelName={modelName} {...this.props}>
+        <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} rowCount={4} maxCount={2} />
+        <Curd.CurdList
+          renderItem={renderCard}
+          actionsConfig={actionsConfig}
+          setFormItemsConfig={setFormItemsConfig}
+          popupType="model"
+          popupProps={{
+            modelConfig: {
+              width: 560,
+            },
+          }}
+          operators={[<TableActions key="more" selectedRows={selectedRows} />]}
+          selectedRows={selectedRows}
+          onSelectRow={rows => this.setState({ selectedRows: rows })}
+          {...this.props}
+        />
+        <CustomModal
+          title="弹出子组件"
+          visible={customModelVisible}
+          onCancel={() => this.setState({ customModelVisible: false })}
+          okButtonProps={{ style: { display: 'none' } }}
+        />
+      </Curd>
     );
   }
 }
