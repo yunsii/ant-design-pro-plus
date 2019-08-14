@@ -80,7 +80,6 @@
 前置依赖：
 
 * dva-base-models
-* antd-form-mate
 * antd-curd
 
 如果需要新建一个类似[**基础增删改查**](src/pages/Enhance/CurdPage)的页面，快速开发指南：
