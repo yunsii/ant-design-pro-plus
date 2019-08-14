@@ -60,9 +60,7 @@
 
 关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)
 
-### StandardTable
-
-基于 ant-deisgn-pro-v2 中的 [StandardTable](https://github.com/ant-design/ant-design-pro/blob/v2/src/components/StandardTable/index.js) 组件。
+### StandardTable 增强
 
 * 默认开启 hideOnSinglePage
 * 间隔行着色
