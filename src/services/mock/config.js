@@ -1,4 +1,4 @@
-let initialUsePromise = process.env.NODE_ENV === 'development';
+let initialUsePromise = process.env.NODE_ENV !== 'development';
 
 if (process.env.NODE_ENV === 'production') {
   initialUsePromise = true;
