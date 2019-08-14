@@ -22,9 +22,18 @@ function delay(ms) {
   });
 }
 
+function* putGenerator(put, actions, payload?: any) {
+  for (const actionName of actions) {
+    yield put({
+      type: actionName,
+      payload,
+    });
+  }
+}
+
 const model = curdModel(modelName, {
   fetchMethod: fetchCurdPage,
-  parallelFetchActions: ['testForParallelWithFetch'],
+  // parallelFetchActions: ['testForParallelWithFetch'],
   afterFetchActions: ['test'],
   detailMethod: detailCurdPage,
   createMethod: createCurdPage,
@@ -33,6 +42,8 @@ const model = curdModel(modelName, {
   extraEffects: {
     *test({ payload }, { call, put, select }) {
       console.log(`call ${modelName}/test`);
+      yield putGenerator(put.resolve, ['testForParallelWithFetch']);
+      console.log('fetch curdPage');
       const response = yield call(fetchCurdPage, payload);
       yield put({
         type: 'testSave',
@@ -44,7 +55,7 @@ const model = curdModel(modelName, {
     *testForParallelWithFetch({ payload }, { call }) {
       console.log(`call ${modelName}/testForParallelWithFetch`);
       console.log('get payload', payload);
-      yield call(delay, 2000);
+      yield call(delay, 5000);
       console.log('after delay');
     },
   },
