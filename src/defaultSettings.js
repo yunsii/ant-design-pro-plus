@@ -18,4 +18,5 @@ module.exports = {
   iconfontUrl: '',
   pageTabs: true,
   proRootPath: '/',
+  publicPath: '/user',
 };
