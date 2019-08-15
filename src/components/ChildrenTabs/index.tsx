@@ -1,5 +1,7 @@
 import React from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
+import { TabsProps } from 'antd/lib/tabs';
+import { MenuProps } from 'antd/lib/menu';
 import _findIndex from 'lodash/findIndex';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
@@ -33,8 +35,33 @@ function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, 
   return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
 }
 
-export default class ChildrenTabs extends React.Component {
-  static getDerivedStateFromProps(props, state) {
+export interface ChildrenTab {
+  /** tab's title */
+  tab: string;
+  key: string;
+  content: React.ReactChildren;
+  /** used to extends tab's properties */
+  [k: string]: any;
+}
+
+export interface ChildrenTabsProps {
+  activeKey: string;
+  activeTitle: string;
+  handleTabChange: (keyToSwitch: string, activedTabs: any[]) => void;
+  extraTabProperties?: {};
+  tabsConfig?: TabsProps;
+  afterRemoveTab?: () => void;
+  children: React.ReactChildren;
+}
+
+interface ChildrenTabsState {
+  activedTabs: ChildrenTab[];
+  activeKey: string | null;
+  nextTabKey: string | null;
+}
+
+export default class ChildrenTabs extends React.Component<ChildrenTabsProps, ChildrenTabsState> {
+  static getDerivedStateFromProps(props: ChildrenTabsProps, state: ChildrenTabsState) {
     // children 可能用于新建 tab ，切换并更新 tab
     const { children, activeKey, activeTitle, extraTabProperties } = props;
     const { activedTabs, nextTabKey } = state;
@@ -74,26 +101,24 @@ export default class ChildrenTabs extends React.Component {
     };
   }
 
-  tabMenu = null;
-
   state = {
     activedTabs: [],
     activeKey: null,
     nextTabKey: null,
   };
 
-  handleSwitch = keyToSwitch => {
+  handleSwitch = (keyToSwitch: string) => {
     const { handleTabChange } = this.props;
     const { activedTabs } = this.state;
     callFunctionIfFunction(handleTabChange)(keyToSwitch, activedTabs);
   };
 
-  handleTabEdit = (targetKey, action) => {
+  handleTabEdit = (targetKey: string, action: string) => {
     // console.log('handleTabEdit', targetKey);
     this[action](targetKey);
   };
 
-  remove = key => {
+  remove = (key: string) => {
     const { afterRemoveTab } = this.props;
     const { activedTabs, activeKey } = this.state;
     if (key !== activeKey) {
@@ -122,7 +147,7 @@ export default class ChildrenTabs extends React.Component {
     );
   };
 
-  handleTabsMenuClick = tabKey => event => {
+  handleTabsMenuClick = (tabKey: string): MenuProps['onClick'] => event => {
     const { key } = event;
     const { activedTabs } = this.state;
 
@@ -141,8 +166,8 @@ export default class ChildrenTabs extends React.Component {
     const { activedTabs, activeKey } = this.state;
     // console.log(activedTabs);
 
-    const setMenu = key => (
-      <Menu onClick={this.handleTabsMenuClick(key)} onContextMenu={event => event.preventDefault()}>
+    const setMenu = (key: string) => (
+      <Menu onClick={this.handleTabsMenuClick(key)}>
         <Menu.Item disabled={activedTabs.length === 1} key={closeCurrentTabMenuKey}>
           关闭页签
         </Menu.Item>
@@ -152,14 +177,12 @@ export default class ChildrenTabs extends React.Component {
       </Menu>
     );
 
-    const setTab = (tab, key) => (
-      <Dropdown
-        overlay={setMenu(key)}
-        trigger={['contextMenu']}
-        onVisibleChange={this.handleDropMenuVisibleChange}
-      >
-        <span className={styles.tabTitle}>{tab}</span>
-      </Dropdown>
+    const setTab = (tab: ChildrenTab, key: string) => (
+      <div onContextMenu={event => event.preventDefault()}>
+        <Dropdown overlay={setMenu(key)} trigger={['contextMenu']}>
+          <span className={styles.tabTitle}>{tab}</span>
+        </Dropdown>
+      </div>
     );
 
     return (
@@ -177,12 +200,7 @@ export default class ChildrenTabs extends React.Component {
         {activedTabs && activedTabs.length
           ? activedTabs.map(item => {
               return (
-                <TabPane
-                  tab={setTab(item.tab, item.key)}
-                  key={item.key}
-                  closable={item.closable}
-                  onContextMenu={event => event.preventDefault()}
-                >
+                <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
                   {item.content}
                 </TabPane>
               );
