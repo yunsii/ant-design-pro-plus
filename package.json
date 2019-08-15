@@ -62,7 +62,7 @@
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
     "dva": "^2.4.1",
-    "dva-base-models": "^1.1.7",
+    "dva-base-models": "^1.1.8",
     "enquire-js": "^0.2.1",
     "express": "^4.16.4",
     "gg-editor": "^2.0.2",
