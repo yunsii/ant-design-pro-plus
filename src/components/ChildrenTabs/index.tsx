@@ -50,7 +50,7 @@ export interface ChildrenTabsProps {
   handleTabChange: (keyToSwitch: string, activedTabs: any[]) => void;
   extraTabProperties?: {};
   tabsConfig?: TabsProps;
-  afterRemoveTab?: () => void;
+  afterRemoveTab?: (key: string, activeKey: string, activedTabs: ChildrenTab[]) => void;
   children: React.ReactChildren;
 }
 
