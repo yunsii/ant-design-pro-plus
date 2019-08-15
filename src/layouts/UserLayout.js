@@ -78,6 +78,5 @@ class UserLayout extends Component {
 }
 
 export default connect(({ menu: menuModel }) => ({
-  menuData: menuModel.menuData,
   breadcrumbNameMap: menuModel.breadcrumbNameMap,
 }))(UserLayout);
