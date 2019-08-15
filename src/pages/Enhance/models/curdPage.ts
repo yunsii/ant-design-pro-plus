@@ -7,20 +7,9 @@ import {
   deleteCurdPage,
 } from '@/services/curdPage';
 import { getTableList } from '@/utils/model';
+import { delay } from '@/utils/enhanceUtils';
 
 export const modelName = 'curdPage';
-
-function delay(ms) {
-  return new Promise((resolve, reject) => {
-    try {
-      setTimeout(() => {
-        resolve();
-      }, ms);
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
 
 function* putGenerator(put, actions, payload?: any) {
   for (const actionName of actions) {
@@ -34,7 +23,7 @@ function* putGenerator(put, actions, payload?: any) {
 const model = curdModel(modelName, {
   fetchMethod: fetchCurdPage,
   // parallelFetchActions: ['testForParallelWithFetch'],
-  afterFetchActions: ['test'],
+  // afterFetchActions: ['test'],
   detailMethod: detailCurdPage,
   createMethod: createCurdPage,
   updateMethod: updateCurdPage,
@@ -42,7 +31,7 @@ const model = curdModel(modelName, {
   extraEffects: {
     *test({ payload }, { call, put, select }) {
       console.log(`call ${modelName}/test`);
-      yield putGenerator(put.resolve, ['testForParallelWithFetch']);
+      yield putGenerator((put as any).resolve, ['testForParallelWithFetch']);
       console.log('fetch curdPage');
       const response = yield call(fetchCurdPage, payload);
       yield put({
