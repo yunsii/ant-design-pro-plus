@@ -10,9 +10,11 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import SiderMenu from '@/components/SiderMenu';
-import getPageTitle from '@/utils/getPageTitle';
-import styles from './BasicLayout.less';
 import PageTabs from '@/components/PageTabs';
+import PageLoading from '@/components/PageLoading';
+import getPageTitle from '@/utils/getPageTitle';
+import { transferMenuData } from '@/utils/enhanceUtils';
+import styles from './BasicLayout.less';
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -112,11 +114,25 @@ class BasicLayout extends React.Component {
       menuData,
       breadcrumbNameMap,
       fixedHeader,
+      menuLoading,
+      publicPath = '/user',
     } = this.props;
 
     const isTop = PropsLayout === 'topmenu';
     let contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     contentStyle = pageTabs ? { ...contentStyle, margin: 'unset' } : { ...contentStyle };
+
+    const renderMenuData = transferMenuData(publicPath, menuLoading, menuData);
+    const renderContent = () => {
+      if (pageTabs) {
+        if (renderMenuData.length) {
+          return <PageTabs {...this.props} />;
+        }
+        return <PageLoading />;
+      }
+      return children;
+    };
+
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (
@@ -124,9 +140,9 @@ class BasicLayout extends React.Component {
             logo={logo}
             theme={navTheme}
             onCollapse={this.handleMenuCollapse}
-            menuData={menuData}
             isMobile={isMobile}
             {...this.props}
+            menuData={renderMenuData}
           />
         )}
         <Layout
@@ -136,14 +152,14 @@ class BasicLayout extends React.Component {
           }}
         >
           <Header
-            menuData={menuData}
             handleMenuCollapse={this.handleMenuCollapse}
             logo={logo}
             isMobile={isMobile}
             {...this.props}
+            menuData={renderMenuData}
           />
           <Content className={styles.content} style={contentStyle}>
-            {pageTabs ? <PageTabs {...this.props} /> : children}
+            {renderContent()}
           </Content>
           <Footer />
         </Layout>
