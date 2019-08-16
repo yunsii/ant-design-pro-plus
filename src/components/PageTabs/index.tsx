@@ -17,32 +17,33 @@ function searchPathIdAndNameAndChildren(
   childrenPathname: string,
   originalMenuData: any[]
 ): [string, string, UmiChildren | null] {
-  function getPathIdAndName(path: string, menuData: any[]) {
+  function getPathIdAndName(path: string, menuData: any[], parent) {
     let result: [string, string, UmiChildren];
     menuData.forEach(item => {
-      // match prefix
+      // match prefix iteratively
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
-        if (item.name) {
+        // create new tab if item has name and item's parant route has not component
+        if (item.name && parent && !parent.component) {
           result = [item.path, item.name, item.children];
         }
         // get children pathIdAndName recursively
         if (item.children) {
-          result = getPathIdAndName(path, item.children) || result;
+          result = getPathIdAndName(path, item.children, item) || result;
         }
       }
     });
     return result;
   }
-  return getPathIdAndName(childrenPathname, originalMenuData) || ['404', 'Error', null];
+  return getPathIdAndName(childrenPathname, originalMenuData, null) || ['404', 'Error', null];
 }
 
 function isChildrenEqualToProRootPath(children: UmiChildren, proRootPath: string) {
   return getChildrenPathname(children) === proRootPath;
 }
 
-function isPathChildrenHasName(pathChildren) {
-  return pathChildren && pathChildren.length && _find(pathChildren, 'name');
-}
+// function isPathChildrenHasName(pathChildren) {
+//   return pathChildren && pathChildren.length && _find(pathChildren, 'name');
+// }
 
 export interface PageTabsProps {
   proRootPath?: string;
@@ -57,14 +58,10 @@ export default function PageTabs(props: PageTabsProps) {
   if (isChildrenEqualToProRootPath(children, proRootPath)) {
     return children;
   }
-  const [newOrSwitchOrNextPathId, pathName, pathChildren] = searchPathIdAndNameAndChildren(
+  const [newOrSwitchOrNextPathId, pathName] = searchPathIdAndNameAndChildren(
     getChildrenPathname(children),
     originalMenuData
   );
-  // return children to router to it's children to render
-  if (isPathChildrenHasName(pathChildren)) {
-    return children;
-  }
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
