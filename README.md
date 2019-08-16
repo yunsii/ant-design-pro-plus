@@ -87,7 +87,8 @@
 * 配置页面路由
 * 编写接口增删改查 service
 * 基于 dva-base-models 配置，model ，见 [base-models/curd.ts](/src/base-models/curd.ts)，主要是根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
-* 配置对象表单数据映射 map.js ，用于对象详情，新建和编辑对象，
+* 配置对象表单数据映射 map.js ，用于对象详情，新建和编辑对象
+* 如需配置表单相关全局参数，可从 `antd-curd` 中导出 `FormMate` 进行配置
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
 
 通过配置化的方式快速实现了一个增删改查页面的需求，让开发者可以尽量少的关心底层的逻辑实现。同时也提供了较为灵活的 API 去扩展特定页面的特定需求。
