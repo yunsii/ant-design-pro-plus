@@ -14,6 +14,7 @@ const closeOthersTabMenuKey = 'closeOthers';
 function addTab(newTab, activedTabs) {
   // filter 过滤路由 为 '/' 的 children
   // map 添加第一个 tab 不可删除
+  // console.log(activedTabs, newTab);
   return [...activedTabs, newTab]
     .filter(item => item.path !== '/')
     .map((item, index) =>
@@ -51,6 +52,7 @@ export interface ChildrenTabsProps {
   extraTabProperties?: {};
   tabsConfig?: TabsProps;
   afterRemoveTab?: (removeKey: string, nextTabKey: string, activedTabs: ChildrenTab[]) => void;
+  /** children is used to create tab, switch and update tab */
   children: React.ReactChildren;
 }
 
@@ -62,10 +64,9 @@ interface ChildrenTabsState {
 
 export default class ChildrenTabs extends React.Component<ChildrenTabsProps, ChildrenTabsState> {
   static getDerivedStateFromProps(props: ChildrenTabsProps, state: ChildrenTabsState) {
-    // children 可能用于新建 tab ，切换并更新 tab
     const { children, activeKey, activeTitle, extraTabProperties } = props;
     const { activedTabs, nextTabKey } = state;
-    // return state after delete tab
+    // return state and set nextTabKey to `null` after delete tab
     if (nextTabKey) {
       return {
         activedTabs,
@@ -178,11 +179,11 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     );
 
     const setTab = (tab: ChildrenTab, key: string) => (
-      <div onContextMenu={event => event.preventDefault()}>
+      <span onContextMenu={event => event.preventDefault()}>
         <Dropdown overlay={setMenu(key)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
         </Dropdown>
-      </div>
+      </span>
     );
 
     return (
@@ -199,12 +200,12 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
       >
         {activedTabs && activedTabs.length
           ? activedTabs.map(item => {
-              return (
-                <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
-                  {item.content}
-                </TabPane>
-              );
-            })
+            return (
+              <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
+                {item.content}
+              </TabPane>
+            );
+          })
           : null}
       </Tabs>
     );
