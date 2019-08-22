@@ -85,9 +85,9 @@
 如果需要新建一个类似[**基础增删改查**](src/pages/Enhance/CurdPage)的页面，快速开发指南：
 
 * 配置页面路由
-* 编写接口增删改查 service
+* 对接增删改查接口
 * 基于 dva-base-models 配置，model ，见 [base-models/curd.ts](/src/base-models/curd.ts)，主要是根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
-* 配置对象表单数据映射 map.js ，用于对象详情，新建和编辑对象
+* 配置对象表单数据映射 map.js ，用于对象的详情，新建和编辑对象
 * 如需配置表单相关全局参数，可从 `antd-curd` 中导出 `FormMate` 进行配置
 * 配置页面 index.js ，主要是配置查询面板和数据列模型
 
