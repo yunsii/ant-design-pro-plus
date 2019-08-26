@@ -112,7 +112,7 @@ class TableList extends PureComponent {
 
     return (
       <Curd modelName={modelName} {...this.props}>
-        <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} rowCount={4} maxCount={2} />
+        <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} />
         <Curd.CurdTable
           columns={this.columns}
           actionsConfig={actionsConfig}
