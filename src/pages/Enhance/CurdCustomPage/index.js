@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
-import { Curd } from '@/utils/dist';
+import { Curd } from 'antd-curd';
 import renderCard from './CustomCard';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
