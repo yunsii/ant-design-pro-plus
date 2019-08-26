@@ -178,7 +178,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
       </Menu>
     );
 
-    const setTab = (tab: ChildrenTab, key: string) => (
+    const setTab = (tab: string, key: string) => (
       <span onContextMenu={event => event.preventDefault()}>
         <Dropdown overlay={setMenu(key)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
@@ -199,7 +199,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
         onChange={this.handleSwitch}
       >
         {activedTabs && activedTabs.length
-          ? activedTabs.map(item => {
+          ? activedTabs.map((item: ChildrenTab) => {
             return (
               <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
                 {item.content}
