@@ -119,11 +119,12 @@ class TableList extends PureComponent {
           renderItem={renderCard}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}
-          popupType="model"
+          popupType="modal"
           popupProps={{
-            modelConfig: {
-              width: 560,
+            modalConfig: {
+              width: 800,
             },
+            cols: 2,
           }}
           operators={[<TableActions key="more" selectedRows={selectedRows} />]}
           selectedRows={selectedRows}
