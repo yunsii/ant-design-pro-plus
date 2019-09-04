@@ -56,8 +56,8 @@
   "dependencies": {
     "@antv/data-set": "^0.10.1",
     "antd": "^3.20.5",
-    "antd-curd": "^0.2.1",
-    "antd-form-mate": "^0.1.14",
+    "antd-curd": "^0.2.4",
+    "antd-form-mate": "^0.2.6",
     "bizcharts": "^3.5.3-beta.0",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
