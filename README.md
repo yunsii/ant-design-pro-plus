@@ -19,20 +19,20 @@
 
 由于是部署到非根目录，发现配置了 `base` 后，仅在页面内部路由能正常访问，如果直接使用完整的页面路由会导致访问失败。已反馈到 umi 的 issue [项目部署到非根目录，如何配置，让url匹配上？](https://github.com/umijs/umi/issues/231)待解决。同时，发现了官方仓库没有针对部署到非根目录情况下的登录重定向，已提交 pull request [fix: redirect with deploy on non-root path](https://github.com/ant-design/ant-design-pro/pull/4887)。
 
-## 新增特性✨
+## ✨新增特性
 
 * [ChildrenTabs 根据 children 实现标签页切换](#ChildrenTabs-根据-children-实现标签页切换)
 * [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 
-## 新增依赖
+## 📌新增依赖
 
 * [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation) 自定义高德地图定位组件
 * [dva-base-models](https://github.com/theprimone/dva-base-models) 基于 dva 的基础 model 配置
 * [antd-form-mate](https://github.com/theprimone/antd-form-mate) 基于 ant design 的表单组件
 * [antd-curd](https://github.com/theprimone/antd-curd) 基于 ant design 的增删改查页面组件
 
-## 功能实现概述☁️
+## ☁️功能实现概述
 
 除 UI 组件外，尽量使用 TypeScript 开发。
 
