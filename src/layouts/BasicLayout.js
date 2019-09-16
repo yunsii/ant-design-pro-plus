@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Layout } from 'antd';
+import { Layout, Button } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
@@ -103,6 +103,37 @@ class BasicLayout extends React.Component {
     return <SettingDrawer />;
   };
 
+  handleRefresh = () => {
+    const { childrenTabs } = window;
+    if (childrenTabs) {
+      console.log(childrenTabs.state.activedTabs);
+      childrenTabs.setState(
+        {
+          activedTabs: childrenTabs.state.activedTabs.map((item, index) => {
+            if (index === 0) {
+              return {
+                ...item,
+                key: 'xxx',
+              };
+            }
+            return item;
+          }),
+        },
+        () => {
+          console.log(childrenTabs.state.activedTabs);
+        }
+      );
+    }
+  };
+
+  renderRefresh = () => {
+    return (
+      <div style={{ position: 'fixed', right: 0, top: 200 }}>
+        <Button icon="reload" type="primary" shape="round" onClick={this.handleRefresh} />
+      </div>
+    );
+  };
+
   render() {
     const {
       navTheme,
@@ -177,6 +208,7 @@ class BasicLayout extends React.Component {
           </ContainerQuery>
         </DocumentTitle>
         <Suspense fallback={null}>{this.renderSettingDrawer()}</Suspense>
+        {this.renderRefresh()}
       </React.Fragment>
     );
   }

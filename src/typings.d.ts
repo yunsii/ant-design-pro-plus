@@ -1,4 +1,5 @@
 declare module '*.less';
+// import ChildrenTabs from '@/components/ChildrenTabs';
 
 declare interface UmiChildren extends React.ReactChildren {
   props: {
@@ -13,4 +14,8 @@ declare interface MenuItem {
   icons?: string;
   name?: string;
   path: string;
+}
+
+interface Window {
+  childrenTabs: any;
 }

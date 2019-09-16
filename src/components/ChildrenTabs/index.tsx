@@ -165,6 +165,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
   render() {
     const { tabsConfig } = this.props;
     const { activedTabs, activeKey } = this.state;
+    window.childrenTabs = this;
     // console.log(activedTabs);
 
     const setMenu = (key: string) => (
@@ -200,12 +201,12 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
       >
         {activedTabs && activedTabs.length
           ? activedTabs.map((item: ChildrenTab) => {
-            return (
-              <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
-                {item.content}
-              </TabPane>
-            );
-          })
+              return (
+                <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
+                  {item.content}
+                </TabPane>
+              );
+            })
           : null}
       </Tabs>
     );
