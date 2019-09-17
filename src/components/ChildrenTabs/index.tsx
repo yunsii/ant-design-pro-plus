@@ -25,10 +25,10 @@ function addTab(newTab, activedTabs) {
 }
 
 function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, activedTabs) {
-  const { path, content, ...rest } = activedTabs[activeIndex];
+  const { path, content, refresh, ...rest } = activedTabs[activeIndex];
   activedTabs.splice(activeIndex, 1, {
     tab: tabName,
-    content: children,
+    content: refresh ? content : children,
     ...rest,
     ...extraTabProperties,
   });

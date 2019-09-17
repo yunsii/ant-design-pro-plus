@@ -3,6 +3,7 @@ import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import { Spin, Tag, Menu, Icon, Avatar, Tooltip, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
+import injectChildren from '@/utils/childrenUtils';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
@@ -63,6 +64,24 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
+  handleTabRefresh = () => {
+    const { childrenTabs } = window;
+    if (childrenTabs) {
+      childrenTabs.setState({
+        activedTabs: childrenTabs.state.activedTabs.map((item, index) => {
+          if (index === 0) {
+            return {
+              ...item,
+              content: injectChildren(item.content, { key: item.key ? item.key + 1 : 1 }),
+              refresh: true,
+            };
+          }
+          return item;
+        }),
+      });
+    }
+  };
+
   render() {
     const {
       currentUser,
@@ -71,6 +90,7 @@ export default class GlobalHeaderRight extends PureComponent {
       onMenuClick,
       onNoticeClear,
       theme,
+      reloadTab,
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -116,6 +136,13 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
+        {reloadTab ? (
+          <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
+            <a className={styles.action} onClick={this.handleTabRefresh}>
+              <Icon type="reload" />
+            </a>
+          </Tooltip>
+        ) : null}
         <Tooltip title={formatMessage({ id: 'component.globalHeader.help' })}>
           <a
             target="_blank"
