@@ -67,9 +67,10 @@ export default class GlobalHeaderRight extends PureComponent {
   handleTabRefresh = () => {
     const { childrenTabs } = window;
     if (childrenTabs) {
+      const { activeKey, activedTabs } = childrenTabs.state;
       childrenTabs.setState({
-        activedTabs: childrenTabs.state.activedTabs.map((item, index) => {
-          if (index === 0) {
+        activedTabs: activedTabs.map(item => {
+          if (item.key === activeKey) {
             return {
               ...item,
               content: injectChildren(item.content, { key: item.key ? item.key + 1 : 1 }),
