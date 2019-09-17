@@ -111,7 +111,6 @@ class TableList extends PureComponent {
       ],
     };
 
-    console.log(this.props);
     return (
       <Curd modelName={modelName} {...this.props}>
         <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} />
