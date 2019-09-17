@@ -52,6 +52,8 @@
 | extraTabProperties | 当前 tab 的扩展属性 | {} | {} |
 | tabsConfig | 可自行配置 Tabs 属性，除 `activeKey`， `onEdit`， `onChange` 外 | TabsProps | - |
 
+此外，还在 [`RightContent`](./src/components/GlobalHeader/RightContent.js#L140) 中实现了刷新当前页签的功能，默认开启。如果不需要，可在 [defaultSettings](/src/defaultSettings.js) 设置 `reloadTab` 为 `false` 即可。
+
 ### PageTabs 基于路由实现标签页切换
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
