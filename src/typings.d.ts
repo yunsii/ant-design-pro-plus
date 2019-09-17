@@ -9,7 +9,7 @@ declare interface UmiChildren extends React.ReactChildren {
 
 declare interface MenuItem {
   authority: string[] | undefined;
-  children?: UmiChildren[];
+  children?: MenuItem[];
   component?: React.Component;
   icons?: string;
   name?: string;

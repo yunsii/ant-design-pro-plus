@@ -13,11 +13,8 @@ function getChildrenPathname(children: UmiChildren) {
   return childrenPathname;
 }
 
-function searchPathIdAndName(
-  childrenPathname: string,
-  originalMenuData: any[]
-): [string, string] {
-  function getPathIdAndName(path: string, menuData: any[], parent: MenuItem | null) {
+function searchPathIdAndName(childrenPathname: string, originalMenuData: any[]): [string, string] {
+  function getPathIdAndName(path: string, menuData: MenuItem[], parent: MenuItem | null) {
     let result: [string, string];
     menuData.forEach(item => {
       // match prefix iteratively
@@ -58,10 +55,7 @@ export default function PageTabs(props: PageTabsProps) {
   if (isChildrenEqualToProRootPath(children, proRootPath)) {
     return children;
   }
-  const [newOrSwitchOrNextPathId, pathName] = searchPathIdAndName(
-    getChildrenPathname(children),
-    originalMenuData
-  );
+  const [pathId, pathName] = searchPathIdAndName(getChildrenPathname(children), originalMenuData);
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
@@ -73,7 +67,7 @@ export default function PageTabs(props: PageTabsProps) {
   };
   return (
     <ChildrenTabs
-      activeKey={newOrSwitchOrNextPathId}
+      activeKey={pathId}
       activeTitle={pathName}
       extraTabProperties={{ path: getChildrenPathname(children) }}
       handleTabChange={handleTabChange}
