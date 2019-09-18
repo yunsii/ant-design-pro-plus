@@ -1,11 +1,10 @@
 import React from 'react';
 import { notification, Button, message } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { FormMate } from 'antd-curd';
+import { FormMateConfig } from 'antd-curd';
 import defaultSettings from './defaultSettings';
 
-
-const { setDefaultExtra } = FormMate;
+const { setDefaultExtra } = FormMateConfig;
 setDefaultExtra({
   picture: '自定义图片默认提示',
 });
