@@ -158,6 +158,7 @@ const getDetail = (req, res) => {
       name: 'XXX',
       textarea: id,
     },
+    status_code: 200,
   });
 };
 const proxy = {
