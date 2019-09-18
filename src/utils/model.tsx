@@ -61,5 +61,5 @@ export function renderCode(list, code) {
 }
 
 export function isResponseOk(response) {
-  return response.status_code === 200;
+  return response && response.status_code === 200;
 }
