@@ -152,7 +152,7 @@ export default function setFormItemsConfig(detail = {}, mode) {
       },
     },
     {
-      type: 'default/string',
+      type: 'string',
       field: 'name',
       formItemProps: {
         label: '姓名',
