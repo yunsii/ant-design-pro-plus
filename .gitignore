@@ -36,4 +36,3 @@ lambda/mock/index.js
 # screenshot
 screenshot
 .firebase
-**/features/copyConfig.js
