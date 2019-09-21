@@ -41,9 +41,15 @@ function isChildrenEqualToProRootPath(children: UmiChildren, proRootPath: string
   return getChildrenPathname(children) === proRootPath;
 }
 
-// function isPathChildrenHasName(pathChildren) {
-//   return pathChildren && pathChildren.length && _find(pathChildren, 'name');
-// }
+function setSearch(search: string) {
+  if (!search) {
+    return '';
+  }
+  if (search.startsWith('?')) {
+    return search;
+  }
+  return `?${search}`;
+}
 
 export interface PageTabsProps {
   proRootPath?: string;
@@ -63,7 +69,7 @@ function PageTabs(props: PageTabsProps) {
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
-    router.push(`${targetTab.path}${targetTab.search}`);
+    router.push(`${targetTab.path}${setSearch(targetTab.search)}`);
   };
   const afterRemoveTab = (removeKey: string, nextTabKey: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: nextTabKey });
