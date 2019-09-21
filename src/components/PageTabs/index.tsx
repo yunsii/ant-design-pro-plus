@@ -2,7 +2,7 @@ import React from 'react';
 import pathToRegexp from 'path-to-regexp';
 import _find from 'lodash/find';
 import withRouter from 'umi/withRouter';
-import router from 'umi/router';
+import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
 
 function getChildrenPathname(children: UmiChildren) {
@@ -37,10 +37,6 @@ function searchPathIdAndName(childrenPathname: string, originalMenuData: any[]):
   return getPathIdAndName(childrenPathname, originalMenuData, null) || ['404', 'Error'];
 }
 
-function isChildrenEqualToProRootPath(children: UmiChildren, proRootPath: string) {
-  return getChildrenPathname(children) === proRootPath;
-}
-
 function routeTo(targetTab: ChildrenTab) {
   router.push({
     ...targetTab.location,
@@ -51,17 +47,17 @@ export interface PageTabsProps {
   proRootPath?: string;
   children?: UmiChildren;
   originalMenuData: MenuItem[];
-  location: any;
+  location: RouteData;
 }
 
 function PageTabs(props: PageTabsProps) {
   const { proRootPath = '/', children, originalMenuData, location } = props;
 
   // return children to redirect if children pathname equal proRootPath
-  if (isChildrenEqualToProRootPath(children, proRootPath)) {
+  if (location.pathname === proRootPath) {
     return children;
   }
-  const [pathId, pathName] = searchPathIdAndName(getChildrenPathname(children), originalMenuData);
+  const [pathId, pathName] = searchPathIdAndName(location.pathname, originalMenuData);
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
