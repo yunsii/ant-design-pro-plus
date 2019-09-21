@@ -41,21 +41,17 @@ function isChildrenEqualToProRootPath(children: UmiChildren, proRootPath: string
   return getChildrenPathname(children) === proRootPath;
 }
 
-function setSearch(search: string) {
-  if (!search) {
-    return '';
-  }
-  if (search.startsWith('?')) {
-    return search;
-  }
-  return `?${search}`;
+function routeTo(targetTab: ChildrenTab) {
+  router.push({
+    ...targetTab.location,
+  });
 }
 
 export interface PageTabsProps {
   proRootPath?: string;
   children?: UmiChildren;
   originalMenuData: MenuItem[];
-  location: Location;
+  location: any;
 }
 
 function PageTabs(props: PageTabsProps) {
@@ -69,17 +65,19 @@ function PageTabs(props: PageTabsProps) {
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
-    router.push(`${targetTab.path}${setSearch(targetTab.search)}`);
+    routeTo(targetTab);
   };
   const afterRemoveTab = (removeKey: string, nextTabKey: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: nextTabKey });
-    router.push(targetTab.path);
+    routeTo(targetTab);
   };
   return (
     <ChildrenTabs
       activeKey={pathId}
       activeTitle={pathName}
-      extraTabProperties={{ path: getChildrenPathname(children), search: location.search }}
+      extraTabProperties={{
+        location,
+      }}
       handleTabChange={handleTabChange}
       afterRemoveTab={afterRemoveTab}
     >
