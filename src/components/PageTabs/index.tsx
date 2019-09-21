@@ -5,15 +5,6 @@ import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
 
-function getChildrenPathname(children: UmiChildren) {
-  const {
-    props: {
-      location: { pathname: childrenPathname },
-    },
-  } = children;
-  return childrenPathname;
-}
-
 function searchPathIdAndName(childrenPathname: string, originalMenuData: any[]): [string, string] {
   function getPathIdAndName(path: string, menuData: MenuItem[], parent: MenuItem | null) {
     let result: [string, string];
