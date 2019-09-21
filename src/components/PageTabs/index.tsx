@@ -20,8 +20,10 @@ function searchPathIdAndName(childrenPathname: string, originalMenuData: any[]):
     menuData.forEach(item => {
       // match prefix iteratively
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
-        // create new tab if item has name and item's parant route has not component
-        if (item.name && parent && !parent.component) {
+        if (!parent && item.name) {
+          result = [item.path, item.name];
+        } else if (parent && !parent.component && item.name) {
+          // create new tab if item has name and item's parant route has not component
           result = [item.path, item.name];
         }
         // get children pathIdAndName recursively
