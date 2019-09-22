@@ -91,6 +91,7 @@ export default class GlobalHeaderRight extends PureComponent {
       onMenuClick,
       onNoticeClear,
       theme,
+      pageTabs = true,
       reloadTab = true,
     } = this.props;
     const menu = (
@@ -137,7 +138,7 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
-        {reloadTab ? (
+        {pageTabs && reloadTab ? (
           <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
             <a className={styles.action} onClick={this.handleTabRefresh}>
               <Icon type="reload" />
