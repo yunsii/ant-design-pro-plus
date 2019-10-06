@@ -6,7 +6,7 @@
 
 </div>
 
-![ant-design-pro-v2-plus-screenshot.png](https://s2.ax1x.com/2019/07/27/eKKtG8.png)
+![ant-design-pro-v2-plus-screenshot.png](https://i.loli.net/2019/10/06/f3jdnlzqXaKSphu.png)
 
 [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/stargazers)
