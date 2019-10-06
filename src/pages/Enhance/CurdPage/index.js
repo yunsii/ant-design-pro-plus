@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import { Curd } from 'antd-curd';
@@ -15,7 +15,7 @@ import styles from './index.less';
   updateLoading: loading.effects[`${modelName}/update`],
   deleteLoading: loading.effects[`${modelName}/delete`],
 }))
-class TableList extends PureComponent {
+class TableList extends Component {
   state = {
     customModelVisible: false,
     selectedRows: [],
@@ -82,7 +82,12 @@ class TableList extends PureComponent {
     },
   ];
 
+  shouldComponentUpdate() {
+    return false;
+  }
+
   render() {
+    console.log('render CurdPage');
     const { customModelVisible, selectedRows } = this.state;
     const actionsConfig = {
       extraActions: [
