@@ -3,4 +3,7 @@ export default {
   'component.tagSelect.collapse': 'Collapse',
   'component.tagSelect.all': 'All',
   'component.miniProgress.tooltipDefault': 'Target value',
+  'component.childrenTabs.closeCurrent': 'Close tab',
+  'component.childrenTabs.closeOthers': 'Close other tabs',
+  'component.childrenTabs.closeToRight': 'Close tabs to the right',
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import _findIndex from 'lodash/findIndex';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
@@ -10,6 +11,7 @@ const { TabPane } = Tabs;
 // tabs 菜单选项 key 值
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
+const closeToRightTabMenuKey = 'closeToRight';
 
 function addTab(newTab, activedTabs) {
   // filter 过滤路由 为 '/' 的 children
@@ -159,6 +161,11 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
       this.setState({
         activedTabs: currentTab.map(item => ({ ...item, closable: false })),
       });
+    } else if (key === closeToRightTabMenuKey) {
+      const currentIndex = _findIndex(activedTabs, { key: tabKey });
+      this.setState({
+        activedTabs: activedTabs.slice(0, currentIndex + 1),
+      });
     }
   };
 
@@ -168,20 +175,23 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     window.childrenTabs = this;
     // console.log(activedTabs);
 
-    const setMenu = (key: string) => (
+    const setMenu = (key: string, index: number) => (
       <Menu onClick={this.handleTabsMenuClick(key)}>
         <Menu.Item disabled={activedTabs.length === 1} key={closeCurrentTabMenuKey}>
-          关闭页签
+          <FormattedMessage id="component.childrenTabs.closeCurrent" />
         </Menu.Item>
         <Menu.Item disabled={activedTabs.length === 1} key={closeOthersTabMenuKey}>
-          关闭其他页签
+          <FormattedMessage id="component.childrenTabs.closeOthers" />
+        </Menu.Item>
+        <Menu.Item disabled={activedTabs.length === index + 1} key={closeToRightTabMenuKey}>
+          <FormattedMessage id="component.childrenTabs.closeToRight" />
         </Menu.Item>
       </Menu>
     );
 
-    const setTab = (tab: string, key: string) => (
+    const setTab = (tab: string, key: string, index: number) => (
       <span onContextMenu={event => event.preventDefault()}>
-        <Dropdown overlay={setMenu(key)} trigger={['contextMenu']}>
+        <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
         </Dropdown>
       </span>
@@ -200,9 +210,13 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
         onChange={this.handleSwitch}
       >
         {activedTabs && activedTabs.length
-          ? activedTabs.map((item: ChildrenTab) => {
+          ? activedTabs.map((item: ChildrenTab, index) => {
               return (
-                <TabPane tab={setTab(item.tab, item.key)} key={item.key} closable={item.closable}>
+                <TabPane
+                  tab={setTab(item.tab, item.key, index)}
+                  key={item.key}
+                  closable={item.closable}
+                >
                   {item.content}
                 </TabPane>
               );
