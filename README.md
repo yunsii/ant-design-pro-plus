@@ -72,7 +72,7 @@ shouldComponentUpdate() {
 }
 ```
 
-所以在遍历获取标签页的 `id` 和名称时，同时[判断标签页是否需要刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要刷新）。再使用高阶组件简单封装了一下 `children`：
+所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要刷新）的逻辑。再使用高阶组件简单封装了一下 `children`：
 
 ```jsx
 class StaticChildren extends React.Component {
@@ -87,13 +87,13 @@ class StaticChildren extends React.Component {
 }
 ```
 
-当标签页需要刷新时，调用 `StaticChildren` 包装 `children` 即可。
+当标签页不需要刷新时，调用 `StaticChildren` 包装 `children` 即可。
 
 ```jsx
 <StaticChildren>{children}</StaticChildren>
 ```
 
-当前的情况是普遍的标签页都不需要额外的路由刷新，所以，渲染性能上得到了较大的优化。
+又由于大多数的标签页都不需要额外的路由刷新，所以，渲染性能上得到了较大的优化。
 
 ### StandardTable 增强
 
