@@ -82,10 +82,6 @@ class TableList extends Component {
     },
   ];
 
-  shouldComponentUpdate() {
-    return false;
-  }
-
   render() {
     console.log('render CurdPage');
     const { customModelVisible, selectedRows } = this.state;

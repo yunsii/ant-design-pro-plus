@@ -83,10 +83,6 @@ class TableList extends Component {
     },
   ];
 
-  shouldComponentUpdate() {
-    return false;
-  }
-
   render() {
     console.log('render CurdCustomPage');
     const { customModelVisible, selectedRows } = this.state;
