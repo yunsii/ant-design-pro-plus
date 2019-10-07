@@ -15,9 +15,40 @@
 
 预览：[https://theprimone.top/ant-design-pro-v2-plus](https://theprimone.top/ant-design-pro-v2-plus)
 
-为了实现基于 Github Pages 的在线预览的功能，将**功能示例**和 **Dashboard** 下的**分析页**数据写到了代码中，以便查看页面效果。
+为了实现基于 Github Pages 的在线预览的功能，仅将**功能示例**和 **Dashboard** 下的**分析页**数据写到了代码中，以便查看页面效果。
 
 官方仓库没有针对部署到非根目录情况下的登录重定向，已提交 pull request [fix: redirect with deploy on non-root path](https://github.com/ant-design/ant-design-pro/pull/4887)。
+
+由于是通过路由的方式实现的标签页的功能，测试发现会出现一定的性能问题，可参考 [issue #2](https://github.com/theprimone/ant-design-pro-v2-plus/issues/2) 。对于不会通过路由再次刷新的页面可使用如下方式：
+
+```jsx
+shouldComponentUpdate() {
+  return false;
+}
+```
+
+所以在遍历获取标签页的 `id` 和名称时，同时[判断标签页是否需要刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要刷新）。再使用高阶组件简单封装了一下 `children`：
+
+```jsx
+class StaticChildren extends React.Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  render() {
+    const { children } = this.props;
+    return children;
+  }
+}
+```
+
+当标签页需要刷新时，调用 `StaticChildren` 包装 `children` 即可。
+
+```jsx
+<StaticChildren>{children}</StaticChildren>
+```
+
+当前的情况是普遍的标签页都不需要额外的路由刷新，所以，渲染性能上得到了较大的优化。
 
 ## ✨新增特性
 
