@@ -8,15 +8,27 @@ import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
-// tabs 菜单选项 key 值
+
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 const closeToRightTabMenuKey = 'closeToRight';
 
-function addTab(newTab, activedTabs) {
-  // filter 过滤路由 为 '/' 的 children
-  // map 添加第一个 tab 不可删除
-  // console.log(activedTabs, newTab);
+export interface ChildrenTab {
+  /** tab's title */
+  tab: string;
+  key: string;
+  content: React.ReactChildren | JSX.Element;
+  /** used to indicate the tab need refresh */
+  refresh?: boolean;
+  /** used to extends tab's properties */
+  [k: string]: any;
+}
+
+function addTab(newTab: ChildrenTab, activedTabs: ChildrenTab[]) {
+  /**
+   * filter 过滤路由 为 '/' 的 children
+   * map 添加第一个 tab 不可删除
+   */
   return [...activedTabs, newTab]
     .filter(item => item.path !== '/')
     .map((item, index) =>
@@ -26,7 +38,13 @@ function addTab(newTab, activedTabs) {
     );
 }
 
-function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, activedTabs) {
+function switchAndUpdateTab(
+  activeIndex: number,
+  tabName: string,
+  extraTabProperties: any,
+  children: any,
+  activedTabs: ChildrenTab[]
+) {
   const { path, content, refresh, ...rest } = activedTabs[activeIndex];
   activedTabs.splice(activeIndex, 1, {
     tab: tabName,
@@ -34,17 +52,8 @@ function switchAndUpdateTab(activeIndex, tabName, extraTabProperties, children, 
     ...rest,
     ...extraTabProperties,
   });
-  // map 删除后的 activedTabs 长度为 1 时不可删除
+  /** map 删除后的 activedTabs 长度为 1 时不可删除 */
   return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
-}
-
-export interface ChildrenTab {
-  /** tab's title */
-  tab: string;
-  key: string;
-  content: React.ReactChildren;
-  /** used to extends tab's properties */
-  [k: string]: any;
 }
 
 export interface ChildrenTabsProps {
@@ -68,7 +77,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
   static getDerivedStateFromProps(props: ChildrenTabsProps, state: ChildrenTabsState) {
     const { children, activeKey, activeTitle, extraTabProperties } = props;
     const { activedTabs, nextTabKey } = state;
-    // return state and set nextTabKey to `null` after delete tab
+    /** return state and set nextTabKey to `null` after delete tab */
     if (nextTabKey) {
       return {
         activedTabs,
@@ -78,7 +87,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     }
 
     const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
-    // return state after switch or update tab
+    /** return state after switch or update tab */
     if (activedTabIndex > -1) {
       return {
         activedTabs: switchAndUpdateTab(
@@ -91,7 +100,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
         activeKey,
       };
     }
-    // return state to add tab
+    /** return state to add tab */
     const newTab = {
       tab: activeTitle,
       key: activeKey,
@@ -117,7 +126,6 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
   };
 
   handleTabEdit = (targetKey: string, action: string) => {
-    // console.log('handleTabEdit', targetKey);
     this[action](targetKey);
   };
 
@@ -173,7 +181,6 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     const { tabsConfig } = this.props;
     const { activedTabs, activeKey } = this.state;
     window.childrenTabs = this;
-    // console.log(activedTabs);
 
     const setMenu = (key: string, index: number) => (
       <Menu onClick={this.handleTabsMenuClick(key)}>
