@@ -48,20 +48,13 @@ const query = {
 
 class BasicLayout extends React.Component {
   componentDidMount() {
-    const {
-      dispatch,
-      // route: { routes, path, authority },
-    } = this.props;
+    const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
     });
     dispatch({
       type: 'setting/getSetting',
     });
-    // dispatch({
-    //   type: 'menu/getMenuData',
-    //   payload: { routes, path, authority },
-    // });
   }
 
   getContext() {
