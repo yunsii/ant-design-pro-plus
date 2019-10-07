@@ -19,28 +19,28 @@ class StaticChildren extends React.Component {
 // result: [pathId, pathName, shouldUpdate]
 function getMetadataOfTab(
   childrenPathname: string,
-  originalMenuData: any[]
+  originalMenuData: MenuItem[]
 ): [string, string, boolean] {
-  function getPathIdAndName(path: string, menuData: MenuItem[], parent: MenuItem | null) {
+  function getMetadata(path: string, menuData: MenuItem[], parent: MenuItem | null) {
     let result: [string, string, boolean];
     menuData.forEach(item => {
-      // match prefix iteratively
+      /** match prefix iteratively */
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
         if (!parent && item.name) {
           result = [item.path, item.name, false];
         } else if (parent && !parent.component && item.component && item.name) {
-          // create new tab if item has name and item's parant route has not component
+          /** create new tab if item has name and item's parant route has not component */
           result = [item.path, item.name, !!item.children];
         }
-        // get children pathIdAndName recursively
+        /** get children pathId, pathName, shouldUpdate recursively */
         if (item.children) {
-          result = getPathIdAndName(path, item.children, item) || result;
+          result = getMetadata(path, item.children, item) || result;
         }
       }
     });
     return result;
   }
-  return getPathIdAndName(childrenPathname, originalMenuData, null) || ['404', 'Error', false];
+  return getMetadata(childrenPathname, originalMenuData, null) || ['404', 'Error', false];
 }
 
 function routeTo(targetTab: ChildrenTab) {
@@ -59,7 +59,7 @@ export interface PageTabsProps {
 function PageTabs(props: PageTabsProps) {
   const { proRootPath = '/', children, originalMenuData, location } = props;
 
-  // return children to redirect if children pathname equal proRootPath
+  /** return children to redirect if children pathname equal proRootPath */
   if (location.pathname === proRootPath) {
     return children;
   }
