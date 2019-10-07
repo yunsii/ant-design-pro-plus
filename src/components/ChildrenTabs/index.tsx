@@ -55,7 +55,7 @@ export interface ChildrenTabsProps {
   tabsConfig?: TabsProps;
   afterRemoveTab?: (removeKey: string, nextTabKey: string, activedTabs: ChildrenTab[]) => void;
   /** children is used to create tab, switch and update tab */
-  children: React.ReactChildren;
+  children: React.ReactChildren | JSX.Element;
 }
 
 interface ChildrenTabsState {
