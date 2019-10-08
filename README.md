@@ -97,12 +97,12 @@ class StaticChildren extends React.Component {
 
 #### <span style="color:red">注意事项</span>
 
-从服务器获取菜单 [`menuData`](/src/models/menu.js#L115) 时，由于当前实际开发的项目只保存并返回了路由的 `name`、 `path` 、 `routes` 和 `authority` ，所以还需要遍历所有的配置式路由（简单起见，可从[面包屑映射](/src/models/menu.js#L116)中取值即可），并注入以下四个属性：
+从服务器获取菜单 [`menuData`](/src/models/menu.js#L115) 时，由于当前实际开发的项目只保存并返回了路由的 `name` 、 `path` 、 `routes` 和 `authority` ，所以还需要遍历所有的配置式路由（简单起见，可从[面包屑映射](/src/models/menu.js#L116)中取值即可），并注入以下四个属性：
 
-* icon
-* component
-* hideInMenu
-* hideChildrenInMenu
+* `icon`
+* `component`
+* `hideInMenu`
+* `hideChildrenInMenu`
 
 以保证菜单和标签页功能的正常使用。
 
