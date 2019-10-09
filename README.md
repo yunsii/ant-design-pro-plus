@@ -72,7 +72,7 @@ shouldComponentUpdate() {
 }
 ```
 
-所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要刷新）的逻辑。再使用高阶组件简单封装了一下 `children`：
+所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
 
 ```jsx
 class StaticChildren extends React.Component {
