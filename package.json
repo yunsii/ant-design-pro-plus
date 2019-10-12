@@ -55,7 +55,7 @@
   ],
   "dependencies": {
     "@antv/data-set": "^0.10.1",
-    "antd": "^3.20.5",
+    "antd": "^3.23.6",
     "antd-curd": "^0.2.9",
     "antd-form-mate": "^0.3.7",
     "bizcharts": "^3.5.3-beta.0",
