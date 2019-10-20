@@ -6,4 +6,4 @@ if (process.env.NODE_ENV === 'production') {
 
 export const usePromise = initialUsePromise;
 
-export const promiseTimeout = 1000;
+export const promiseTimeout = 1200;
