@@ -72,7 +72,7 @@ shouldComponentUpdate() {
 }
 ```
 
-所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单需要渲染，且没有父级组件并且有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
+所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单的页面需要渲染，这个页面没有父组件而有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
 
 ```jsx
 class StaticChildren extends React.Component {
@@ -97,7 +97,7 @@ class StaticChildren extends React.Component {
 
 #### <span style="color:red">注意事项</span>
 
-从服务器获取菜单 [`menuData`](/src/models/menu.js#L115) 时，由于当前实际开发的项目只保存并返回了路由的 `name` 、 `path` 、 `routes` 和 `authority` ，所以还需要遍历所有的配置式路由（简单起见，可从[面包屑映射](/src/models/menu.js#L116)中取值即可），并注入以下四个属性：
+从服务器获取菜单时，我的做法是直接返回路由的结构，也就是直接修改 [`routes`](/src/models/menu.js#L113) ，由于当前实际开发的项目只保存并返回了路由的 `name` 、 `path` 、 `routes` 和 `authority` ，所以还需要遍历所有的配置式路由（简单起见，可从[面包屑映射](/src/models/menu.js#L116)中取值即可），并注入以下四个属性：
 
 * `icon`
 * `component`
