@@ -118,7 +118,7 @@ class BasicLayout extends React.Component {
     const renderMenuData = transferMenuData(publicPath, menuLoading, menuData);
     const renderContent = () => {
       if (pageTabs) {
-        if (renderMenuData.length) {
+        if (renderMenuData) {
           return <PageTabs {...this.props} />;
         }
         return <PageLoading />;

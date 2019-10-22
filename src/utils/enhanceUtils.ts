@@ -12,10 +12,10 @@ export function delay(ms: number) {
 
 export function transferMenuData(publicPath: string, menuLoading: boolean, menuData: MenuItem[]) {
   if (menuLoading || !menuData.length) {
-    return [];
+    return null;
   }
   if (menuData.length && menuData[0].path.startsWith(publicPath)) {
-    return [];
+    return null;
   }
   return menuData;
 }
