@@ -10,11 +10,8 @@ export function delay(ms: number) {
   });
 }
 
-export function transferMenuData(publicPath: string, menuLoading: boolean, menuData: MenuItem[]) {
-  if (menuLoading || !menuData.length) {
-    return null;
-  }
-  if (menuData.length && menuData[0].path.startsWith(publicPath)) {
+export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
+  if (menuLoading) {
     return null;
   }
   return menuData;

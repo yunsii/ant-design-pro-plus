@@ -108,14 +108,13 @@ class BasicLayout extends React.Component {
       breadcrumbNameMap,
       fixedHeader,
       menuLoading,
-      publicPath = '/user',
     } = this.props;
 
     const isTop = PropsLayout === 'topmenu';
     let contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     contentStyle = pageTabs ? { ...contentStyle, margin: 'unset' } : { ...contentStyle };
 
-    const renderMenuData = transferMenuData(publicPath, menuLoading, menuData);
+    const renderMenuData = transferMenuData(menuLoading, menuData);
     const renderContent = () => {
       if (pageTabs) {
         if (renderMenuData) {
