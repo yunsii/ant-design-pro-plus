@@ -1,21 +1,21 @@
-type TreeType = any[];
-type TreeToListConfigType = {
+export interface TreeToListConfig {
   childrenFieldName: string;
   nodeTransfer?: (node: any) => any;
-};
+}
 
 const defaultTreeToListConfig = {
   childrenFieldName: 'children',
 };
 
-export function flatTreeToList(tree: TreeType, customConfig: TreeToListConfigType): any[] {
+export function flatTreeToList<T>(tree: T[], customConfig: TreeToListConfig): T[] {
   const config = {
     ...defaultTreeToListConfig,
     ...customConfig,
-  } as TreeToListConfigType;
+  };
   const { childrenFieldName, nodeTransfer } = config;
   const result = [];
-  function flatTree(item: TreeType) {
+
+  function flatTree(item: T[]) {
     item.forEach(node => {
       if (nodeTransfer) {
         result.push(nodeTransfer(node));
@@ -27,6 +27,7 @@ export function flatTreeToList(tree: TreeType, customConfig: TreeToListConfigTyp
       }
     });
   }
+
   flatTree(tree);
   return result;
 }
