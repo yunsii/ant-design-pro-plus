@@ -41,7 +41,9 @@ export function renderBadge(node) {
 export function renderStatus(status, code) {
   if (isValidCode(code)) {
     const target = _find(status, { value: code });
-    if (!target) return `未编码：${code}`;
+    if (!target) {
+      return `未编码：${code}`;
+    }
 
     return renderBadge(target);
   }
@@ -54,7 +56,9 @@ export function renderCode(list, code) {
     if (type && type.color) {
       return renderBadge(type);
     }
-    if (type) return type.text;
+    if (type) {
+      return type.text;
+    }
     return `未编码：${code}`;
   }
   return `无类型`;
