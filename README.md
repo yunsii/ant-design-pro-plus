@@ -27,7 +27,6 @@
 
 ## 📌新增依赖
 
-* [react-amap-plugin-custom-geolocation](https://github.com/theprimone/react-amap-plugin-custom-geolocation) 自定义高德地图定位组件
 * [dva-base-models](https://github.com/theprimone/dva-base-models) 基于 dva 的基础 model 配置
 * [antd-form-mate](https://github.com/theprimone/antd-form-mate) 基于 ant design 的表单组件
 * [antd-curd](https://github.com/theprimone/antd-curd) 基于 ant design 的增删改查页面组件
@@ -126,6 +125,7 @@ class StaticChildren extends React.Component {
 前置依赖：
 
 * [dva-base-models](#新增依赖)
+* [antd-form-mate](#新增依赖)
 * [antd-curd](#新增依赖)
 
 如果需要新建一个类似[**基础增删改查**](src/pages/Enhance/CurdPage)的页面，快速开发指南：
