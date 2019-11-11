@@ -6,7 +6,7 @@ import {
   updateCurdPage,
   deleteCurdPage,
 } from '@/services/curdPage';
-import { getTableList } from '@/utils/model';
+import { getList } from '@/utils/model';
 import { delay } from '@/utils/enhanceUtils';
 
 export const modelName = 'curdPage';
@@ -36,7 +36,7 @@ const model = curdModel(modelName, {
       const response = yield call(fetchCurdPage, payload);
       yield put({
         type: 'testSave',
-        payload: getTableList(response),
+        payload: getList(response),
       });
       const testData = yield select(state => state[modelName].testData);
       console.log('testData', testData);

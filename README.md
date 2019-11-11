@@ -132,7 +132,7 @@ class StaticChildren extends React.Component {
 
 * 配置页面路由
 * 对接增删改查接口
-* 基于 dva-base-models 配置，model ，见 [base-models/curd.ts](/src/base-models/curd.ts)，主要是根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getTableList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
+* 基于 dva-base-models 配置，model ，见 [base-models/curd.ts](/src/base-models/curd.ts)，主要是根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
 * 配置对象表单数据映射 map.js （参考 [CurdPage/map.js](src/pages/Enhance/CurdPage/map.js) ），用于对象的详情，新建和编辑对象
 * 如需配置表单相关全局参数，可从 `antd-curd` 中导出 `formMateConfig` 进行配置（参考 [global.js](src/global.js#L4) ）
 * 配置页面 index.js （参考 [CurdPage/index.js](src/pages/Enhance/CurdPage/index.js) ），主要是配置查询面板和数据列模型
