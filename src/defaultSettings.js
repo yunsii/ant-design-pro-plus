@@ -19,6 +19,5 @@ module.exports = {
 
   pageTabs: true,
   proRootPath: '/',
-  publicPath: '/user',
   reloadTab: true,
 };
