@@ -11,7 +11,7 @@ export function getData(response) {
   return data || {};
 }
 
-export function getTableList(response) {
+export function getList(response) {
   // 本地化更新数据，直接传入数组
   if (_isArray(response)) {
     return { list: response };

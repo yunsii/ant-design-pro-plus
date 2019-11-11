@@ -1,8 +1,8 @@
 import { curdModel } from 'dva-base-models';
-import { getTableList, getData, isResponseOk } from '@/utils/model';
+import { getList, getData, isResponseOk } from '@/utils/model';
 
 curdModel.config({
-  getTableList,
+  getList,
   getData,
   isResponseOk,
 });
