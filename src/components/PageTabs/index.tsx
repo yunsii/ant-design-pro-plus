@@ -1,12 +1,15 @@
 import React from 'react';
 import pathToRegexp from 'path-to-regexp';
 import _find from 'lodash/find';
+import _get from 'lodash/get';
 import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
 
 class StaticChildren extends React.Component {
   shouldComponentUpdate() {
+    console.log('shouldComponentUpdate false');
+    console.log(_get(this.props, 'children.props.location.pathname'));
     return false;
   }
 
