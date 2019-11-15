@@ -78,7 +78,7 @@
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
     "rc-animate": "^2.6.0",
-    "react": "^16.7.0",
+    "react": "^16.12.0",
     "react-container-query": "^0.11.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-document-title": "^2.0.3",
