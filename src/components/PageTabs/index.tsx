@@ -8,8 +8,8 @@ import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
 
 class StaticChildren extends React.Component {
   shouldComponentUpdate() {
-    console.log('shouldComponentUpdate false');
-    console.log(_get(this.props, 'children.props.location.pathname'));
+    // console.log('shouldComponentUpdate false');
+    // console.log(_get(this.props, 'children.props.location.pathname'));
     return false;
   }
 
