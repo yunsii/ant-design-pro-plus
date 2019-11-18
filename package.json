@@ -86,7 +86,7 @@
     "react-fittext": "^1.0.0",
     "react-media": "^1.9.2",
     "resize-observer-polyfill": "^1.5.1",
-    "umi": "^2.8.12",
+    "umi": "^2.10.5",
     "umi-plugin-react": "^1.9.11",
     "umi-request": "^1.0.5"
   },
