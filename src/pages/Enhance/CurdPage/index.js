@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import { Curd } from 'antd-curd';
+import _get from 'lodash/get';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
@@ -84,6 +85,7 @@ class TableList extends Component {
 
   componentDidUpdate() {
     console.log('update CurdPage');
+    console.log(_get(this.props, 'history'));
   }
 
   render() {
