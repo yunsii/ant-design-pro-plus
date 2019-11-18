@@ -83,8 +83,11 @@ class TableList extends Component {
     },
   ];
 
+  componentDidUpdate() {
+    console.log('update CurdCustomPage');
+  }
+
   render() {
-    console.log('render CurdCustomPage');
     const { customModelVisible, selectedRows } = this.state;
     const actionsConfig = {
       extraActions: [
