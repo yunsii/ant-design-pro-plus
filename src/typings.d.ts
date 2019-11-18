@@ -17,4 +17,5 @@ declare interface MenuItem {
 
 interface Window {
   childrenTabs: any;
+  routerBase: string;
 }
