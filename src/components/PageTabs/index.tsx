@@ -19,7 +19,7 @@ class StaticChildren extends React.Component {
   }
 }
 
-// result: [pathId, pathName, shouldUpdate]
+// result: [pathID, pathName, shouldUpdate]
 function getMetadataOfTab(
   childrenPathname: string,
   originalMenuData: MenuItem[]
@@ -35,7 +35,7 @@ function getMetadataOfTab(
           /** create new tab if item has name and item's parant route has not component */
           result = [item.path, item.name, !!item.children];
         }
-        /** get children pathId, pathName, shouldUpdate recursively */
+        /** get children pathID, pathName, shouldUpdate recursively */
         if (item.children) {
           result = getMetadata(path, item.children, item) || result;
         }
@@ -66,7 +66,7 @@ function PageTabs(props: PageTabsProps) {
   if (location.pathname === proRootPath) {
     return children;
   }
-  const [pathId, pathName, shouldUpdate] = getMetadataOfTab(location.pathname, originalMenuData);
+  const [pathID, pathName, shouldUpdate] = getMetadataOfTab(location.pathname, originalMenuData);
   const renderChildren = shouldUpdate ? children : <StaticChildren>{children}</StaticChildren>;
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
@@ -79,7 +79,7 @@ function PageTabs(props: PageTabsProps) {
   };
   return (
     <ChildrenTabs
-      activeKey={pathId}
+      activeKey={pathID}
       activeTitle={pathName}
       extraTabProperties={{
         location,
