@@ -6,6 +6,7 @@ import _get from 'lodash/get';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
+import { withStaticPage } from '@/utils/enhanceUtils';
 
 @connect(({ [modelName]: model, loading }) => ({
   data: model.data,
@@ -16,6 +17,7 @@ import styles from './index.less';
   updateLoading: loading.effects[`${modelName}/update`],
   deleteLoading: loading.effects[`${modelName}/delete`],
 }))
+@withStaticPage
 class TableList extends Component {
   state = {
     customModelVisible: false,
