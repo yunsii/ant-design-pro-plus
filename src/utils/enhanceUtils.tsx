@@ -1,4 +1,5 @@
 import React from 'react';
+import _isEqual from 'lodash/isEqual';
 
 export function delay(ms: number) {
   return new Promise((resolve, reject) => {
@@ -34,9 +35,39 @@ export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
   return menuData;
 }
 
-export function withStaticPage(WrappedComponent: React.ComponentClass) {
-  return class extends React.Component {
-    shouldComponentUpdate() {
+export function withRoutePage(WrappedComponent: React.ComponentClass) {
+  return class extends React.Component<any> {
+    shouldComponentUpdate(nextProps: any) {
+      const {
+        history: nextHistory,
+        location: nextLocation,
+        match: nextMatch,
+        route: nextRoute,
+        ...nextRest
+      } = nextProps;
+      const {
+        history: thisHistory,
+        location: thisLocation,
+        match: thisMatch,
+        route: thisRoute,
+        ...thisRest
+      } = this.props;
+      // 注入数据变化，刷新组件
+      if (!_isEqual(nextRest, thisRest)) {
+        return true;
+      }
+
+      const { pathname: nextPathname, search: nextSearch, state: nextState } = nextLocation;
+      const { pathname: thisPathname, search: thisSearch, state: thisState } = thisLocation;
+      const isLocationChange =
+        nextPathname !== thisPathname ||
+        nextSearch !== thisSearch ||
+        !_isEqual(nextState, thisState);
+      // 路由变化，刷新组件
+      if (isLocationChange) {
+        return true;
+      }
+
       return false;
     }
 
