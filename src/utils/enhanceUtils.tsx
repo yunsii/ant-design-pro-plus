@@ -38,21 +38,25 @@ export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
 export function withRoutePage(WrappedComponent: React.ComponentClass | React.FC) {
   return class extends React.Component<any> {
     shouldComponentUpdate(nextProps: any) {
-      // console.log(this.props);
+      console.log(this.props);
       const {
+        children: nextChildren,
         computedMatch: nextComputedMatch,
         history: nextHistory,
         location: nextLocation,
         match: nextMatch,
         route: nextRoute,
+        staticContext: nextStaticContext,
         ...nextRest
       } = nextProps;
       const {
+        children: thisChildren,
         computedMatch: thisComputedMatch,
         history: thisHistory,
         location: thisLocation,
         match: thisMatch,
         route: thisRoute,
+        staticContext: thisStaticContext,
         ...thisRest
       } = this.props;
       // 注入数据变化，刷新组件
