@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import { Curd } from 'antd-curd';
 import _get from 'lodash/get';
-import { withStaticPage } from '@/utils/enhanceUtils';
+import { withRoutePage } from '@/utils/enhanceUtils';
 import renderCard from './CustomCard';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
@@ -18,7 +18,7 @@ import styles from './index.less';
   updateLoading: loading.effects[`${modelName}/update`],
   deleteLoading: loading.effects[`${modelName}/delete`],
 }))
-@withStaticPage
+@withRoutePage
 class TableList extends Component {
   state = {
     customModelVisible: false,
