@@ -71,7 +71,7 @@ shouldComponentUpdate() {
 }
 ```
 
-所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L19)（如果一个导航菜单的页面需要渲染，这个页面没有父组件而有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
+所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L23)（如果一个导航菜单的页面需要渲染，这个页面没有父组件而有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
 
 ```jsx
 class StaticChildren extends React.Component {
@@ -93,6 +93,16 @@ class StaticChildren extends React.Component {
 ```
 
 又由于大多数的标签页都不需要额外的路由刷新，所以，渲染性能上得到了较大的优化。
+
+以上都在 `PageTabs` 组件做了处理。
+
+#### 性能问题 2.0
+
+一次手滑升级 umi 之后导致了前一节对性能的优化没了作用，仍然会不断的渲染本不用刷新的页面。具体可见 [umi issue#3639](https://github.com/umijs/umi/issues/3639) 。
+
+最后发现 umi 注入的 `children` 是一个 `Switch` 组件，应该是 `react-router-dom` 中的 `Switch` 。如果 `history` 的值无法固定下来，那就只能通过在页面组件中添加 `shouldComponentUpdate` 方法了，前一节的做法是为了尽量不与业务代码产生交集，现在能想到的最佳方法是使用高阶组件将页面组件包裹一层判断是否需要刷新，具体实现 [`withRoutePage`](/src/utils/enhanceUtils.tsx#L38) 。
+
+这样的话只需要包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。
 
 #### <span style="color:red">注意事项</span>
 
