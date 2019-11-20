@@ -69,7 +69,7 @@
 
 这样的话只需要使用 `withRoutePage` 包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。
 
-#### <span style="color:red">注意事项</span>
+### <span style="color:red">注意事项</span>
 
 从服务器获取菜单时，我的做法是直接返回路由的结构，也就是直接修改 [`routes`](/src/models/menu.js#L113) ，由于当前实际开发的项目只保存并返回了路由的 `name` 、 `path` 、 `routes` 和 `authority` ，所以还需要遍历所有的配置式路由（简单起见，可从[面包屑映射](/src/models/menu.js#L116)中取值即可），并注入以下四个属性：
 
