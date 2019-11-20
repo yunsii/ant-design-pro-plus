@@ -40,6 +40,12 @@ export default [
             name: 'curdCustomPage',
             component: './Enhance/CurdCustomPage',
           },
+          {
+            path: '/enhance/dynamic/:name',
+            name: 'dynamic',
+            hideInMenu: true,
+            component: './Enhance/Dynamic',
+          },
         ],
       },
       // dashboard
