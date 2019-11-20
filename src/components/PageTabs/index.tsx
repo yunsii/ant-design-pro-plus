@@ -6,34 +6,21 @@ import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
 
-class StaticChildren extends React.Component {
-  shouldComponentUpdate() {
-    // console.log('shouldComponentUpdate false');
-    // console.log(_get(this.props, 'children.props.location.pathname'));
-    return false;
-  }
-
-  render() {
-    const { children } = this.props;
-    return children;
-  }
-}
-
-// result: [pathID, pathName, shouldUpdate]
+// result: [pathID, pathName]
 function getMetadataOfTab(
   childrenPathname: string,
   originalMenuData: MenuItem[]
-): [string, string, boolean] {
+): [string, string] {
   function getMetadata(path: string, menuData: MenuItem[], parent: MenuItem | null) {
-    let result: [string, string, boolean];
+    let result: [string, string];
     menuData.forEach(item => {
       /** match prefix iteratively */
       if (pathToRegexp(`${item.path}(.*)`).test(path)) {
         if (!parent && item.name) {
-          result = [item.path, item.name, false];
+          result = [item.path, item.name];
         } else if (parent && !parent.component && item.component && item.name) {
           /** create new tab if item has name and item's parant route has not component */
-          result = [item.path, item.name, !!item.children];
+          result = [item.path, item.name];
         }
         /** get children pathID, pathName, shouldUpdate recursively */
         if (item.children) {
@@ -43,7 +30,7 @@ function getMetadataOfTab(
     });
     return result;
   }
-  return getMetadata(childrenPathname, originalMenuData, null) || ['404', 'Error', false];
+  return getMetadata(childrenPathname, originalMenuData, null) || ['404', 'Error'];
 }
 
 function routeTo(targetTab: ChildrenTab) {
@@ -66,8 +53,7 @@ function PageTabs(props: PageTabsProps) {
   if (location.pathname === proRootPath) {
     return children;
   }
-  const [pathID, pathName, shouldUpdate] = getMetadataOfTab(location.pathname, originalMenuData);
-  const renderChildren = shouldUpdate ? children : <StaticChildren>{children}</StaticChildren>;
+  const [pathID, pathName] = getMetadataOfTab(location.pathname, originalMenuData);
 
   const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
     const targetTab = _find(activedTabs, { key: keyToSwitch });
@@ -87,7 +73,7 @@ function PageTabs(props: PageTabsProps) {
       handleTabChange={handleTabChange}
       afterRemoveTab={afterRemoveTab}
     >
-      {renderChildren}
+      {children}
     </ChildrenTabs>
   );
 }
