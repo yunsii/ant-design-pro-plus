@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import { Curd } from 'antd-curd';
-import _get from 'lodash/get';
 import { withRoutePage } from '@/utils/enhanceUtils';
 import { modelName } from '../models/curdPage.ts';
 import setFormItemsConfig from './map';
@@ -22,6 +22,7 @@ class TableList extends Component {
   state = {
     customModelVisible: false,
     selectedRows: [],
+    name: '-',
   };
 
   queryArgsConfig = [
@@ -87,11 +88,10 @@ class TableList extends Component {
 
   componentDidUpdate() {
     console.log('update CurdPage');
-    console.log(_get(this.props, 'history'));
   }
 
   render() {
-    const { customModelVisible, selectedRows } = this.state;
+    const { customModelVisible, selectedRows, name } = this.state;
     const actionsConfig = {
       extraActions: [
         {
@@ -120,7 +120,14 @@ class TableList extends Component {
 
     return (
       <Curd modelName={modelName} {...this.props}>
-        <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} />
+        <Curd.QueryPanel
+          queryArgsConfig={this.queryArgsConfig}
+          onValuesChange={(_, values) => {
+            this.setState({
+              name: values.username,
+            });
+          }}
+        />
         <Curd.CurdTable
           columns={this.columns}
           actionsConfig={actionsConfig}
@@ -131,7 +138,12 @@ class TableList extends Component {
               width: 560,
             },
           }}
-          operators={[<TableActions key="more" selectedRows={selectedRows} />]}
+          extraOperators={[
+            <Button key="dynamic" onClick={() => router.push(`/enhance/dynamic/${name}`)}>
+              动态路由
+            </Button>,
+            <TableActions key="more" selectedRows={selectedRows} />,
+          ]}
           selectedRows={selectedRows}
           onSelectRow={rows => this.setState({ selectedRows: rows })}
           {...this.props}
@@ -160,7 +172,7 @@ function TableActions(props) {
   return (
     selectedRows.length > 0 && (
       <span>
-        <Button>批量操作</Button>
+        <Button style={{ marginRight: 8 }}>批量操作</Button>
         <Dropdown overlay={menu}>
           <Button>
             更多操作 <Icon type="down" />
