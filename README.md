@@ -63,46 +63,11 @@
 
 #### 性能问题
 
-由于是通过路由的方式实现的标签页的功能，测试发现会出现一定的性能问题，可参考 [issue #2](https://github.com/theprimone/ant-design-pro-v2-plus/issues/2) 。对于不会通过路由再次刷新的页面可使用如下方式：
+由于是通过路由的方式实现的标签页的功能，测试发现会出现一定的性能问题，可参考 [issue #2](https://github.com/theprimone/ant-design-pro-v2-plus/issues/2) 。
 
-```jsx
-shouldComponentUpdate() {
-  return false;
-}
-```
+之前的方案有个严重的问题，因为是通过判断一个页面有没有子路由的方式来决定是否刷新页面，这会导致动态路由，如 `/page/:name` ，无法正确刷新，还有查询参数和 `state` 等的变化都无法触发页面刷新。当然如果没有动态路由是一点影响也没有。现在能想到的最佳方法是使用高阶组件将页面组件包裹一层判断是否需要刷新，具体实现 [`withRoutePage`](/src/utils/enhanceUtils.tsx#L38) 。
 
-所以在遍历获取标签页的 `id` 和名称时，添加了[判断标签页是否需要路由刷新](/src/components/PageTabs/index.tsx#L23)（如果一个导航菜单的页面需要渲染，这个页面没有父组件而有子组件，也就是子路由，那么这个导航菜单需要路由刷新）的逻辑。再简单封装一下 `children`：
-
-```jsx
-class StaticChildren extends React.Component {
-  shouldComponentUpdate() {
-    return false;
-  }
-
-  render() {
-    const { children } = this.props;
-    return children;
-  }
-}
-```
-
-当标签页不需要刷新时，调用 `StaticChildren` 包装 `children` 即可。
-
-```jsx
-<StaticChildren>{children}</StaticChildren>
-```
-
-又由于大多数的标签页都不需要额外的路由刷新，所以，渲染性能上得到了较大的优化。
-
-以上都在 `PageTabs` 组件做了处理。
-
-#### 性能问题 2.0
-
-一次手滑升级 umi 之后导致了前一节对性能的优化没了作用，仍然会不断的渲染本不用刷新的页面。具体可见 [umi issue#3639](https://github.com/umijs/umi/issues/3639) 。
-
-最后发现 umi 注入的 `children` 是一个 `Switch` 组件，应该是 `react-router-dom` 中的 `Switch` 。如果 `history` 的值无法固定下来，那就只能通过在页面组件中添加 `shouldComponentUpdate` 方法了，前一节的做法是为了尽量不与业务代码产生交集，现在能想到的最佳方法是使用高阶组件将页面组件包裹一层判断是否需要刷新，具体实现 [`withRoutePage`](/src/utils/enhanceUtils.tsx#L38) 。
-
-这样的话只需要包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。
+这样的话只需要使用 `withRoutePage` 包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。
 
 #### <span style="color:red">注意事项</span>
 
