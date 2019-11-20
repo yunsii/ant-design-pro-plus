@@ -35,10 +35,12 @@ export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
   return menuData;
 }
 
-export function withRoutePage(WrappedComponent: React.ComponentClass | React.FC) {
+export function withRoutePage<Props = any>(
+  WrappedComponent: React.ComponentClass | React.FC<Props>
+): React.ComponentClass {
   return class extends React.Component<any> {
     shouldComponentUpdate(nextProps: any) {
-      console.log(this.props);
+      // console.log(this.props);
       const {
         children: nextChildren,
         computedMatch: nextComputedMatch,
@@ -79,7 +81,7 @@ export function withRoutePage(WrappedComponent: React.ComponentClass | React.FC)
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return <WrappedComponent {...(this.props as any)} />;
     }
   };
 }
