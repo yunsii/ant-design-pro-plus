@@ -63,6 +63,7 @@ export function withRoutePage<Props = any>(
       } = this.props;
       // 注入数据变化，刷新组件
       if (!_isEqual(nextRest, thisRest)) {
+        console.log('update by 数据变化');
         return true;
       }
 
@@ -74,6 +75,7 @@ export function withRoutePage<Props = any>(
         !_isEqual(nextState, thisState);
       // 路由变化，刷新组件
       if (isLocationChange) {
+        console.log('update by 路由变化');
         return true;
       }
 
