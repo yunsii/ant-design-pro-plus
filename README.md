@@ -68,7 +68,25 @@
 
 之前的方案有个严重的问题，因为是通过判断一个页面有没有子路由的方式来决定是否刷新页面，这会导致动态路由，如 `/page/:name` ，无法正确刷新，还有查询参数和 `state` 等的变化都无法触发页面刷新。当然如果没有动态路由是一点影响也没有。现在能想到的最佳方法是使用高阶组件将页面组件包裹一层判断是否需要刷新，具体实现 [`withRoutePage`](/src/utils/enhanceUtils.tsx#L38) 。
 
-这样的话只需要使用 `withRoutePage` 包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。
+这样的话只需要使用 `withRoutePage` 包装一下页面组件即可，参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) 。 另外，由于 `withRoutePage` 只是通过注入属性是否变化来判断是否刷新，当使用类似表单组件的 `Form.create()` 包装页面组件时，由于其只是注入方法，所以如果在其后使用 `withRoutePage` 包装会导致页面不会正常刷新的问题，遇到这种情况，将 `withRoutePage` 层级降低即可。
+
+```tsx
+// 页面不能正常刷新
+@Form.create()
+@withRoutePage
+class Page extends React.Component<any, any> {
+  // ...
+}
+```
+
+```tsx
+// 页面正常刷新
+@withRoutePage
+@Form.create()
+class Page extends React.Component<any, any> {
+  // ...
+}
+```
 
 ### <span style="color:red">注意事项</span>
 
