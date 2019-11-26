@@ -72,6 +72,9 @@
 
 ```tsx
 // 页面不能正常刷新
+@connect(
+  // ...
+)
 @Form.create()
 @withRoutePage
 class Page extends React.Component<any, any> {
@@ -81,6 +84,9 @@ class Page extends React.Component<any, any> {
 
 ```tsx
 // 页面正常刷新
+@connect(
+  //...
+)
 @withRoutePage
 @Form.create()
 class Page extends React.Component<any, any> {
