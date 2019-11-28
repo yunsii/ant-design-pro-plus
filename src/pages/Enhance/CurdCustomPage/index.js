@@ -4,7 +4,7 @@ import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
 import { Curd } from 'antd-curd';
 import { withRoutePage } from '@/utils/enhanceUtils';
 import renderCard from './CustomCard';
-import { modelName } from '../models/curdPage.ts';
+import { modelName } from '../models/curdCustomPage.ts';
 import setFormItemsConfig from './map';
 import styles from './index.less';
 
@@ -85,8 +85,12 @@ class TableList extends Component {
     },
   ];
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     console.log('update CurdCustomPage');
+    // console.log(prevProps)
+    // console.log(this.props)
+    // console.log(prevState)
+    // console.log(this.state)
   }
 
   render() {

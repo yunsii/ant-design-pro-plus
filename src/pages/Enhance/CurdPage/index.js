@@ -86,8 +86,12 @@ class TableList extends Component {
     },
   ];
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     console.log('update CurdPage');
+    // console.log(prevProps)
+    // console.log(this.props)
+    // console.log(prevState)
+    // console.log(this.state)
   }
 
   render() {
