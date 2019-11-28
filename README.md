@@ -122,19 +122,13 @@ class Page extends React.Component<any, any> {
 <p align='center'>列表型增删改查</p>
 <p align='center'>自定义 <code>renderItem</code> ，这里自定义为 <code>Card</code></p>
 
-前置依赖：
-
-* [dva-base-models](#新增依赖)
-* [antd-form-mate](#新增依赖)
-* [antd-curd](#新增依赖)
-
 如果需要新建一个类似[**基础增删改查**](src/pages/Enhance/CurdPage)的页面，快速开发指南：
 
 * 配置页面路由
 * 对接增删改查接口
 * 基于 dva-base-models 配置，model ，见 [base-models/curd.ts](/src/base-models/curd.ts)，主要是根据接口实现 [src/utils/model.tsx](src/utils/model.tsx) 中的 `getData` 和 `getList` 、 `isResponseOk` 方法，以便 model 能正确获取并处理相关数据
 * 配置对象表单数据映射 map.js （参考 [CurdPage/map.js](src/pages/Enhance/CurdPage/map.js) ），用于对象的详情，新建和编辑对象
-* 如需配置表单相关全局参数，可从 `antd-curd` 中导出 `formMateConfig` 进行配置（参考 [global.js](src/global.js#L4) ）
+* 如需配置表单相关全局参数，如图片上传配置，默认类型提示等，可从 `antd-curd` 中导出 `formMateConfig` 进行配置（参考 [global.js](src/global.js#L4) ），**如果配置图片上传相关参数后，选择图片后即上传**，如果不需要，可不配置相关属性，在提交表单时再做上传图片的处理。另，如果需要**单独使用 `antd-form-mate` 组件**，可全局引入 `antd-form-mate` 并配置即可， `antd-curd` 的表单配置会复用该配置。
 * 配置页面 index.js （参考 [CurdPage/index.js](src/pages/Enhance/CurdPage/index.js) ），主要是配置查询面板和数据列模型
 
 通过配置化的方式快速实现了一个增删改查页面的需求，让开发者可以尽量少的关心底层的逻辑实现。同时也提供了较为灵活的 API 去扩展特定页面的特定需求。更多参数配置，可到 [antd-curd](https://github.com/theprimone/antd-curd) 中查看。
