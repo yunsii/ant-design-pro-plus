@@ -29,16 +29,15 @@ export function injectChildren(children, properties) {
 }
 
 export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
-  if (menuLoading) {
-    return null;
-  }
-  return menuData;
+  return !menuLoading && menuData;
 }
 
 export function withRoutePage<Props = any>(
   WrappedComponent: React.ComponentClass | React.FC<Props>
 ): React.ComponentClass {
-  return class extends React.Component<any> {
+  class WithRoutePage extends React.Component<any> {
+    static displayName: string;
+
     shouldComponentUpdate(nextProps: any) {
       // console.log(this.props);
       const {
@@ -63,7 +62,9 @@ export function withRoutePage<Props = any>(
       } = this.props;
       // 注入数据变化，刷新组件
       if (!_isEqual(nextRest, thisRest)) {
-        console.log('update by 数据变化');
+        // console.log('update by 数据变化');
+        // console.log(thisRest);
+        // console.log(nextRest);
         return true;
       }
 
@@ -75,7 +76,7 @@ export function withRoutePage<Props = any>(
         !_isEqual(nextState, thisState);
       // 路由变化，刷新组件
       if (isLocationChange) {
-        console.log('update by 路由变化');
+        // console.log('update by 路由变化');
         return true;
       }
 
@@ -85,5 +86,12 @@ export function withRoutePage<Props = any>(
     render() {
       return <WrappedComponent {...(this.props as any)} />;
     }
-  };
+  }
+
+  WithRoutePage.displayName = `WithRoutePage(${getDisplayName(WrappedComponent)})`;
+  return WithRoutePage;
+}
+
+function getDisplayName(WrappedComponent: React.ComponentClass | React.FC) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
