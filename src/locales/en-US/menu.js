@@ -47,4 +47,5 @@ export default {
   'menu.enhance.curdPage': 'Base Curd',
   'menu.enhance.curdCustomPage': 'Custom Curd',
   'menu.enhance.curdPackage': 'Curd Package',
+  'menu.enhance.dynamic': 'Dynamic Test',
 };

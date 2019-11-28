@@ -47,4 +47,5 @@ export default {
   'menu.enhance.curdPage': '基础增删改查',
   'menu.enhance.curdCustomPage': '定制增删改查',
   'menu.enhance.curdPackage': '增删改查模块',
+  'menu.enhance.dynamic': '动态测试',
 };
