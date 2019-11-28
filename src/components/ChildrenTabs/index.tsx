@@ -5,7 +5,6 @@ import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
-import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
@@ -128,9 +127,9 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
   };
 
   handleSwitch = (keyToSwitch: string) => {
-    const { handleTabChange } = this.props;
+    const { handleTabChange = () => {} } = this.props;
     const { activedTabs } = this.state;
-    callFunctionIfFunction(handleTabChange)(keyToSwitch, activedTabs);
+    handleTabChange(keyToSwitch, activedTabs);
   };
 
   handleTabEdit = (targetKey: string, action: string) => {
@@ -138,7 +137,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
   };
 
   remove = (key: string) => {
-    const { afterRemoveTab } = this.props;
+    const { afterRemoveTab = () => {} } = this.props;
     const { activedTabs, activeKey } = this.state;
     if (key !== activeKey) {
       this.setState(
@@ -147,7 +146,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
           nextTabKey: activeKey,
         },
         () => {
-          callFunctionIfFunction(afterRemoveTab)(key, activeKey, activedTabs);
+          afterRemoveTab(key, activeKey, activedTabs);
         }
       );
       return;
@@ -161,7 +160,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
         nextTabKey,
       },
       () => {
-        callFunctionIfFunction(afterRemoveTab)(key, nextTabKey, activedTabs);
+        afterRemoveTab(key, nextTabKey, activedTabs);
       }
     );
   };
