@@ -92,7 +92,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     }
 
     const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
-    /** return state after switch or update tab */
+    /** return state after switch or update tab, including switch after delete */
     if (activedTabIndex > -1) {
       const { extraTabProperties: prevExtraTabProperties } = activedTabs[activedTabIndex];
       if (_isEqual(extraTabProperties, prevExtraTabProperties)) {
