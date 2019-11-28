@@ -1,7 +1,6 @@
 import React from 'react';
 import pathToRegexp from 'path-to-regexp';
 import _find from 'lodash/find';
-import _get from 'lodash/get';
 import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
@@ -33,10 +32,8 @@ function getMetadataOfTab(
   return getMetadata(childrenPathname, originalMenuData, null) || ['404', 'Error'];
 }
 
-function routeTo(targetTab: ChildrenTab) {
-  router.push({
-    ...targetTab.location,
-  });
+function routeTo(targetTab: ChildrenTab<{ location: any }>) {
+  router.push(targetTab.extraTabProperties.location);
 }
 
 export interface PageTabsProps {
@@ -63,13 +60,12 @@ function PageTabs(props: PageTabsProps) {
     const targetTab = _find(activedTabs, { key: nextTabKey });
     routeTo(targetTab);
   };
+
   return (
     <ChildrenTabs
       activeKey={pathID}
       activeTitle={pathName}
-      extraTabProperties={{
-        location,
-      }}
+      extraTabProperties={{ location }}
       handleTabChange={handleTabChange}
       afterRemoveTab={afterRemoveTab}
     >

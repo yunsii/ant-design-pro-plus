@@ -4,6 +4,7 @@ import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import _findIndex from 'lodash/findIndex';
+import _isEqual from 'lodash/isEqual';
 import { callFunctionIfFunction } from '@/utils/decorators/callFunctionOrNot';
 import styles from './index.less';
 
@@ -13,48 +14,52 @@ const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 const closeToRightTabMenuKey = 'closeToRight';
 
-export interface ChildrenTab {
+export interface ChildrenTab<T = any> {
   /** tab's title */
   tab: string;
   key: string;
   content: React.ReactChildren | JSX.Element;
+  closable?: boolean;
   /** used to indicate the tab need refresh */
   refresh?: boolean;
   /** used to extends tab's properties */
-  [k: string]: any;
+  extraTabProperties?: T;
 }
 
-function addTab(newTab: ChildrenTab, activedTabs: ChildrenTab[]) {
+function addTab<T>(newTab: ChildrenTab<T>, activedTabs: ChildrenTab<T>[]) {
   /**
    * filter 过滤路由 为 '/' 的 children
    * map 添加第一个 tab 不可删除
    */
-  return [...activedTabs, newTab]
-    .filter(item => item.path !== '/')
-    .map((item, index) =>
-      activedTabs.length === 0 && index === 0
-        ? { ...item, closable: false }
-        : { ...item, closable: true }
-    );
+  return [...activedTabs, newTab].map((item, index) =>
+    activedTabs.length === 0 && index === 0
+      ? { ...item, closable: false }
+      : { ...item, closable: true }
+  );
 }
 
-function switchAndUpdateTab(
+const switchAndUpdateTab: <T>(
+  activedTabs: ChildrenTab<T>[]
+) => (
   activeIndex: number,
   tabName: string,
   extraTabProperties: any,
-  children: any,
-  activedTabs: ChildrenTab[]
-) {
-  const { path, content, refresh, ...rest } = activedTabs[activeIndex];
+  children: any
+) => ChildrenTab<T>[] = activedTabs => (activeIndex, tabName, extraTabProperties, children) => {
+  const { content, refresh, extraTabProperties: prevExtraTabProperties, ...rest } = activedTabs[
+    activeIndex
+  ];
+
   activedTabs.splice(activeIndex, 1, {
     tab: tabName,
     content: refresh ? content : children,
+    extraTabProperties,
     ...rest,
-    ...extraTabProperties,
   });
-  /** map 删除后的 activedTabs 长度为 1 时不可删除 */
+
+  /** map 删除后更新的 activedTabs 长度为 1 时不可删除 */
   return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
-}
+};
 
 export interface ChildrenTabsProps {
   activeKey: string;
@@ -89,13 +94,16 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
     const activedTabIndex = _findIndex(activedTabs, { key: activeKey });
     /** return state after switch or update tab */
     if (activedTabIndex > -1) {
+      const { extraTabProperties: prevExtraTabProperties } = activedTabs[activedTabIndex];
+      if (_isEqual(extraTabProperties, prevExtraTabProperties)) {
+        return { activeKey };
+      }
       return {
-        activedTabs: switchAndUpdateTab(
+        activedTabs: switchAndUpdateTab(activedTabs)(
           activedTabIndex,
           activeTitle,
           extraTabProperties,
-          children,
-          activedTabs
+          children
         ),
         activeKey,
       };
@@ -105,7 +113,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
       tab: activeTitle,
       key: activeKey,
       content: children,
-      ...extraTabProperties,
+      extraTabProperties,
     };
     return {
       activedTabs: addTab(newTab, activedTabs),
