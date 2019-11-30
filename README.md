@@ -58,9 +58,9 @@
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
 
-可通过 [defaultSettings](/src/defaultSettings.js) 中的 `pageTabs` 配置是否开启标签页功能，默认开启。
+可通过 [defaultSettings](/src/defaultSettings.js) 中的 `pageTabs` 配置是否开启标签页功能，标签页功能可选两种模式，一是**路由模式**，使用路由定义作为标签页 id ，类似 `'/path/:name'` 这样的动态路由只会打开一个标签页。也可选择**路径模式**，使用页面路径作为标签页 id，这样动态路由则会打开不同的标签页，也因此可能需要动态设置标签页标题，可通过配置 [`setPathName(pathID: string, predefinePathName: string, params: any, location: RouteData)`](/src/components/PageTabs/index.tsx#L43) 函数来处理。默认为**路由模式**。
 
-关注实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)。
+关注标签页实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)。
 
 #### 性能问题
 
@@ -93,6 +93,25 @@ class Page extends React.Component<any, any> {
   // ...
 }
 ```
+
+#### 另一些值得注意的问题
+
+##### 1. 关于 `umi` 注入的 `children`
+
+其实就是 `react-router-dom` 的 `Switch` 组件。
+
+##### 2. `window.location` 和 `withRouter` 注入的 `location` 的区别
+
+在实现**路径模式**的时候注意到
+
+* `window.location.pathname === '/ant-design-pro-v2-plus/enhance/curd-page'`
+* `location.pathname === '/enhance/curd-page'`
+
+由于我默认部署的不是根目录，所以发现了这一区别。
+
+##### 3. `withRouter` 注入的 `match` 的问题
+
+为了能使**路径模式**，能动态配置标签页标题。本来以为可以在 [`PageTabs`](/src/components/PageTabs/index.tsx#L71) 中直接使用注入 `match` 对象来获取动态路由中的参数，结果获取到的都是根路由的 `match` 对象，所以只能使用 `path-to-regexp` 的 `match` 方法了。猜测可能是由于第一个问题中提到的注入的都是 `Switch` 组件有关，当前的 `PageTabs` 组件还是在根路由的渲染之中。
 
 ### <span style="color:red">注意事项</span>
 
