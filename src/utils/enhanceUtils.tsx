@@ -28,7 +28,7 @@ export function injectChildren(children, properties) {
   });
 }
 
-export function transferMenuData(menuLoading: boolean, menuData: MenuItem[]) {
+export function waitMenuData(menuLoading: boolean, menuData: MenuItem[]) {
   return !menuLoading && menuData;
 }
 
