@@ -22,7 +22,7 @@ class TableList extends Component {
   state = {
     customModelVisible: false,
     selectedRows: [],
-    name: '-',
+    id: '-',
   };
 
   queryArgsConfig = [
@@ -95,7 +95,7 @@ class TableList extends Component {
   }
 
   render() {
-    const { customModelVisible, selectedRows, name } = this.state;
+    const { customModelVisible, selectedRows, id } = this.state;
     const actionsConfig = {
       extraActions: [
         {
@@ -128,7 +128,7 @@ class TableList extends Component {
           queryArgsConfig={this.queryArgsConfig}
           onValuesChange={(_, values) => {
             this.setState({
-              name: values.username,
+              id: values.username,
             });
           }}
         />
@@ -143,10 +143,13 @@ class TableList extends Component {
             },
           }}
           extraOperators={[
-            <Button key="dynamic1" onClick={() => router.push(`/enhance/dynamic1/${name}`)}>
+            <Button key="dynamic1" onClick={() => router.push(`/enhance/dynamic1/${id}?name=xxx`)}>
               动态路由1
             </Button>,
-            <Button key="dynamic2" onClick={() => router.push(`/enhance/dynamic2/${name}/man`)}>
+            <Button
+              key="dynamic2"
+              onClick={() => router.push(`/enhance/dynamic2/${id}/aname?name=yyy`)}
+            >
               动态路由2
             </Button>,
             <TableActions key="more" selectedRows={selectedRows} />,

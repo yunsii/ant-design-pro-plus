@@ -38,10 +38,11 @@ function getMetadataOfTab(
  * @param pathID 预定义的标签页路由，可据此动态配置标题
  * @param predefinePathName 预定义的已转义的国际化标题
  * @param params 路由中的参数
+ * @param location RouteData
  */
-function setPathName(pathID: string, predefinePathName: string, params: any) {
+function setPathName(pathID: string, predefinePathName: string, params: any, location: RouteData) {
   if (pathID.includes('dynamic')) {
-    return `${predefinePathName} - ${params.name}`;
+    return `${predefinePathName} - ${location.query.name}`;
   }
   return predefinePathName;
 }
@@ -87,7 +88,7 @@ function PageTabs(props: PageTabsProps) {
   const activeKey = pageTabs === 'path' ? location.pathname : pathID;
   const activeTitle =
     pageTabs === 'path'
-      ? setPathName(pathID, pathName, getParams(pathID, location.pathname))
+      ? setPathName(pathID, pathName, getParams(pathID, location.pathname), location)
       : pathName;
   return (
     <div style={{ paddingTop: 2 }}>

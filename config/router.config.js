@@ -41,13 +41,13 @@ export default [
             component: './Enhance/CurdCustomPage',
           },
           {
-            path: '/enhance/dynamic1/:name',
+            path: '/enhance/dynamic1/:id',
             name: 'dynamic',
             hideInMenu: true,
             component: './Enhance/Dynamic',
           },
           {
-            path: '/enhance/dynamic2/:name/:gender',
+            path: '/enhance/dynamic2/:id/:name',
             name: 'dynamic',
             hideInMenu: true,
             component: './Enhance/Dynamic',
