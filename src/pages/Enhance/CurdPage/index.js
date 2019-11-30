@@ -143,8 +143,11 @@ class TableList extends Component {
             },
           }}
           extraOperators={[
-            <Button key="dynamic" onClick={() => router.push(`/enhance/dynamic/${name}`)}>
-              动态路由
+            <Button key="dynamic1" onClick={() => router.push(`/enhance/dynamic1/${name}`)}>
+              动态路由1
+            </Button>,
+            <Button key="dynamic2" onClick={() => router.push(`/enhance/dynamic2/${name}/man`)}>
+              动态路由2
             </Button>,
             <TableActions key="more" selectedRows={selectedRows} />,
           ]}
