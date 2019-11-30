@@ -13,7 +13,7 @@ import SiderMenu from '@/components/SiderMenu';
 import PageTabs from '@/components/PageTabs';
 import PageLoading from '@/components/PageLoading';
 import getPageTitle from '@/utils/getPageTitle';
-import { transferMenuData } from '@/utils/enhanceUtils';
+import { waitMenuData } from '@/utils/enhanceUtils';
 import styles from './BasicLayout.less';
 
 // lazy load SettingDrawer
@@ -100,25 +100,35 @@ class BasicLayout extends React.Component {
     const {
       navTheme,
       layout: PropsLayout,
-      children,
-      pageTabs = true,
       location: { pathname },
       isMobile,
       menuData,
       breadcrumbNameMap,
       fixedHeader,
       menuLoading,
+      pageTabs = 'route',
+      proRootPath,
+      originalMenuData,
+      children,
     } = this.props;
 
     const isTop = PropsLayout === 'topmenu';
     let contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     contentStyle = pageTabs ? { ...contentStyle, margin: 'unset' } : { ...contentStyle };
 
-    const renderMenuData = transferMenuData(menuLoading, menuData);
+    const renderMenuData = waitMenuData(menuLoading, menuData);
     const renderContent = () => {
       if (pageTabs) {
         if (renderMenuData) {
-          return <PageTabs {...this.props} />;
+          return (
+            <PageTabs
+              proRootPath={proRootPath}
+              pageTabs={pageTabs}
+              originalMenuData={originalMenuData}
+            >
+              {children}
+            </PageTabs>
+          );
         }
         return <PageLoading />;
       }
