@@ -12,7 +12,7 @@
 
 </div>
 
-[![K1TDnP.png](https://s2.ax1x.com/2019/10/21/K1TDnP.png)](https://imgchr.com/i/K1TDnP)
+![v2-plus.png](https://i.loli.net/2019/11/30/uqOm4T32nADViZh.png)
 
 预览：[https://theprimone.top/ant-design-pro-v2-plus](https://theprimone.top/ant-design-pro-v2-plus)
 
