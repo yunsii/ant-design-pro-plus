@@ -78,7 +78,7 @@ export default function setFormItemsConfig(detail = {}, mode) {
         initialValue: detail.textarea,
       },
       componentProps: {
-        autosize: { minRows: 2, maxRows: 6 },
+        autoSize: { minRows: 2, maxRows: 6 },
       },
     },
     {
