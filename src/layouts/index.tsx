@@ -1,14 +1,14 @@
 import React from 'react';
 import { FormConfigProvider } from 'antd-curd';
-import uploadFile, { getUrl, isUploadSuccess } from '@/services/upload';
+import uploadFn, { getUrl, isUploadOk } from '@/services/upload';
 
 const GlobalLayout: React.FC<any> = props => {
   return (
     <FormConfigProvider
       value={{
-        uploadFn: uploadFile,
+        uploadFn,
         getUrl,
-        isUploadOk: isUploadSuccess,
+        isUploadOk,
         commenExtra: {
           picture: '自定义图片默认提示',
         },

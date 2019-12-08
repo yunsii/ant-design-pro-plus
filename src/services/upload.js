@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-export default async function uploadFile(file) {
+export default async function uploadFn(file) {
   const fd = new FormData();
   fd.append('file', file);
 
@@ -10,7 +10,7 @@ export default async function uploadFile(file) {
   });
 }
 
-export function isUploadSuccess(response) {
+export function isUploadOk(response) {
   const { data } = response;
   return data;
 }
