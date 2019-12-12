@@ -216,7 +216,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps, Chi
         tabPosition="top"
         type="editable-card"
         tabBarStyle={{ margin: 0 }}
-        tabBarGutter={2}
+        tabBarGutter={0}
         hideAdd
         {...tabsConfig}
         activeKey={activeKey}
