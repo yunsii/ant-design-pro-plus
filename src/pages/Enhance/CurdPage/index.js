@@ -125,7 +125,7 @@ class TableList extends Component {
 
     return (
       <Curd modelName={modelName} {...this.props}>
-        <Curd.QueryPanel
+        <Curd.Query
           queryArgsConfig={this.queryArgsConfig}
           onValuesChange={(_, values) => {
             this.setState({
@@ -134,7 +134,7 @@ class TableList extends Component {
             });
           }}
         />
-        <Curd.CurdTable
+        <Curd.Table
           columns={this.columns}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}

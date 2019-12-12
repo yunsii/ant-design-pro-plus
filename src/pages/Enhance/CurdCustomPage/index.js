@@ -93,6 +93,29 @@ class TableList extends Component {
     // console.log(this.state)
   }
 
+  getProps = () => {
+    const {
+      data,
+      detail,
+      fetchLoading,
+      detailLoading,
+      createLoading,
+      updateLoading,
+      deleteLoading,
+      dispatch,
+    } = this.props;
+    return {
+      data,
+      detail,
+      fetchLoading,
+      detailLoading,
+      createLoading,
+      updateLoading,
+      deleteLoading,
+      dispatch,
+    };
+  };
+
   render() {
     const { customModelVisible, selectedRows } = this.state;
     const actionsConfig = {
@@ -120,11 +143,12 @@ class TableList extends Component {
         14,
       ],
     };
+    console.log(this.getProps());
 
     return (
       <Curd modelName={modelName} {...this.props}>
-        <Curd.QueryPanel queryArgsConfig={this.queryArgsConfig} />
-        <Curd.CurdList
+        <Curd.Query queryArgsConfig={this.queryArgsConfig} />
+        <Curd.List
           renderItem={renderCard}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}
@@ -138,7 +162,7 @@ class TableList extends Component {
           operators={[<TableActions key="more" selectedRows={selectedRows} />]}
           selectedRows={selectedRows}
           onSelectRow={rows => this.setState({ selectedRows: rows })}
-          {...this.props}
+          {...this.getProps()}
         />
         <CustomModal
           title="弹出子组件"
