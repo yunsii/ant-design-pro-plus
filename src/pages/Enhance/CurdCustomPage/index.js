@@ -143,7 +143,6 @@ class TableList extends Component {
         14,
       ],
     };
-    console.log(this.getProps());
 
     return (
       <Curd modelName={modelName} {...this.props}>

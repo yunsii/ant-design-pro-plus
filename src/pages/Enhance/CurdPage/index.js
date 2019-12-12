@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { Avatar, message, Button, Menu, Dropdown, Icon, Modal } from 'antd';
+// import { Curd } from '@/utils/dist';
 import { Curd } from 'antd-curd';
 import { withRoutePage } from '@/utils/enhanceUtils';
 import { modelName } from '../models/curdPage.ts';
