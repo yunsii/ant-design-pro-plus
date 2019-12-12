@@ -32,6 +32,49 @@ export function waitMenuData(menuLoading: boolean, menuData: MenuItem[]) {
   return !menuLoading && menuData;
 }
 
+export const shouldRoutePageUpdate = (nextProps, thisProps) => {
+  // console.log(this.props);
+  const {
+    children: nextChildren,
+    computedMatch: nextComputedMatch,
+    history: nextHistory,
+    location: nextLocation,
+    match: nextMatch,
+    route: nextRoute,
+    staticContext: nextStaticContext,
+    ...nextRest
+  } = nextProps;
+  const {
+    children: thisChildren,
+    computedMatch: thisComputedMatch,
+    history: thisHistory,
+    location: thisLocation,
+    match: thisMatch,
+    route: thisRoute,
+    staticContext: thisStaticContext,
+    ...thisRest
+  } = thisProps;
+  // 注入数据变化，刷新组件
+  if (!_isEqual(nextRest, thisRest)) {
+    console.log('update by 数据变化');
+    // console.log(thisRest);
+    // console.log(nextRest);
+    return true;
+  }
+
+  const { pathname: nextPathname, search: nextSearch, state: nextState } = nextLocation || {};
+  const { pathname: thisPathname, search: thisSearch, state: thisState } = thisLocation || {};
+  const isLocationChange =
+    nextPathname !== thisPathname || nextSearch !== thisSearch || !_isEqual(nextState, thisState);
+  // 路由变化，刷新组件
+  if (isLocationChange) {
+    console.log('update by 路由变化');
+    return true;
+  }
+
+  return false;
+};
+
 export function withRoutePage<Props = any>(
   WrappedComponent: React.ComponentClass | React.FC<Props>
 ): React.ComponentClass {
@@ -39,52 +82,12 @@ export function withRoutePage<Props = any>(
     static displayName: string;
 
     shouldComponentUpdate(nextProps: any) {
-      // console.log(this.props);
-      const {
-        children: nextChildren,
-        computedMatch: nextComputedMatch,
-        history: nextHistory,
-        location: nextLocation,
-        match: nextMatch,
-        route: nextRoute,
-        staticContext: nextStaticContext,
-        ...nextRest
-      } = nextProps;
-      const {
-        children: thisChildren,
-        computedMatch: thisComputedMatch,
-        history: thisHistory,
-        location: thisLocation,
-        match: thisMatch,
-        route: thisRoute,
-        staticContext: thisStaticContext,
-        ...thisRest
-      } = this.props;
-      // 注入数据变化，刷新组件
-      if (!_isEqual(nextRest, thisRest)) {
-        // console.log('update by 数据变化');
-        // console.log(thisRest);
-        // console.log(nextRest);
-        return true;
-      }
-
-      const { pathname: nextPathname, search: nextSearch, state: nextState } = nextLocation;
-      const { pathname: thisPathname, search: thisSearch, state: thisState } = thisLocation;
-      const isLocationChange =
-        nextPathname !== thisPathname ||
-        nextSearch !== thisSearch ||
-        !_isEqual(nextState, thisState);
-      // 路由变化，刷新组件
-      if (isLocationChange) {
-        // console.log('update by 路由变化');
-        return true;
-      }
-
-      return false;
+      return shouldRoutePageUpdate(nextProps, this.props);
     }
 
     render() {
-      return <WrappedComponent {...(this.props as any)} />;
+      const { history: thisHistory, ...thisRest } = this.props;
+      return <WrappedComponent {...(thisRest as any)} />;
     }
   }
 
