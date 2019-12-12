@@ -56,7 +56,7 @@ export const shouldRoutePageUpdate = (nextProps, thisProps) => {
   } = thisProps;
   // 注入数据变化，刷新组件
   if (!_isEqual(nextRest, thisRest)) {
-    console.log('update by 数据变化');
+    // console.log('update by 数据变化');
     // console.log(thisRest);
     // console.log(nextRest);
     return true;
@@ -68,7 +68,7 @@ export const shouldRoutePageUpdate = (nextProps, thisProps) => {
     nextPathname !== thisPathname || nextSearch !== thisSearch || !_isEqual(nextState, thisState);
   // 路由变化，刷新组件
   if (isLocationChange) {
-    console.log('update by 路由变化');
+    // console.log('update by 路由变化');
     return true;
   }
 
