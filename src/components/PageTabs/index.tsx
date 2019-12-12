@@ -91,20 +91,18 @@ function PageTabs(props: PageTabsProps) {
       ? setPathName(pathID, pathName, getParams(pathID, location.pathname), location)
       : pathName;
   return (
-    <div style={{ paddingTop: 2 }}>
-      <ChildrenTabs
-        activeKey={activeKey}
-        activeTitle={activeTitle}
-        extraTabProperties={{ location }}
-        handleTabChange={handleTabChange}
-        afterRemoveTab={afterRemoveTab}
-        tabsConfig={{
-          animated: true,
-        }}
-      >
-        {children}
-      </ChildrenTabs>
-    </div>
+    <ChildrenTabs
+      activeKey={activeKey}
+      activeTitle={activeTitle}
+      extraTabProperties={{ location }}
+      handleTabChange={handleTabChange}
+      afterRemoveTab={afterRemoveTab}
+      tabsConfig={{
+        animated: true,
+      }}
+    >
+      {children}
+    </ChildrenTabs>
   );
 }
 
