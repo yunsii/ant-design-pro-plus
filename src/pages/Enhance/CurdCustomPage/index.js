@@ -151,9 +151,9 @@ class TableList extends Component {
           renderItem={renderCard}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}
-          popupType="modal"
+          popup="modal"
           popupProps={{
-            modalConfig: {
+            modalProps: {
               width: 800,
             },
             cols: 2,

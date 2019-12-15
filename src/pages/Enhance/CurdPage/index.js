@@ -139,9 +139,9 @@ class TableList extends Component {
           columns={this.columns}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}
-          popupType="drawer"
+          popup="drawer"
           popupProps={{
-            drawerConfig: {
+            drawerProps: {
               width: 560,
             },
           }}
