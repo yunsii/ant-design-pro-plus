@@ -12,7 +12,7 @@
 
 </div>
 
-![v2-plus.png](https://i.loli.net/2019/11/30/uqOm4T32nADViZh.png)
+![ant-design-pro-v2-plus-min.png](https://i.loli.net/2019/12/19/Kvrq4JloCQ7Ekty.png)
 
 预览：[https://theprimone.top/ant-design-pro-v2-plus](https://theprimone.top/ant-design-pro-v2-plus)
 
