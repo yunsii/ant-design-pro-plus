@@ -101,6 +101,11 @@ export default function setFormItemsConfig(detail = {}, mode) {
         // initialValue: detail.picture,
         initialValue: 'https://s2.ax1x.com/2019/09/25/uEvPxI.png',
       },
+      componentProps: {
+        viewerProps: {
+          className: 'custom-viewer',
+        },
+      },
     },
     {
       type: 'switch',
