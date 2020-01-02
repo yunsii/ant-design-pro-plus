@@ -139,11 +139,12 @@ class TableList extends Component {
           columns={this.columns}
           actionsConfig={actionsConfig}
           setFormItemsConfig={setFormItemsConfig}
-          popup="drawer"
+          popup="modal"
           popupProps={{
-            drawerProps: {
-              width: 560,
+            modalProps: {
+              width: 800,
             },
+            cols: 2,
           }}
           extraOperators={[
             <Button
