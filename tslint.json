@@ -11,6 +11,7 @@
     "member-access": false,
     "interface-name": false,
     "ordered-imports": false,
-    "array-type": false
+    "array-type": false,
+    "no-empty": false
   }
 }
