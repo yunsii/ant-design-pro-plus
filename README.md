@@ -22,7 +22,7 @@
 
 ## ✨新增特性
 
-* [ChildrenTabs 根据 children 实现标签页切换](#ChildrenTabs-根据-children-实现标签页切换)
+* MenuTabs 带右键菜单的标签页组件
 * [PageTabs 基于路由实现标签页切换](#PageTabs-基于路由实现标签页切换)
 * [StandardTable 增强](#StandardTable-增强)
 
@@ -36,31 +36,15 @@
 
 除 UI 组件外，尽量使用 TypeScript 开发。
 
-### ChildrenTabs 根据 children 实现标签页切换
-
-可通过配置实现 children 的标签页展示。
-
-#### API
-
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| activeKey | 激活 tab 的唯一标识 | string | - |
-| activeTitle | 激活 tab 展示的标题 | string | - |
-| handleTabChange | 切换 tab 时的回调函数。设置新的的 activeKey | (keyToSwitch: string, activedTabs: any[]) => void; | - |
-| handleRemoveTab | 删除 tab 时的回调函数。可直接设置新的 activeKey 为相邻的 nextTabKey | (removeKey: string, nextTabKey: string, activedTabs: any[]) => void | - |
-| children | 与当前 tab 对应的 children | JSX.Element | - |
-| extraTabProperties | 当前 tab 的扩展属性 | {} | {} |
-| tabsConfig | 可自行配置 Tabs 属性，除 `activeKey`， `onEdit`， `onChange` 外 | TabsProps | - |
-
-此外，还在 [`RightContent`](/src/components/GlobalHeader/RightContent.js#L140) 中实现了刷新当前标签页的功能，默认开启。如果不需要，可在 [defaultSettings](/src/defaultSettings.js) 设置 `reloadTab` 为 `false` 即可。
-
 ### PageTabs 基于路由实现标签页切换
 
 `router.push()` 会注入该路由的 component ，所以根据条件处理该 children component 即可。
 
-可通过 [defaultSettings](/src/defaultSettings.js) 中的 `pageTabs` 配置是否开启标签页功能，标签页功能可选两种模式，一是**路由模式**，使用路由定义作为标签页 id ，类似 `'/path/:name'` 这样的动态路由只会打开一个标签页。也可选择**路径模式**，使用页面路径作为标签页 id，这样动态路由则会打开不同的标签页，也因此可能需要动态设置标签页标题，可通过配置 [`setPathName(pathID: string, predefinePathName: string, params: any, location: RouteData)`](/src/components/PageTabs/index.tsx#L43) 函数来处理。默认为**路由模式**。
+可通过 [defaultSettings](/src/defaultSettings.js) 中的 `pageTabs` 配置是否开启标签页功能，标签页功能可选两种模式，一是**路由模式**，使用路由定义作为标签页 id ，类似 `'/path/:name'` 这样的动态路由只会打开一个标签页。也可选择**路径模式**，使用页面路径作为标签页 id，这样动态路由则会打开不同的标签页，也因此可能需要动态设置标签页标题，可通过配置 [`setPathName`](/src/components/PageTabs/index.tsx#L45) 函数来处理。默认为**路由模式**。
 
 关注标签页实现的可参考[基于 ant design pro 2.3.1 页面标签化展示的研究与实现](https://theprimone.top/2019/07/06/2019-07-06-ant-design-pro-tabs-page-by-route)。
+
+此外，还在 [`RightContent`](/src/components/GlobalHeader/RightContent.js#L140) 中实现了刷新当前标签页的功能，默认开启。如果不需要，可在 [defaultSettings](/src/defaultSettings.js) 设置 `reloadTab` 为 `false` 即可。
 
 #### 性能问题
 
