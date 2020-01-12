@@ -3,8 +3,6 @@ import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import _findIndex from 'lodash/findIndex';
-import _isEqual from 'lodash/isEqual';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
@@ -13,7 +11,7 @@ const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 const closeToRightTabMenuKey = 'closeToRight';
 
-export interface ChildrenTab<T = any> {
+export interface MenuTab<T = any> {
   /** tab's title */
   tab: string;
   key: string;
@@ -25,17 +23,17 @@ export interface ChildrenTab<T = any> {
   extraTabProperties?: T;
 }
 
-export interface ChildrenTabsProps {
+export interface MenuTabsProps {
   activeKey: string;
-  tabs: ChildrenTab[];
+  tabs: MenuTab[];
   onSwitch: (keyToSwitch: string) => void;
   onRemove: (removeKey: string) => void;
   onRemoveOthers: (currentKey: string) => void;
   onRemoveRightTabs: (currentKey: string) => void;
-  tabsConfig?: TabsProps;
+  tabsProps?: TabsProps;
 }
 
-export default class ChildrenTabs extends React.Component<ChildrenTabsProps> {
+export default class extends React.Component<MenuTabsProps> {
   handleTabEdit = (targetKey: string, action: string) => {
     this[action](targetKey);
   };
@@ -59,7 +57,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps> {
   };
 
   render() {
-    const { tabsConfig, onSwitch, tabs, activeKey } = this.props;
+    const { tabsProps, onSwitch, tabs, activeKey } = this.props;
 
     const setMenu = (key: string, index: number) => (
       <Menu onClick={this.handleTabsMenuClick(key)}>
@@ -86,7 +84,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps> {
     const renderTabs = () => {
       return (
         !!tabs.length &&
-        tabs.map((item: ChildrenTab, index) => {
+        tabs.map((item: MenuTab, index) => {
           return (
             <TabPane
               tab={setTab(item.tab, item.key, index)}
@@ -107,7 +105,7 @@ export default class ChildrenTabs extends React.Component<ChildrenTabsProps> {
         tabBarStyle={{ margin: 0 }}
         tabBarGutter={0}
         hideAdd
-        {...tabsConfig}
+        {...tabsProps}
         activeKey={activeKey}
         onEdit={this.handleTabEdit}
         onChange={onSwitch}
