@@ -5,7 +5,7 @@ import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
-import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
+import MenuTabs, { MenuTab } from '@/components/MenuTabs';
 
 // result: [pathID, pathName]
 function getMetadataOfTab(
@@ -59,11 +59,11 @@ function getParams(path: string, pathname: string): { [key: string]: string } {
   return result.params;
 }
 
-function routeTo(targetTab: ChildrenTab<{ location: any }>) {
+function routeTo(targetTab: MenuTab<{ location: any }>) {
   router.push(targetTab.extraTabProperties.location);
 }
 
-function addTab<T>(newTab: ChildrenTab<T>, activedTabs: ChildrenTab<T>[]) {
+function addTab<T>(newTab: MenuTab<T>, activedTabs: MenuTab<T>[]) {
   /**
    * filter 过滤路由 为 '/' 的 children
    * map 添加第一个 tab 不可删除
@@ -76,13 +76,13 @@ function addTab<T>(newTab: ChildrenTab<T>, activedTabs: ChildrenTab<T>[]) {
 }
 
 const switchAndUpdateTab: <T>(
-  activedTabs: ChildrenTab<T>[]
+  activedTabs: MenuTab<T>[]
 ) => (
   activeIndex: number,
   tabName: string,
   extraTabProperties: any,
   children: any
-) => ChildrenTab<T>[] = activedTabs => (activeIndex, tabName, extraTabProperties, children) => {
+) => MenuTab<T>[] = activedTabs => (activeIndex, tabName, extraTabProperties, children) => {
   const { content, refresh, extraTabProperties: prevExtraTabProperties, ...rest } = activedTabs[
     activeIndex
   ];
@@ -112,7 +112,7 @@ function PageTabs(props: PageTabsProps) {
   if (location.pathname === proRootPath) {
     return children;
   }
-  const [tabs, setTabs] = useState<ChildrenTab[]>([]);
+  const [tabs, setTabs] = useState<MenuTab[]>([]);
 
   const [pathID, pathName] = getMetadataOfTab(location.pathname, originalMenuData);
   const activeKey = pageTabs === 'path' ? location.pathname : pathID;
@@ -192,13 +192,13 @@ function PageTabs(props: PageTabsProps) {
   };
 
   return (
-    <ChildrenTabs
+    <MenuTabs
       activeKey={activeKey}
       onSwitch={handleSwitch}
       onRemove={handleRemove}
       onRemoveOthers={handleRemoveOthers}
       onRemoveRightTabs={handRemoveRightTabs}
-      tabsConfig={{
+      tabsProps={{
         animated: true,
       }}
       tabs={tabs}
