@@ -3,7 +3,6 @@ import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
 import { Spin, Tag, Menu, Icon, Avatar, Tooltip, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import { injectChildren } from '@/utils/enhanceUtils';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
@@ -65,21 +64,8 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   handleTabRefresh = () => {
-    const { childrenTabs } = window;
-    if (childrenTabs) {
-      const { activeKey, activedTabs } = childrenTabs.state;
-      childrenTabs.setState({
-        activedTabs: activedTabs.map(item => {
-          if (item.key === activeKey) {
-            return {
-              ...item,
-              content: injectChildren(item.content, { key: item.key ? item.key + 1 : 1 }),
-              refresh: true,
-            };
-          }
-          return item;
-        }),
-      });
+    if (window.handleTabRefresh) {
+      window.handleTabRefresh();
     }
   };
 

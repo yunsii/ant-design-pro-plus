@@ -16,6 +16,6 @@ declare interface MenuItem {
 }
 
 interface Window {
-  childrenTabs: any;
+  handleTabRefresh: () => void;
   routerBase: string;
 }

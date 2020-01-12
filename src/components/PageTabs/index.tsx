@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import pathToRegexp from 'path-to-regexp';
 import _find from 'lodash/find';
+import _findIndex from 'lodash/findIndex';
+import _isEqual from 'lodash/isEqual';
 import withRouter from 'umi/withRouter';
 import router, { RouteData } from 'umi/router';
 import ChildrenTabs, { ChildrenTab } from '@/components/ChildrenTabs';
@@ -61,6 +63,41 @@ function routeTo(targetTab: ChildrenTab<{ location: any }>) {
   router.push(targetTab.extraTabProperties.location);
 }
 
+function addTab<T>(newTab: ChildrenTab<T>, activedTabs: ChildrenTab<T>[]) {
+  /**
+   * filter 过滤路由 为 '/' 的 children
+   * map 添加第一个 tab 不可删除
+   */
+  return [...activedTabs, newTab].map((item, index) =>
+    activedTabs.length === 0 && index === 0
+      ? { ...item, closable: false }
+      : { ...item, closable: true }
+  );
+}
+
+const switchAndUpdateTab: <T>(
+  activedTabs: ChildrenTab<T>[]
+) => (
+  activeIndex: number,
+  tabName: string,
+  extraTabProperties: any,
+  children: any
+) => ChildrenTab<T>[] = activedTabs => (activeIndex, tabName, extraTabProperties, children) => {
+  const { content, refresh, extraTabProperties: prevExtraTabProperties, ...rest } = activedTabs[
+    activeIndex
+  ];
+
+  activedTabs.splice(activeIndex, 1, {
+    tab: tabName,
+    content: refresh ? content : children,
+    extraTabProperties,
+    ...rest,
+  });
+
+  /** map 删除后更新的 activedTabs 长度为 1 时不可删除 */
+  return activedTabs.map(item => (activedTabs.length === 1 ? { ...item, closable: false } : item));
+};
+
 export interface PageTabsProps {
   proRootPath?: string;
   pageTabs?: 'route' | 'path';
@@ -75,34 +112,97 @@ function PageTabs(props: PageTabsProps) {
   if (location.pathname === proRootPath) {
     return children;
   }
-  const [pathID, pathName] = getMetadataOfTab(location.pathname, originalMenuData);
-  const handleTabChange = (keyToSwitch: string, activedTabs: ChildrenTab[]) => {
-    const targetTab = _find(activedTabs, { key: keyToSwitch });
-    routeTo(targetTab);
-  };
-  const afterRemoveTab = (removeKey: string, nextTabKey: string, activedTabs: ChildrenTab[]) => {
-    const targetTab = _find(activedTabs, { key: nextTabKey });
-    routeTo(targetTab);
-  };
+  const [tabs, setTabs] = useState<ChildrenTab[]>([]);
 
+  const [pathID, pathName] = getMetadataOfTab(location.pathname, originalMenuData);
   const activeKey = pageTabs === 'path' ? location.pathname : pathID;
   const activeTitle =
     pageTabs === 'path'
       ? setPathName(pathID, pathName, getParams(pathID, location.pathname), location)
       : pathName;
+
+  useEffect(() => {
+    window.handleTabRefresh = () => {
+      setTabs(
+        tabs.map(item => {
+          if (item.key === activeKey) {
+            return {
+              ...item,
+              content: React.cloneElement(item.content, { key: item.key ? item.key + 1 : 1 }),
+            };
+          }
+          return item;
+        })
+      );
+    };
+  }, [tabs]);
+
+  useEffect(() => {
+    const activedTabIndex = _findIndex(tabs, { key: activeKey });
+    if (activedTabIndex > -1) {
+      const { extraTabProperties: prevExtraTabProperties } = tabs[activedTabIndex];
+      if (!_isEqual({ location }, prevExtraTabProperties)) {
+        const refreshedTabs = switchAndUpdateTab(tabs)(
+          activedTabIndex,
+          activeTitle,
+          { location },
+          children
+        );
+        setTabs(refreshedTabs);
+      }
+    } else {
+      const newTab = {
+        tab: activeTitle,
+        key: activeKey,
+        content: children as any,
+        extraTabProperties: { location },
+      };
+      const addedTabs = addTab(newTab, tabs);
+      setTabs(addedTabs);
+    }
+  }, [children]);
+
+  const handleSwitch = (keyToSwitch: string) => {
+    const targetTab = _find(tabs, { key: keyToSwitch });
+    routeTo(targetTab);
+  };
+
+  const handleRemove = (removeKey: string) => {
+    let nextTabKey: string;
+    if (removeKey !== activeKey) {
+      nextTabKey = activeKey;
+    } else {
+      const targetIndex = _findIndex(tabs, { key: removeKey });
+      const nextIndex = targetIndex > 0 ? targetIndex - 1 : targetIndex + 1;
+      nextTabKey = tabs[nextIndex].key;
+    }
+    setTabs(tabs.filter(item => item.key !== removeKey));
+    const targetTab = _find(tabs, { key: nextTabKey });
+    routeTo(targetTab);
+  };
+
+  const handleRemoveOthers = (currentKey: string) => {
+    const currentTab = tabs.filter(item => item.key === currentKey);
+    setTabs(currentTab.map(item => ({ ...item, closable: false })));
+  };
+
+  const handRemoveRightTabs = (currentKey: string) => {
+    const currentIndex = _findIndex(tabs, { key: currentKey });
+    setTabs(tabs.slice(0, currentIndex + 1));
+  };
+
   return (
     <ChildrenTabs
       activeKey={activeKey}
-      activeTitle={activeTitle}
-      extraTabProperties={{ location }}
-      handleTabChange={handleTabChange}
-      afterRemoveTab={afterRemoveTab}
+      onSwitch={handleSwitch}
+      onRemove={handleRemove}
+      onRemoveOthers={handleRemoveOthers}
+      onRemoveRightTabs={handRemoveRightTabs}
       tabsConfig={{
         animated: true,
       }}
-    >
-      {children}
-    </ChildrenTabs>
+      tabs={tabs}
+    />
   );
 }
 
