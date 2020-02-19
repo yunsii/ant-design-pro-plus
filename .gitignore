@@ -26,7 +26,6 @@ package-lock.json
 .history
 *.log
 functions/*
-lambda/mock/index.js
 .temp/**
 
 # umi
@@ -36,3 +35,6 @@ lambda/mock/index.js
 # screenshot
 screenshot
 .firebase
+.eslintcache
+
+build
