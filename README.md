@@ -5,16 +5,14 @@
 官方说明请参阅 [/v2/README.zh-CN](https://github.com/ant-design/ant-design-pro/blob/v2/README.zh-CN.md)
 
 
-[![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/issues)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/theprimone/ant-design-pro-v2-plus.svg)](https://github.com/theprimone/ant-design-pro-v2-plus/commits/master)
+[![GitHub license](https://img.shields.io/github/license/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/issues)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/commits/master)
 
 </div>
 
-![ant-design-pro-v2-plus-min.png](https://i.loli.net/2019/12/19/Kvrq4JloCQ7Ekty.png)
-
-预览：[https://theprimone.top/ant-design-pro-v2-plus](https://theprimone.top/ant-design-pro-v2-plus)
+![ant-design-pro-plus-min.png](https://i.loli.net/2019/12/19/Kvrq4JloCQ7Ekty.png)
 
 为了实现基于 Github Pages 的在线预览的功能，仅将**功能示例**和 **Dashboard** 下的**分析页**数据写到了代码中，以便查看页面效果。
 
@@ -28,9 +26,9 @@
 
 ## 📌新增依赖
 
-* [dva-base-models](https://github.com/theprimone/dva-base-models) 基于 dva 的基础 model 配置
-* [antd-form-mate](https://github.com/theprimone/antd-form-mate) 基于 ant design 的表单组件
-* [antd-curd](https://github.com/theprimone/antd-curd) 基于 ant design 的增删改查页面组件
+* [dva-base-models](https://github.com/zpr1g/dva-base-models) 基于 dva 的基础 model 配置
+* [antd-form-mate](https://github.com/zpr1g/antd-form-mate) 基于 ant design 的表单组件
+* [antd-curd](https://github.com/zpr1g/antd-curd) 基于 ant design 的增删改查页面组件
 
 ## ☁️功能实现概述
 
@@ -48,7 +46,7 @@
 
 #### 性能问题
 
-由于是通过路由的方式实现的标签页的功能，测试发现会出现一定的性能问题，可参考 [issue #2](https://github.com/theprimone/ant-design-pro-v2-plus/issues/2) 。
+由于是通过路由的方式实现的标签页的功能，测试发现会出现一定的性能问题，可参考 [issue #2](https://github.com/zpr1g/ant-design-pro-plus/issues/2) 。
 
 之前的方案有个严重的问题，因为是通过判断一个页面有没有子路由的方式来决定是否刷新页面，这会导致动态路由，如 `/page/:name` ，无法正确刷新，还有查询参数和 `state` 等的变化都无法触发页面刷新。当然如果没有动态路由是一点影响也没有。现在能想到的最佳方法是使用高阶组件将页面组件包裹一层判断是否需要刷新，具体实现 [`withRoutePage`](/src/utils/enhanceUtils.tsx#L38) 。
 
@@ -133,4 +131,4 @@ class Page extends React.Component<any, any> {
 * 配置对象表单数据映射 map.js （参考 [CurdPage/map.js](/src/pages/Enhance/CurdPage/map.js) ），用于对象的详情，新建和编辑对象
 * 配置页面（参考 [CurdPage/index.js](/src/pages/Enhance/CurdPage/index.js) ），主要是配置查询面板和数据列模型，组件相关全局配置可在 [layouts/inde.tsx](/src/layouts/index.tsx) 中配置。
 
-通过配置化的方式快速实现了一个增删改查页面的需求，让开发者可以尽量少的关心底层的逻辑实现。同时也提供了较为灵活的 API 去扩展特定页面的特定需求。更多参数配置，可到 [antd-curd](https://github.com/theprimone/antd-curd) 中查看。
+通过配置化的方式快速实现了一个增删改查页面的需求，让开发者可以尽量少的关心底层的逻辑实现。同时也提供了较为灵活的 API 去扩展特定页面的特定需求。更多参数配置，可到 [antd-curd](https://github.com/zpr1g/antd-curd) 中查看。
