@@ -1,57 +1,13 @@
-# Ant Design Pro
+<h1 align="center">Ant Design Pro Plus</h1>
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+<div align="center">
 
-## Environment Prepare
+官方说明请参阅 [/master/README.zh-CN](https://github.com/ant-design/ant-design-pro/blob/master/README.zh-CN.md)
 
-Install `node_modules`:
+[![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/commits/master)
 
-```bash
-npm install
-```
+</div>
 
-or
+原仓库名称 `ant design pro v2 plus` ，代码移到 [`v2` 分支](https://github.com/zpr1g/ant-design-pro-plus/tree/v2)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
-```bash
-yarn
-```
-
-## Provided Scripts
-
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
-
-Scripts provided in `package.json`. It's safe to modify or add additional script:
-
-### Start project
-
-```bash
-npm start
-```
-
-### Build project
-
-```bash
-npm run build
-```
-
-### Check code style
-
-```bash
-npm run lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+目前 `master` 正在同步施工中...
