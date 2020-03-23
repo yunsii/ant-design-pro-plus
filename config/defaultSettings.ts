@@ -1,5 +1,12 @@
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 
+// 标签页功能配置
+const pageTabsMode = [
+  'route', // 使用页面路由定义作为标签页 id ，类似 /path/:name 这样的动态路由只会打开一个标签页
+  'path', // 使用页面路径作为标签页 id ，动态路由会打开不同的标签页，因此，可能需要再在 PageTabs 组件中动态设置标签页的标题
+  false, // 不使用标签页功能
+];
+
 export type ContentWidth = 'Fluid' | 'Fixed';
 
 export interface DefaultSettings {
@@ -45,7 +52,7 @@ export interface DefaultSettings {
 export default {
   navTheme: 'dark',
   // 拂晓蓝
-  primaryColor: 'daybreak',
+  primaryColor: '#1890ff',
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: false,
@@ -58,4 +65,8 @@ export default {
   title: 'Ant Design Pro',
   pwa: false,
   iconfontUrl: '',
+
+  pageTabs: pageTabsMode[0],
+  proRootPath: '/',
+  reloadTab: true,
 } as DefaultSettings;

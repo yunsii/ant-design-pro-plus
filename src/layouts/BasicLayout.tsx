@@ -17,11 +17,16 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
+
+import PageTabs from "@/components/PageTabs";
+import PageLoading from "@/components/PageLoading";
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
+import { waitMenuData } from "@/utils/enhanceUtils";
 import logo from '../assets/logo.svg';
+import styles from './BasicLayout.less';
 
 const noMatch = (
   <Result
@@ -122,6 +127,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     settings: initSettings,
   } = props;
 
+  const [originalMenuData, setOriginalMenuData] = useState<MenuDataItem[]>();
   const [settings, setSettings] = useState<Partial<Settings>>(initSettings);
 
   useEffect(() => {
@@ -139,13 +145,36 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         payload,
       });
     }
-  }; // get children authority
+  };
 
+  // get children authority
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
     authority: undefined,
   };
+
+  const renderMenuData = waitMenuData(false, originalMenuData);
+
+  const renderContent = () => {
+    if (settings.pageTabs) {
+      if (renderMenuData) {
+        return (
+          <PageTabs
+            proRootPath={settings.proRootPath}
+            pageTabs={settings.pageTabs}
+            originalMenuData={originalMenuData}
+          >
+            {children}
+          </PageTabs>
+        );
+      }
+      return <PageLoading />;
+    }
+    return children;
+  };
+
   return (
     <ProLayout
+      className={settings.pageTabs && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
       menuHeaderRender={(logoDom, titleDom) => (
@@ -174,19 +203,25 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-          <span>{route.breadcrumbName}</span>
-        );
+            <span>{route.breadcrumbName}</span>
+          );
       }}
       footerRender={footerRender}
-      menuDataRender={menuDataRender}
+      menuDataRender={(menuData) => {
+        if (!originalMenuData) {
+          setOriginalMenuData(menuData);
+        }
+
+        return menuDataRender(originalMenuData || []);
+      }}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
-        {children}
+        {renderContent()}
       </Authorized>
-      <SettingDrawer 
+      <SettingDrawer
         settings={settings}
         onSettingChange={config => {
           console.log(config);
