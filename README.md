@@ -10,4 +10,4 @@
 
 原仓库名称 `ant design pro v2 plus` ，代码移到 [`v2` 分支](https://github.com/zpr1g/ant-design-pro-plus/tree/v2)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
-目前 `master` 正在同步施工中...
+已完成标签页功能
