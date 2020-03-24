@@ -47,6 +47,10 @@ export interface DefaultSettings {
   // Usage: https://github.com/ant-design/ant-design-pro/pull/3517
   iconfontUrl: string;
   colorWeak: boolean;
+
+  pageTabs: 'route' | 'path' | false;
+  proRootPath: string;
+  reloadTab: boolean;
 }
 
 export default {
@@ -60,7 +64,7 @@ export default {
   fixSiderbar: false,
   colorWeak: false,
   menu: {
-    locale: true,
+    locale: true
   },
   title: 'Ant Design Pro',
   pwa: false,
@@ -68,5 +72,5 @@ export default {
 
   pageTabs: pageTabsMode[0],
   proRootPath: '/',
-  reloadTab: true,
+  reloadTab: true
 } as DefaultSettings;

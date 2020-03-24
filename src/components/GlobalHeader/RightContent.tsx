@@ -2,6 +2,9 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { ReloadOutlined } from '@ant-design/icons';
+
 import { ConnectProps, ConnectState } from '@/models/connect';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
@@ -12,10 +15,13 @@ export type SiderTheme = 'light' | 'dark';
 export interface GlobalHeaderRightProps extends ConnectProps {
   theme?: SiderTheme;
   layout: 'sidemenu' | 'topmenu';
+
+  pageTabs: 'route' | 'path' | false;
+  reloadTab: boolean;
 }
 
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
-  const { theme, layout } = props;
+  const { theme, layout, pageTabs, reloadTab } = props;
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
@@ -43,10 +49,17 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
             value: 'Pro Layout',
           },
         ]}
-        // onSearch={value => {
-        //   //console.log('input', value);
-        // }}
+      // onSearch={value => {
+      //   //console.log('input', value);
+      // }}
       />
+      {pageTabs && reloadTab ? (
+        <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
+          <a className={styles.action} onClick={() => window.reloadCurrentTab()}>
+            <ReloadOutlined />
+          </a>
+        </Tooltip>
+      ) : null}
       <Tooltip title="使用文档">
         <a
           target="_blank"
@@ -66,4 +79,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 export default connect(({ settings }: ConnectState) => ({
   theme: settings.navTheme,
   layout: settings.layout,
+
+  pageTabs: settings.pageTabs,
+  reloadTab: settings.reloadTab,
 }))(GlobalHeaderRight);

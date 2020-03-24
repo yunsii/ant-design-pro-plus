@@ -17,10 +17,6 @@ export interface MenuTab<T = any> {
   key: string;
   content: JSX.Element;
   closable?: boolean;
-  /** used to indicate the tab need refresh */
-  refresh?: boolean;
-  /** used to extends tab's properties */
-  extraTabProperties?: T;
 }
 
 export interface MenuTabsProps {
@@ -34,7 +30,7 @@ export interface MenuTabsProps {
 }
 
 export default class extends React.Component<MenuTabsProps> {
-  handleTabEdit = (targetKey: string, action: string) => {
+  handleTabEdit = (targetKey: string, action: "add" |"remove") => {
     this[action](targetKey);
   };
 
@@ -107,7 +103,7 @@ export default class extends React.Component<MenuTabsProps> {
         hideAdd
         {...tabsProps}
         activeKey={activeKey}
-        onEdit={this.handleTabEdit}
+        onEdit={this.handleTabEdit as TabsProps["onEdit"]}
         onChange={onSwitch}
       >
         {renderTabs()}

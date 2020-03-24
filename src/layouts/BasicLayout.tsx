@@ -6,7 +6,6 @@
 import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
-  Settings,
   DefaultFooter,
   SettingDrawer,
 } from '@ant-design/pro-layout';
@@ -18,28 +17,29 @@ import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 
-import PageTabs from "@/components/PageTabs";
-import PageLoading from "@/components/PageLoading";
+import PageTabs, { UmiChildren } from '@/components/PageTabs';
 import Authorized from '@/utils/Authorized';
+import PageLoading from '@/components/PageLoading';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
-import { waitMenuData } from "@/utils/enhanceUtils";
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
+import { DefaultSettings } from 'config/defaultSettings';
 
 const noMatch = (
   <Result
-    status="403"
-    title="403"
-    subTitle="Sorry, you are not authorized to access this page."
+    status={403}
+    title='403'
+    subTitle='Sorry, you are not authorized to access this page.'
     extra={
-      <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+      <Button type='primary'>
+        <Link to='/user/login'>Go Login</Link>
       </Button>
     }
   />
 );
+
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
@@ -47,27 +47,32 @@ export interface BasicLayoutProps extends ProLayoutProps {
   route: ProLayoutProps['route'] & {
     authority: string[];
   };
-  settings: Settings;
+  settings: DefaultSettings;
   dispatch: Dispatch;
 }
+
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
   };
 };
+
 /**
  * use Authorized check all menu item
  */
-
-const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
-  menuList.map(item => {
-    const localItem = { ...item, children: item.children ? menuDataRender(item.children) : [] };
+const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => {
+  return menuList.map(item => {
+    const localItem = {
+      ...item,
+      children: item.children ? menuDataRender(item.children) : []
+    };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
+};
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
+    copyright='2019 蚂蚁金服体验技术部出品'
     links={[
       {
         key: 'Ant Design Pro',
@@ -105,11 +110,15 @@ const footerRender: BasicLayoutProps['footerRender'] = () => {
           textAlign: 'center',
         }}
       >
-        <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href='https://www.netlify.com'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           <img
-            src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
-            width="82px"
-            alt="netlify logo"
+            src='https://www.netlify.com/img/global/badges/netlify-color-bg.svg'
+            width='82px'
+            alt='netlify logo'
           />
         </a>
       </div>
@@ -122,13 +131,15 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     dispatch,
     children,
     location = {
-      pathname: '/',
+      pathname: '/'
     },
     settings: initSettings,
   } = props;
 
+  const [settings, setSettings] = useState<Partial<DefaultSettings>>(initSettings);
+
+  const [menuLoading] = useState(false);
   const [originalMenuData, setOriginalMenuData] = useState<MenuDataItem[]>();
-  const [settings, setSettings] = useState<Partial<Settings>>(initSettings);
 
   useEffect(() => {
     if (dispatch) {
@@ -148,26 +159,30 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   };
 
   // get children authority
-  const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
+  const authorized = getAuthorityFromRouter(
+    props.route.routes,
+    location.pathname || '/'
+  ) || {
     authority: undefined,
   };
 
-  const renderMenuData = waitMenuData(false, originalMenuData);
 
   const renderContent = () => {
     if (settings.pageTabs) {
-      if (renderMenuData) {
+      if (menuLoading) {
+        return <PageLoading />;
+      }
+      if (originalMenuData) {
         return (
           <PageTabs
             proRootPath={settings.proRootPath}
             pageTabs={settings.pageTabs}
             originalMenuData={originalMenuData}
           >
-            {children}
+            {children as UmiChildren}
           </PageTabs>
         );
       }
-      return <PageLoading />;
     }
     return children;
   };
@@ -178,14 +193,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       logo={logo}
       formatMessage={formatMessage}
       menuHeaderRender={(logoDom, titleDom) => (
-        <Link to="/">
+        <Link to='/'>
           {logoDom}
           {titleDom}
         </Link>
       )}
       onCollapse={handleMenuCollapse}
       menuItemRender={(menuItemProps, defaultDom) => {
-        if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
+        if (
+          menuItemProps.isUrl ||
+          menuItemProps.children ||
+          !menuItemProps.path
+        ) {
           return defaultDom;
         }
 

@@ -1,4 +1,9 @@
-// ref: https://github.com/pillarjs/path-to-regexp/blob/master/src/index.ts
+/**
+ * 无法直接安装使用 path-to-regexp@6.1.0
+ * issue: https://github.com/ant-design/ant-design-pro/issues/6190
+ * 
+ * 直接使用源码 ref: https://github.com/pillarjs/path-to-regexp/blob/master/src/index.ts
+ */
 
 /**
  * Tokenizer results.
