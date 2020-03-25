@@ -49,6 +49,10 @@ export interface DefaultSettings {
   colorWeak: boolean;
 
   pageTabs: 'route' | 'path' | false;
+  /**
+   * sticky page tabs
+   */
+  fixedPageTabs: boolean;
   proRootPath: string;
   reloadTab: boolean;
 }
@@ -61,16 +65,17 @@ export default {
   contentWidth: 'Fluid',
   fixedHeader: false,
   autoHideHeader: false,
-  fixSiderbar: false,
+  fixSiderbar: true,
   colorWeak: false,
   menu: {
-    locale: true
+    locale: true,
   },
   title: 'Ant Design Pro',
   pwa: false,
   iconfontUrl: '',
 
   pageTabs: pageTabsMode[0],
+  fixedPageTabs: true,
   proRootPath: '/',
-  reloadTab: true
+  reloadTab: true,
 } as DefaultSettings;
