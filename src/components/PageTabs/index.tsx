@@ -7,10 +7,13 @@ import router, { RouteData } from 'umi/router';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouteComponentProps } from 'react-router';
 import * as H from 'history';
+import classNames from 'classnames';
 
 import MenuTabs, { MenuTab } from '@/components/MenuTabs';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
 import styles from './index.less';
+
+console.log(styles)
 
 export interface PageTab<T> extends MenuTab<T> {
   /** used to indicate the tab need reload */
@@ -216,12 +219,7 @@ function PageTabs(props: PageTabsProps) {
     setTabs(tabs.slice(0, currentIndex + 1));
   };
 
-  const setTabsClassName = () => {
-    if (fixedPageTabs) {
-      return styles['fixed-page-tabs'];
-    }
-  }
-
+  console.log("classNames", classNames({ 'page-tabs-fixed': fixedPageTabs }))
   return (
     <MenuTabs
       activeKey={activeKey}
@@ -231,7 +229,7 @@ function PageTabs(props: PageTabsProps) {
       onRemoveRightTabs={handRemoveRightTabs}
       tabsProps={{
         animated: true,
-        className: setTabsClassName(),
+        className: classNames({ 'page-tabs-fixed': fixedPageTabs }),
       }}
       tabs={tabs}
     />
