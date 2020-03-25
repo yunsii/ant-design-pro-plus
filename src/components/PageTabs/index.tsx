@@ -10,6 +10,7 @@ import * as H from 'history';
 
 import MenuTabs, { MenuTab } from '@/components/MenuTabs';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
+import styles from './index.less';
 
 export interface PageTab<T> extends MenuTab<T> {
   /** used to indicate the tab need reload */
@@ -113,6 +114,7 @@ export interface UmiChildren extends React.ReactChildren {
 export interface PageTabsProps extends RouteComponentProps<any> {
   proRootPath?: string;
   pageTabs?: 'route' | 'path';
+  fixedPageTabs?: boolean;
   children?: UmiChildren;
   originalMenuData: MenuDataItem[];
 }
@@ -122,6 +124,7 @@ function PageTabs(props: PageTabsProps) {
     proRootPath = '/',
     location,
     pageTabs,
+    fixedPageTabs,
     originalMenuData,
     children,
   } = props;
@@ -213,6 +216,12 @@ function PageTabs(props: PageTabsProps) {
     setTabs(tabs.slice(0, currentIndex + 1));
   };
 
+  const setTabsClassName = () => {
+    if (fixedPageTabs) {
+      return styles['fixed-page-tabs'];
+    }
+  }
+
   return (
     <MenuTabs
       activeKey={activeKey}
@@ -222,6 +231,7 @@ function PageTabs(props: PageTabsProps) {
       onRemoveRightTabs={handRemoveRightTabs}
       tabsProps={{
         animated: true,
+        className: setTabsClassName(),
       }}
       tabs={tabs}
     />

@@ -177,6 +177,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           <PageTabs
             proRootPath={settings.proRootPath}
             pageTabs={settings.pageTabs}
+            fixedPageTabs={settings.fixedPageTabs}
             originalMenuData={originalMenuData}
           >
             {children as UmiChildren}
@@ -225,7 +226,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
             <span>{route.breadcrumbName}</span>
           );
       }}
-      footerRender={footerRender}
+      footerRender={false}
       menuDataRender={(menuData) => {
         if (!originalMenuData) {
           setOriginalMenuData(menuData);
