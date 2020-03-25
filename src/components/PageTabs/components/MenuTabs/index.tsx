@@ -3,6 +3,8 @@ import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
+import _debounce from 'lodash/debounce';
+
 import styles from './index.less';
 
 const { TabPane } = Tabs;
@@ -20,7 +22,7 @@ export interface MenuTab<T = any> {
 }
 
 export interface MenuTabsProps {
-  activeKey: string;
+  activeKey?: string;
   tabs: MenuTab[];
   onSwitch: (keyToSwitch: string) => void;
   onRemove: (removeKey: string) => void;
@@ -30,12 +32,12 @@ export interface MenuTabsProps {
 }
 
 export default class extends React.Component<MenuTabsProps> {
-  handleTabEdit = (targetKey: string, action: "add" |"remove") => {
+  handleTabEdit = (targetKey: string, action: "add" | "remove") => {
     this[action](targetKey);
   };
 
   remove = (key: string) => {
-    const { onRemove = () => {} } = this.props;
+    const { onRemove = () => { } } = this.props;
     onRemove(key);
   };
 
@@ -70,7 +72,7 @@ export default class extends React.Component<MenuTabsProps> {
     );
 
     const setTab = (tab: string, key: string, index: number) => (
-      <span onContextMenu={event => event.preventDefault()}>
+      <span onContextMenu={event => event.preventDefault()} onClick={event => event.preventDefault()}>
         <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
         </Dropdown>

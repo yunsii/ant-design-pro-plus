@@ -9,11 +9,10 @@ import { RouteComponentProps } from 'react-router';
 import * as H from 'history';
 import classNames from 'classnames';
 
-import MenuTabs, { MenuTab } from '@/components/MenuTabs';
+import MenuTabs, { MenuTab } from '@/components/PageTabs/components/MenuTabs';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
-import styles from './index.less';
+import './index.less';
 
-console.log(styles)
 
 export interface PageTab<T> extends MenuTab<T> {
   /** used to indicate the tab need reload */
@@ -219,7 +218,6 @@ function PageTabs(props: PageTabsProps) {
     setTabs(tabs.slice(0, currentIndex + 1));
   };
 
-  console.log("classNames", classNames({ 'page-tabs-fixed': fixedPageTabs }))
   return (
     <MenuTabs
       activeKey={activeKey}
