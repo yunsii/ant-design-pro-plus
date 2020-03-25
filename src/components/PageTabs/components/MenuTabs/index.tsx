@@ -1,23 +1,22 @@
 import React from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
-import { MenuProps } from 'antd/lib/menu';
+import { MenuProps, ClickParam } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import _debounce from 'lodash/debounce';
 
 import styles from './index.less';
-
-const { TabPane } = Tabs;
+import { UmiChildren } from '../../data';
 
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 const closeToRightTabMenuKey = 'closeToRight';
 
-export interface MenuTab<T = any> {
+export interface MenuTab {
   /** tab's title */
   tab: string;
   key: string;
-  content: JSX.Element;
+  content: UmiChildren;
   closable?: boolean;
 }
 
@@ -41,10 +40,12 @@ export default class extends React.Component<MenuTabsProps> {
     onRemove(key);
   };
 
-  handleTabsMenuClick = (tabKey: string): MenuProps['onClick'] => event => {
+  handleTabsMenuClick = (tabKey: string): MenuProps['onClick'] => (event: ClickParam) => {
     const { onRemove, onRemoveOthers, onRemoveRightTabs } = this.props;
-    const { key } = event;
+    const { key, domEvent } = event;
+    domEvent.stopPropagation();
 
+    console.log(key, tabKey);
     if (key === closeCurrentTabMenuKey) {
       onRemove(tabKey);
     } else if (key === closeOthersTabMenuKey) {
@@ -72,7 +73,7 @@ export default class extends React.Component<MenuTabsProps> {
     );
 
     const setTab = (tab: string, key: string, index: number) => (
-      <span onContextMenu={event => event.preventDefault()} onClick={event => event.preventDefault()}>
+      <span onContextMenu={event => event.preventDefault()}>
         <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
         </Dropdown>
@@ -84,13 +85,13 @@ export default class extends React.Component<MenuTabsProps> {
         !!tabs.length &&
         tabs.map((item: MenuTab, index) => {
           return (
-            <TabPane
+            <Tabs.TabPane
               tab={setTab(item.tab, item.key, index)}
               key={item.key}
               closable={item.closable}
             >
               {item.content}
-            </TabPane>
+            </Tabs.TabPane>
           );
         })
       );
