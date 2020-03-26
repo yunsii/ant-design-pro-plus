@@ -1,16 +1,19 @@
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
+import _isArray from 'lodash/isArray';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
+import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
-import * as H from 'history';
 
-import { PageTab, PageTabsProps } from './data';
+import { PageTab, PageTabsProps, BeautifulLocation } from './data';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
+ * 
+ * `pathID` 为核心，标签页根据次属性生成
  *
  * @param pathname 必须是 `withRouter` 注入的 `location` 的 `pathname`
  * @param originalMenuData 原始菜单数据
@@ -19,37 +22,23 @@ export function getPathnameMetadata(
   pathname: string,
   originalMenuData: MenuDataItem[],
 ): [string, string] {
-  console.log('call getPathnameMetadata:', pathname, originalMenuData);
-  function getMetadata(_pathname: string, menuData: MenuDataItem[], parent: MenuDataItem | null) {
+  function getMetadata(_pathname: string, menuData: MenuDataItem[], parent: MenuDataItem | null): [string, string] | null {
     let result: [string, string] | null = null;
-    menuData.forEach(item => {
-      if (pathToRegexp(`${item.path}(.*)`).test(_pathname)) {
-        /** match prefix iteratively */
 
-        console.log('matched path', item.path, _pathname);
-        console.log('parent', parent);
-        console.log('item', item);
-
-        if (!parent && item.name) {
-          /** BasicLayout 下的子路由(一级路由) */
-          result = [item.path!, item.name];
-        } else if (
-          parent &&
-          !parent.component &&
-          item.component &&
-          item.name &&
-          !item.hideChildrenInMenu
-        ) {
-          /** 嵌套路由，子菜单 */
-          result = [item.path!, item.name];
-        }
-        if (Array.isArray(item.children) && item.children.length) {
-          /** 必须判断 `children` 长度，否则当长度为 0 时，会重置 `result` */
-          /** get children pathID, title, shouldUpdate recursively */
-          result = getMetadata(_pathname, item.children, item) || result;
-        }
-      }
+    const targetMenuItem = _find(menuData, (item) => {
+      return pathToRegexp(`${item.path}(.*)`).test(_pathname);
     });
+
+    if (targetMenuItem) {
+      result = [targetMenuItem.path!, targetMenuItem.name!]
+    }
+
+    const hasChildren = _isArray(targetMenuItem?.children) && targetMenuItem?.children.length;
+
+    if (hasChildren && !targetMenuItem?.hideChildrenInMenu) {
+      result = getMetadata(_pathname, targetMenuItem!.children!, targetMenuItem!) || result;
+    }
+
     return result;
   }
   return getMetadata(pathname, originalMenuData, null) || ['404', 'Error'];
@@ -80,7 +69,7 @@ export function getParams(path: string, pathname: string): { [key: string]: stri
  *
  * @param location 必须是 `withRouter` 注入的 `location`
  */
-export function getActiveTabInfo(location: H.Location) {
+export function getActiveTabInfo(location: BeautifulLocation) {
   /**
    * 获取标签页的 id 和标题
    *
@@ -93,16 +82,25 @@ export function getActiveTabInfo(location: H.Location) {
     originalMenuData: MenuDataItem[],
     setTabTitle: PageTabsProps['setTabTitle'],
   ): [string, React.ReactNode] {
-    console.log('location.pathname:', location.pathname);
     const [pathID, title] = memoizeOneGetPathnameMetadata(location.pathname!, originalMenuData);
 
     if (pageTabs === 'route') {
       return [pathID, title];
     }
+
+    const params = getParams(pathID, location.pathname!);
+    const query = location.query;
+    const state = location.state || {};
+
+    const hashPart = hash(JSON.stringify({
+      ...params,
+      ...query,
+      ...state,
+    }));
+
     return [
-      // location.pathname as string,
-      pathID,
-      setTabTitle?.(pathID, title, getParams(pathID, location.pathname!), location) || title,
+      `${pathID}-${hashPart}`,
+      setTabTitle?.(pathID, title, params, location) || title,
     ];
   }
   return getInfo;
