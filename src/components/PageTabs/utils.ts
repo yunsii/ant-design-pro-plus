@@ -13,10 +13,8 @@ import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
  * 
- * `pathID` 为核心，标签页根据次属性生成
- *
  * @param pathname 必须是 `withRouter` 注入的 `location` 的 `pathname`
- * @param originalMenuData 原始菜单数据
+ * @param originalMenuData 原始菜单数据，未经过滤处理
  */
 export function getPathnameMetadata(
   pathname: string,
@@ -25,17 +23,17 @@ export function getPathnameMetadata(
   function getMetadata(_pathname: string, menuData: MenuDataItem[], parent: MenuDataItem | null): [string, string] | null {
     let result: [string, string] | null = null;
 
+    /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
     const targetMenuItem = _find(menuData, (item) => {
-      return pathToRegexp(`${item.path}(.*)`).test(_pathname);
+      return pathToRegexp(`${item.path}(.*)`).test(_pathname) && !!item.name;
     });
 
     if (targetMenuItem) {
       result = [targetMenuItem.path!, targetMenuItem.name!]
     }
 
-    const hasChildren = _isArray(targetMenuItem?.children) && targetMenuItem?.children.length;
-
-    if (hasChildren && !targetMenuItem?.hideChildrenInMenu) {
+    /** 递归设置 `pathID` 和 `title` */
+    if (_isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
       result = getMetadata(_pathname, targetMenuItem!.children!, targetMenuItem!) || result;
     }
 
@@ -87,6 +85,10 @@ export function getActiveTabInfo(location: BeautifulLocation) {
     if (pageTabs === 'route') {
       return [pathID, title];
     }
+
+    // 以下为 **路径** 模式的处理逻辑：
+    // 核心是根据路由中所带的参数算出参数的哈希值，并将其与算出的 `pathID` 拼成一个标签页的唯一 id
+    // 这样，不同的参数就能得到不同的标签页了
 
     const params = getParams(pathID, location.pathname!);
     const query = location.query;
