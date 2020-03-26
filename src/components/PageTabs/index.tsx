@@ -3,7 +3,6 @@ import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import withRouter from 'umi/withRouter';
-import * as H from 'history';
 import classNames from 'classnames';
 
 import MenuTabs from '@/components/PageTabs/components/MenuTabs';
@@ -11,7 +10,7 @@ import {
   getActiveTabInfo,
   routeTo,
 } from './utils';
-import { UmiChildren, PageTab, PageTabsProps } from './data';
+import { UmiChildren, PageTab, PageTabsProps, BeautifulLocation } from './data';
 import './index.less';
 
 function PageTabs(props: PageTabsProps) {
@@ -30,7 +29,7 @@ function PageTabs(props: PageTabsProps) {
     return children;
   }
 
-  const [tabs, setTabs] = useState<PageTab<{ location: H.Location }>[]>([]);
+  const [tabs, setTabs] = useState<PageTab<{ location: BeautifulLocation }>[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(pageTabs, originalMenuData, setTabTitle);
 
   /**
@@ -38,7 +37,7 @@ function PageTabs(props: PageTabsProps) {
    * 
    * @param newTab 
    */
-  const addTab = (newTab: PageTab<{ location: H.Location }>) => {
+  const addTab = (newTab: PageTab<{ location: BeautifulLocation }>) => {
     setTabs([...tabs, newTab].map((item, index) =>
       tabs.length === 0 && index === 0
         ? { ...item, closable: false }

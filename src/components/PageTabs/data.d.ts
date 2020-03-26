@@ -5,7 +5,7 @@ import { MenuTab } from '@/components/PageTabs/components/MenuTabs';
 
 export interface UmiChildren extends JSX.Element {
   props: {
-    location: H.Location;
+    location: BeautifulLocation;
   };
 }
 
@@ -15,6 +15,7 @@ export interface PageTab<T> extends MenuTab {
 }
 
 export interface PageTabsProps extends RouteComponentProps<any> {
+  location: BeautifulLocation;
   proRootPath?: string;
   pageTabs?: 'route' | 'path';
   fixedPageTabs?: boolean;
@@ -35,4 +36,8 @@ export interface PageTabsProps extends RouteComponentProps<any> {
     params: any,
     location: H.Location,
   ) => React.ReactNode;
+}
+
+declare interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Location<S> {
+  query: Q;
 }
