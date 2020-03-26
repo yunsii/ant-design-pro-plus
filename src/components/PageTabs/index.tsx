@@ -111,7 +111,8 @@ function PageTabs(props: PageTabsProps) {
       nextTabKey = tabs[nextIndex].key;
     }
     handleSwitch(nextTabKey);
-    setTabs(tabs.filter(item => item.key !== removeKey));
+    const restTabs = tabs.filter(item => item.key !== removeKey);
+    setTabs(restTabs.map(item => (restTabs.length === 1 ? { ...item, closable: false } : item)));
   };
 
   const handleRemoveOthers = (currentKey: string) => {
