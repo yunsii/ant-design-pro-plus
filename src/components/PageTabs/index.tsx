@@ -77,6 +77,7 @@ function PageTabs(props: PageTabsProps) {
   }, [tabs]);
 
   useEffect(() => {
+    console.log("children effect", children);
     const activedTab = _find(tabs, { key: activeKey });
     if (activedTab) {
       const { extraTabProperties: prevExtraTabProperties } = activedTab;
@@ -127,7 +128,6 @@ function PageTabs(props: PageTabsProps) {
     setTabs(restTabs.map(item => (restTabs.length === 1 ? { ...item, closable: false } : item)));
   };
 
-  console.log(tabs);
   return (
     <MenuTabs
       activeKey={activeKey}
