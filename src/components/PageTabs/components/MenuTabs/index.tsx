@@ -14,7 +14,7 @@ const closeToRightTabMenuKey = 'closeToRight';
 
 export interface MenuTab {
   /** tab's title */
-  tab: string;
+  tab: React.ReactNode;
   key: string;
   content: UmiChildren;
   closable?: boolean;
@@ -72,7 +72,7 @@ export default class extends React.Component<MenuTabsProps> {
       </Menu>
     );
 
-    const setTab = (tab: string, key: string, index: number) => (
+    const setTab = (tab: React.ReactNode, key: string, index: number) => (
       <span onContextMenu={event => event.preventDefault()}>
         <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
           <span className={styles.tabTitle}>{tab}</span>
