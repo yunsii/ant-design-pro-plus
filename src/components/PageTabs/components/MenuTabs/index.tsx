@@ -45,7 +45,6 @@ export default class extends React.Component<MenuTabsProps> {
     const { key, domEvent } = event;
     domEvent.stopPropagation();
 
-    console.log(key, tabKey);
     if (key === closeCurrentTabMenuKey) {
       onRemove(tabKey);
     } else if (key === closeOthersTabMenuKey) {
