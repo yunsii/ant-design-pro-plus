@@ -17,7 +17,8 @@ import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 
-import PageTabs, { UmiChildren } from '@/components/PageTabs';
+import PageTabs from '@/components/PageTabs';
+import { UmiChildren } from '@/components/PageTabs/data';
 import Authorized from '@/utils/Authorized';
 import PageLoading from '@/components/PageLoading';
 import RightContent from '@/components/GlobalHeader/RightContent';
