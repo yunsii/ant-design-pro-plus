@@ -122,6 +122,52 @@ export default {
               component: './ListTableList',
             },
             {
+              name: 'page-tabs-demo',
+              icon: 'star',
+              path: '/page-tabs-demo',
+              routes: [
+                {
+                  path: '/page-tabs-demo',
+                  redirect: '/page-tabs-demo/parent',
+                },
+                {
+                  name: 'parent',
+                  path: '/page-tabs-demo/parent',
+                  component: './PageTabsDemo/Parent',
+                  hideChildrenInMenu: true,
+                  routes: [
+                    {
+                      path: '/page-tabs-demo/parent',
+                      redirect: '/page-tabs-demo/parent/child1',
+                    },
+                    {
+                      path: '/page-tabs-demo/parent/child1',
+                      component: './PageTabsDemo/Parent/Child1',
+                    },
+                    {
+                      path: '/page-tabs-demo/parent/child2',
+                      component: './PageTabsDemo/Parent/Child2',
+                    },
+                    {
+                      path: '/page-tabs-demo/parent/child3',
+                      component: './PageTabsDemo/Parent/Child3',
+                    },
+                  ],
+                },
+                {
+                  name: 'query',
+                  path: '/page-tabs-demo/query',
+                  component: './PageTabsDemo/Query',
+                },
+                {
+                  name: 'result',
+                  path: '/page-tabs-demo/result/:id',
+                  hideInMenu: true,
+                  component: './PageTabsDemo/Result',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],

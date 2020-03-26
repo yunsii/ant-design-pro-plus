@@ -48,4 +48,9 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+
+  'menu.page-tabs-demo': 'Page Tabs Demo',
+  'menu.page-tabs-demo.parent': 'Nested Route',
+  'menu.page-tabs-demo.query': 'Query',
+  'menu.page-tabs-demo.result': 'Result',
 };

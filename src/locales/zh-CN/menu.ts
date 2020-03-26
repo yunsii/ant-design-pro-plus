@@ -48,4 +48,9 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
+
+  'menu.page-tabs-demo': '标签页 Demo',
+  'menu.page-tabs-demo.parent': '嵌套路由',
+  'menu.page-tabs-demo.query': '查询页',
+  'menu.page-tabs-demo.result': '结果页',
 };
