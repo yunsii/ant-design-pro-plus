@@ -8,9 +8,7 @@ import classNames from 'classnames';
 
 import MenuTabs from '@/components/PageTabs/components/MenuTabs';
 import {
-  setPathName,
-  getMetadataOfTab,
-  getParams,
+  getActiveTabInfo,
   routeTo,
   addTab,
   updateTab,
@@ -22,8 +20,9 @@ function PageTabs(props: PageTabsProps) {
   const {
     proRootPath = '/',
     location,
-    pageTabs,
+    pageTabs = 'route',
     fixedPageTabs,
+    setTabTitle,
     originalMenuData,
     children,
   } = props;
@@ -55,12 +54,7 @@ function PageTabs(props: PageTabsProps) {
     window.reloadCurrentTab = reloadCurrentTab;
   }, [tabs]);
 
-  const [pathID, pathName] = getMetadataOfTab(location.pathname!, originalMenuData);
-  const activeKey = pageTabs === 'path' ? location.pathname! : pathID;
-  const activeTitle =
-    pageTabs === 'path'
-      ? setPathName(pathID, pathName, getParams(pathID, location.pathname!), location)
-      : pathName;
+  const [activeKey, activeTitle] = getActiveTabInfo(location)(pageTabs, originalMenuData, setTabTitle);
 
   useEffect(() => {
     const activedTabIndex = _findIndex(tabs, { key: activeKey });
