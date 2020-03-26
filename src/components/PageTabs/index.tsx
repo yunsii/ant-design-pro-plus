@@ -10,8 +10,6 @@ import MenuTabs from '@/components/PageTabs/components/MenuTabs';
 import {
   getActiveTabInfo,
   routeTo,
-  addTab,
-  updateTab,
 } from './utils';
 import { UmiChildren, PageTab, PageTabsProps } from './data';
 import './index.less';
@@ -33,15 +31,39 @@ function PageTabs(props: PageTabsProps) {
   }
 
   const [tabs, setTabs] = useState<PageTab<{ location: H.Location }>[]>([]);
+  const [activeKey, activeTitle] = getActiveTabInfo(location)(pageTabs, originalMenuData, setTabTitle);
 
-  // TODO: 与 `updateTab` 函数整合
-  const reloadCurrentTab = (children?: UmiChildren) => {
+  /**
+   * 新增第一个 tab 不可删除
+   * 
+   * @param newTab 
+   */
+  const addTab = (newTab: PageTab<{ location: H.Location }>) => {
+    setTabs([...tabs, newTab].map((item, index) =>
+      tabs.length === 0 && index === 0
+        ? { ...item, closable: false }
+        : { ...item, closable: true },
+    ));
+  }
+
+
+  /**
+   * 
+   * @param reloadKey 需要刷新的 tab key
+   * @param tabTitle 需要刷新的 tab 标题
+   * @param extraTabProperties 需要刷新的 tab 额外属性
+   * @param content 需要刷新的 tab 渲染的内容
+   */
+  const reloadTab = (reloadKey: string, tabTitle?: React.ReactNode, extraTabProperties?: any, content?: UmiChildren) => {
     if (Array.isArray(tabs) && tabs.length) {
       const updatedTabs = tabs.map(item => {
-        if (item.key === activeKey) {
+        if (item.key === reloadKey) {
+          const { tab: prevTabTitle, extraTabProperties: prevExtraTabProperties, content: prevContent, ...rest } = item;
           return {
-            ...item,
-            content: children || React.cloneElement(item.content, { key: (new Date()).valueOf() }),
+            ...rest,
+            tab: tabTitle || prevTabTitle,
+            extraTabProperties: extraTabProperties || prevExtraTabProperties,
+            content: content || React.cloneElement(item.content, { key: (new Date()).valueOf() }),
           };
         }
         return item;
@@ -51,25 +73,17 @@ function PageTabs(props: PageTabsProps) {
   }
 
   useEffect(() => {
-    window.reloadCurrentTab = reloadCurrentTab;
+    window.reloadCurrentTab = () => reloadTab(activeKey);
   }, [tabs]);
 
-  const [activeKey, activeTitle] = getActiveTabInfo(location)(pageTabs, originalMenuData, setTabTitle);
-
   useEffect(() => {
-    const activedTabIndex = _findIndex(tabs, { key: activeKey });
-    if (activedTabIndex > -1) {
-      const { extraTabProperties: prevExtraTabProperties } = tabs[activedTabIndex];
+    const activedTab = _find(tabs, { key: activeKey });
+    if (activedTab) {
+      const { extraTabProperties: prevExtraTabProperties } = activedTab;
       console.log("current location", { location });
       console.log("prev location", prevExtraTabProperties);
       if (!_isEqual({ location }, prevExtraTabProperties)) {
-        const refreshedTabs = updateTab(tabs)(
-          activedTabIndex,
-          activeTitle,
-          { location },
-          children
-        );
-        setTabs(refreshedTabs);
+        reloadTab(activeKey, activeTitle, { location }, children);
       }
     } else {
       const newTab = {
@@ -78,8 +92,7 @@ function PageTabs(props: PageTabsProps) {
         content: children as any,
         extraTabProperties: { location },
       };
-      const addedTabs = addTab(tabs)(newTab);
-      setTabs(addedTabs);
+      addTab(newTab);
     }
   }, [children]);
 
@@ -102,15 +115,16 @@ function PageTabs(props: PageTabsProps) {
   };
 
   const handleRemoveOthers = (currentKey: string) => {
-    const currentTab = tabs.filter(item => item.key === currentKey);
+    const restTabs = tabs.filter(item => item.key === currentKey);
     handleSwitch(currentKey);
-    setTabs(currentTab.map(item => ({ ...item })));
+    setTabs(restTabs.map(item => ({ ...item, closable: false })));
   };
 
   const handRemoveRightTabs = (currentKey: string) => {
     const currentIndex = _findIndex(tabs, { key: currentKey });
     handleSwitch(tabs[currentIndex].key);
-    setTabs(tabs.slice(0, currentIndex + 1));
+    const restTabs = tabs.slice(0, currentIndex + 1);
+    setTabs(restTabs.map(item => (restTabs.length === 1 ? { ...item, closable: false } : item)));
   };
 
   console.log(tabs);
