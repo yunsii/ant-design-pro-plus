@@ -3,26 +3,23 @@ import { usePersistFn } from '@umijs/hooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
-import withRouter from 'umi/withRouter';
-import classNames from 'classnames';
 
-import MenuTabs from '@/components/PageTabs/components/MenuTabs';
 import { useReallyPrevious } from '@/hooks/common';
-import { UmiChildren, PageTab, PageTabsProps, BeautifulLocation } from './data';
+import { UmiChildren, RouteTab, UseTabsOptions } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
-import './index.less';
 
-function PageTabs(props: PageTabsProps) {
+export function useTabs(options: UseTabsOptions) {
   const {
     location,
     pageTabs = 'route',
-    fixedPageTabs,
     setTabTitle,
     originalMenuData,
     children,
-  } = props;
+  } = options;
 
-  const [tabs, setTabs] = useState<PageTab<{ location: BeautifulLocation }>[]>([]);
+  console.log("useTabs originalMenuData:", originalMenuData);
+
+  const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(
     pageTabs,
     originalMenuData,
@@ -32,7 +29,7 @@ function PageTabs(props: PageTabsProps) {
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
-  const setTabsAfterDelete = (_tabs: PageTab<{ location: BeautifulLocation }>[]) => {
+  const setTabsAfterDelete = (_tabs: RouteTab[]) => {
     setTabs(_tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)));
   };
 
@@ -81,7 +78,7 @@ function PageTabs(props: PageTabsProps) {
    *
    * @param newTab
    */
-  const addTab = usePersistFn((newTab: PageTab<{ location: BeautifulLocation }>) => {
+  const addTab = usePersistFn((newTab: RouteTab) => {
     setTabs(
       [...tabs, newTab].map((item, index) =>
         tabs.length === 0 && index === 0
@@ -193,20 +190,16 @@ function PageTabs(props: PageTabsProps) {
     }
   }, [children]);
 
-  return (
-    <MenuTabs
-      activeKey={activeKey}
-      onSwitch={handleSwitch}
-      onRemove={handleRemove}
-      onRemoveOthers={handleRemoveOthers}
-      onRemoveRightTabs={handRemoveRightTabs}
-      tabsProps={{
-        animated: true,
-        className: classNames({ 'page-tabs-fixed': fixedPageTabs }),
-      }}
-      tabs={tabs}
-    />
-  );
+  console.log("render tabs:", tabs);
+
+  return {
+    tabs,
+    activeKey,
+    handleSwitch,
+    handleRemove,
+    handleRemoveOthers,
+    handRemoveRightTabs,
+  };
 }
 
-export default withRouter<PageTabsProps, React.FC>(PageTabs as React.FC);
+export default useTabs;

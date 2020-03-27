@@ -3,7 +3,7 @@ import * as H from 'history';
 import { RouteComponentProps } from 'react-router';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
-import { MenuTab } from '@/components/PageTabs/components/MenuTabs';
+import { PageTab, PageTabsProps } from './components/PageTabs';
 
 export interface UmiChildren extends JSX.Element {
   props: {
@@ -11,15 +11,14 @@ export interface UmiChildren extends JSX.Element {
   };
 }
 
-export interface PageTab<T> extends MenuTab {
+export interface RouteTab extends PageTab {
   /** used to extends tab's properties */
-  extraTabProperties: T;
+  extraTabProperties: { location: BeautifulLocation };
 }
 
-export interface PageTabsProps extends RouteComponentProps<any> {
+export interface UseTabsOptions {
   location: BeautifulLocation;
   pageTabs?: 'route' | 'path';
-  fixedPageTabs?: boolean;
   children?: UmiChildren;
   originalMenuData: MenuDataItem[];
 
@@ -41,4 +40,7 @@ export interface PageTabsProps extends RouteComponentProps<any> {
 
 export interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Location<S> {
   query: Q;
+}
+
+export interface MenuTabsProps extends PageTabsProps, Omit<RouteComponentProps<any>, 'location'> {
 }

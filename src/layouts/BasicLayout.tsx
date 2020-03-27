@@ -17,8 +17,8 @@ import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 
-import PageTabs from '@/components/PageTabs';
-import { UmiChildren } from '@/components/PageTabs/data';
+import MenuTabs from '@/components/MenuTabs';
+import { UmiChildren } from '@/components/MenuTabs/data';
 import Authorized from '@/utils/Authorized';
 import PageLoading from '@/components/PageLoading';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -167,21 +167,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return <PageLoading />;
       }
       if (originalMenuData) {
-        /** return children to redirect if children pathname equal proRootPath */
-        if (location.pathname === settings.proRootPath) {
-          return children;
-        }
         return (
-          <PageTabs
+          <MenuTabs
             pageTabs={settings.pageTabs}
             fixedPageTabs={settings.fixedPageTabs}
             originalMenuData={originalMenuData}
+            // animated={false}
           >
             <div>
               {children as UmiChildren}
               <div>{footerRender()}</div>
             </div>
-          </PageTabs>
+          </MenuTabs>
         );
       }
     }
@@ -219,8 +216,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-          <span>{route.breadcrumbName}</span>
-        );
+            <span>{route.breadcrumbName}</span>
+          );
       }}
       footerRender={false}
       menuDataRender={menuData => {

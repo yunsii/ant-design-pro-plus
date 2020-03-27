@@ -6,8 +6,21 @@ import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
-import { PageTab, PageTabsProps, BeautifulLocation } from './data';
+import { RouteTab, MenuTabsProps, BeautifulLocation } from './data';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
+
+export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
+  function isInMenus(menuData: MenuDataItem[]) {
+    const targetMenuItem = _find(
+      menuData,
+      item => pathToRegexp(`${item.path}(.*)`).test(pathname),
+    );
+
+    return !!targetMenuItem;
+  }
+
+  return isInMenus(originalMenuData);
+}
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -20,7 +33,6 @@ export function getPathnameMetadata(
   originalMenuData: MenuDataItem[],
 ): [string, string] {
   function getMetadata(
-    _pathname: string,
     menuData: MenuDataItem[],
     parent: MenuDataItem | null,
   ): [string, string] | null {
@@ -29,7 +41,7 @@ export function getPathnameMetadata(
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
     const targetMenuItem = _find(
       menuData,
-      item => pathToRegexp(`${item.path}(.*)`).test(_pathname) && !!item.name,
+      item => pathToRegexp(`${item.path}(.*)`).test(pathname) && !!item.name,
     );
 
     /** 如果为 **一级路由** 直接写入 `result` ，否则父级没有 `component` 时才能写入 `result` */
@@ -43,12 +55,12 @@ export function getPathnameMetadata(
 
     /** 递归设置 `pathID` 和 `title` */
     if (_isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
-      result = getMetadata(_pathname, targetMenuItem!.children!, targetMenuItem!) || result;
+      result = getMetadata(targetMenuItem!.children!, targetMenuItem!) || result;
     }
 
     return result;
   }
-  return getMetadata(pathname, originalMenuData, null) || ['404', 'Error'];
+  return getMetadata(originalMenuData, null) || ['404', 'Error'];
 }
 
 const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
@@ -87,7 +99,7 @@ export function getActiveTabInfo(location: BeautifulLocation) {
   function getInfo(
     pageTabs: 'route' | 'path',
     originalMenuData: MenuDataItem[],
-    setTabTitle: PageTabsProps['setTabTitle'],
+    setTabTitle: MenuTabsProps['setTabTitle'],
   ): [string, React.ReactNode] {
     const [pathID, title] = memoizeOneGetPathnameMetadata(location.pathname!, originalMenuData);
 
@@ -115,6 +127,6 @@ export function getActiveTabInfo(location: BeautifulLocation) {
   return getInfo;
 }
 
-export function routeTo(targetTab: PageTab<{ location: any }>) {
+export function routeTo(targetTab: RouteTab) {
   router.push(targetTab.extraTabProperties.location);
 }

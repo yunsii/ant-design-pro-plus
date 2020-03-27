@@ -1,3 +1,17 @@
+.tabTitle {
+  position: relative;
+  font-weight: initial;
+
+  &::before {
+    position: absolute;
+    top: -12px;
+    right: 0;
+    bottom: -12px;
+    left: -16px;
+    content: '';
+  }
+}
+
 :global {
   .page-tabs-fixed {
     > .ant-tabs-bar {
@@ -7,7 +21,7 @@
     }
 
     > .ant-tabs-content {
-      > .ant-tabs-tabpane {
+      .ant-tabs-tabpane-active {
         height: calc(100vh - 108px);
         overflow: auto;
       }
