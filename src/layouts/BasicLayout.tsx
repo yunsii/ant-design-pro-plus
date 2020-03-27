@@ -26,16 +26,16 @@ import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
-import { DefaultSettings } from 'config/defaultSettings';
+import { DefaultSettings } from '@/../config/defaultSettings';
 
 const noMatch = (
   <Result
     status={403}
-    title='403'
-    subTitle='Sorry, you are not authorized to access this page.'
+    title="403"
+    subTitle="Sorry, you are not authorized to access this page."
     extra={
-      <Button type='primary'>
-        <Link to='/user/login'>Go Login</Link>
+      <Button type="primary">
+        <Link to="/user/login">Go Login</Link>
       </Button>
     }
   />
@@ -62,10 +62,11 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
  * use Authorized check all menu item
  */
 const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => {
+  console.log(menuList);
   return menuList.map(item => {
     const localItem = {
       ...item,
-      children: item.children ? menuDataRender(item.children) : []
+      children: item.children ? menuDataRender(item.children) : [],
     };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
@@ -73,7 +74,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => {
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright='2019 蚂蚁金服体验技术部出品'
+    copyright="2019 蚂蚁金服体验技术部出品"
     links={[
       {
         key: 'Ant Design Pro',
@@ -97,7 +98,7 @@ const defaultFooterDom = (
   />
 );
 
-const footerRender: BasicLayoutProps['footerRender'] = () => {
+const footerRender = () => {
   if (!isAntDesignPro()) {
     return defaultFooterDom;
   }
@@ -111,15 +112,11 @@ const footerRender: BasicLayoutProps['footerRender'] = () => {
           textAlign: 'center',
         }}
       >
-        <a
-          href='https://www.netlify.com'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
+        <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer">
           <img
-            src='https://www.netlify.com/img/global/badges/netlify-color-bg.svg'
-            width='82px'
-            alt='netlify logo'
+            src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
+            width="82px"
+            alt="netlify logo"
           />
         </a>
       </div>
@@ -132,7 +129,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     dispatch,
     children,
     location = {
-      pathname: '/'
+      pathname: '/',
     },
     settings: initSettings,
   } = props;
@@ -160,13 +157,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   };
 
   // get children authority
-  const authorized = getAuthorityFromRouter(
-    props.route.routes,
-    location.pathname || '/'
-  ) || {
+  const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
     authority: undefined,
   };
-
 
   const renderContent = () => {
     if (settings.pageTabs) {
@@ -174,14 +167,20 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return <PageLoading />;
       }
       if (originalMenuData) {
+        /** return children to redirect if children pathname equal proRootPath */
+        if (location.pathname === settings.proRootPath) {
+          return children;
+        }
         return (
           <PageTabs
-            proRootPath={settings.proRootPath}
             pageTabs={settings.pageTabs}
             fixedPageTabs={settings.fixedPageTabs}
             originalMenuData={originalMenuData}
           >
-            {children as UmiChildren}
+            <div>
+              {children as UmiChildren}
+              <div>{footerRender()}</div>
+            </div>
           </PageTabs>
         );
       }
@@ -195,18 +194,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       logo={logo}
       formatMessage={formatMessage}
       menuHeaderRender={(logoDom, titleDom) => (
-        <Link to='/'>
+        <Link to="/">
           {logoDom}
           {titleDom}
         </Link>
       )}
       onCollapse={handleMenuCollapse}
       menuItemRender={(menuItemProps, defaultDom) => {
-        if (
-          menuItemProps.isUrl ||
-          menuItemProps.children ||
-          !menuItemProps.path
-        ) {
+        if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
           return defaultDom;
         }
 
@@ -224,11 +219,11 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-            <span>{route.breadcrumbName}</span>
-          );
+          <span>{route.breadcrumbName}</span>
+        );
       }}
       footerRender={false}
-      menuDataRender={(menuData) => {
+      menuDataRender={menuData => {
         if (!originalMenuData) {
           setOriginalMenuData(menuData);
         }
