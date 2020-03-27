@@ -13,6 +13,8 @@ declare module '*.tiff';
 declare module 'omit.js';
 declare module 'svg';
 
+declare module 'hash-string';
+
 // google analytics interface
 interface GAFieldsObject {
   eventCategory: string;
