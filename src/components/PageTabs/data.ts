@@ -18,7 +18,6 @@ export interface PageTab<T> extends MenuTab {
 
 export interface PageTabsProps extends RouteComponentProps<any> {
   location: BeautifulLocation;
-  proRootPath?: string;
   pageTabs?: 'route' | 'path';
   fixedPageTabs?: boolean;
   children?: UmiChildren;
