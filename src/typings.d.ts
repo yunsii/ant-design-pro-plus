@@ -30,6 +30,8 @@ interface Window {
   reloadAuthorized: () => void;
 
   reloadCurrentTab: () => void;
+  goBackTab: () => void;
+  closeAndGoBackTab: () => void;
 }
 
 declare let ga: Function;
