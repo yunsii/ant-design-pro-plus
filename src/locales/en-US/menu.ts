@@ -51,6 +51,7 @@ export default {
 
   'menu.page-tabs-demo': 'Page Tabs Demo',
   'menu.page-tabs-demo.parent': 'Nested Route',
+  'menu.page-tabs-demo.parent.child2': 'Nested Route - Child 2',
   'menu.page-tabs-demo.query': 'Query',
   'menu.page-tabs-demo.result': 'Result',
 };

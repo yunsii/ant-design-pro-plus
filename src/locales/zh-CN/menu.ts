@@ -51,6 +51,7 @@ export default {
 
   'menu.page-tabs-demo': '标签页 Demo',
   'menu.page-tabs-demo.parent': '嵌套路由',
+  'menu.page-tabs-demo.parent.child2': '嵌套路由 - 子节点 2',
   'menu.page-tabs-demo.query': '查询页',
   'menu.page-tabs-demo.result': '结果页',
 };

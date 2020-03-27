@@ -146,6 +146,7 @@ export default {
                     },
                     {
                       path: '/page-tabs-demo/parent/child2',
+                      name: 'child2',
                       component: './PageTabsDemo/Parent/Child2',
                     },
                     {
