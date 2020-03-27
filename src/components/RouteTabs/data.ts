@@ -42,5 +42,5 @@ export interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Locati
   query: Q;
 }
 
-export interface MenuTabsProps extends PageTabsProps, Omit<RouteComponentProps<any>, 'location'> {
+export interface RouteTabsProps extends PageTabsProps, Omit<RouteComponentProps<any>, 'location'> {
 }

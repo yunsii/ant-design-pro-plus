@@ -7,7 +7,7 @@ import _debounce from 'lodash/debounce';
 import classNames from 'classnames';
 import { usePersistFn } from '@umijs/hooks';
 
-import { UseTabsOptions } from '@/components/MenuTabs/data';
+import { UseTabsOptions } from '@/components/RouteTabs/data';
 import useTabs from '../../useTabs';
 import { UmiChildren } from '../../data';
 import styles from './index.less';

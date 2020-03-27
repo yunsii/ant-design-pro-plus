@@ -17,8 +17,8 @@ import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 
-import MenuTabs from '@/components/MenuTabs';
-import { UmiChildren } from '@/components/MenuTabs/data';
+import RouteTabs from '@/components/RouteTabs';
+import { UmiChildren } from '@/components/RouteTabs/data';
 import Authorized from '@/utils/Authorized';
 import PageLoading from '@/components/PageLoading';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -168,7 +168,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       }
       if (originalMenuData) {
         return (
-          <MenuTabs
+          <RouteTabs
             pageTabs={settings.pageTabs}
             fixedPageTabs={settings.fixedPageTabs}
             originalMenuData={originalMenuData}
@@ -178,7 +178,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
               {children as UmiChildren}
               <div>{footerRender()}</div>
             </div>
-          </MenuTabs>
+          </RouteTabs>
         );
       }
     }
