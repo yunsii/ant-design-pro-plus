@@ -1,5 +1,4 @@
 import _find from 'lodash/find';
-import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
 import router from 'umi/router';
@@ -12,7 +11,7 @@ import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
- * 
+ *
  * @param pathname 必须是 `withRouter` 注入的 `location` 的 `pathname`
  * @param originalMenuData 原始菜单数据，未经过滤处理
  */
@@ -20,16 +19,22 @@ export function getPathnameMetadata(
   pathname: string,
   originalMenuData: MenuDataItem[],
 ): [string, string] {
-  function getMetadata(_pathname: string, menuData: MenuDataItem[], parent: MenuDataItem | null): [string, string] | null {
+  function getMetadata(
+    _pathname: string,
+    menuData: MenuDataItem[],
+    parent: MenuDataItem | null,
+  ): [string, string] | null {
     let result: [string, string] | null = null;
 
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
-    const targetMenuItem = _find(menuData, (item) => {
-      return pathToRegexp(`${item.path}(.*)`).test(_pathname) && !!item.name;
-    });
+    const targetMenuItem = _find(
+      menuData,
+      item => pathToRegexp(`${item.path}(.*)`).test(_pathname) && !!item.name,
+    );
 
-    if (targetMenuItem) {
-      result = [targetMenuItem.path!, targetMenuItem.name!]
+    /** 如果为 **一级路由** 直接写入 `result` ，否则父级没有 `component` 时才能写入 `result` */
+    if ((!parent && targetMenuItem) || (parent && !parent.component && targetMenuItem)) {
+      result = [targetMenuItem.path!, targetMenuItem.name!];
     }
     /** 如果父级配置了 `hideChildrenInMenu` ，子级配置了 `name` 则重写 `result` */
     if (parent?.hideChildrenInMenu && targetMenuItem) {
@@ -95,19 +100,17 @@ export function getActiveTabInfo(location: BeautifulLocation) {
     // 这样，不同的参数就能得到不同的标签页了
 
     const params = getParams(pathID, location.pathname!);
-    const query = location.query;
-    const state = location.state || {};
+    const { query, state = {} } = location;
 
-    const hashPart = hash(JSON.stringify({
-      ...params,
-      ...query,
-      ...state,
-    }));
+    const hashPart = hash(
+      JSON.stringify({
+        ...params,
+        ...query,
+        ...state,
+      }),
+    );
 
-    return [
-      `${pathID}-${hashPart}`,
-      setTabTitle?.(pathID, title, params, location) || title,
-    ];
+    return [`${pathID}-${hashPart}`, setTabTitle?.(pathID, title, params, location) || title];
   }
   return getInfo;
 }
