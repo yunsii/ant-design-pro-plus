@@ -31,6 +31,10 @@ export function getPathnameMetadata(
     if (targetMenuItem) {
       result = [targetMenuItem.path!, targetMenuItem.name!]
     }
+    /** 如果父级配置了 `hideChildrenInMenu` ，子级配置了 `name` 则重写 `result` */
+    if (parent?.hideChildrenInMenu && targetMenuItem) {
+      result = [parent.path!, targetMenuItem.name!];
+    }
 
     /** 递归设置 `pathID` 和 `title` */
     if (_isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
