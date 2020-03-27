@@ -1,5 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import * as H from 'history';
 import { RouteComponentProps } from 'react-router';
+import { MenuDataItem } from '@ant-design/pro-layout';
 
 import { MenuTab } from '@/components/PageTabs/components/MenuTabs';
 
