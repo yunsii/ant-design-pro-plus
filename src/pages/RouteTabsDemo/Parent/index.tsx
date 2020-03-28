@@ -4,9 +4,10 @@ import * as H from 'history';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
+import { withRouteTab } from '@/components/RouteTabs/utils';
 import styles from './index.less';
 
-export default ({ children, location }: { children: React.ReactChildren, location: H.Location }) => {
+export default withRouteTab(({ children, location }: { children: React.ReactChildren, location: H.Location }) => {
   console.log("render Parent");
 
   const setCurrentByLocation = () => {
@@ -40,4 +41,4 @@ export default ({ children, location }: { children: React.ReactChildren, locatio
       </Card>
     </PageHeaderWrapper>
   )
-}
+});

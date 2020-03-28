@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Card, Input, Checkbox } from 'antd';
+import { Card, Input, Checkbox, Button } from 'antd';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import _find from 'lodash/find';
 
-export default () => {
-  console.log("render Query");
+import { withRouteTab } from '@/components/RouteTabs/utils';
+
+export default withRouteTab((props) => {
+  console.log("render Query", props);
 
   const [text, setText] = useState<string>();
   const [options, setOptions] = useState<any[]>([]);
@@ -46,7 +48,8 @@ export default () => {
             setOptions(_options);
           }}
         />
+        <Button onClick={() => { setText('123') }}>setText: 123</Button>
       </Card>
     </PageHeaderWrapper>
-  )
-}
+  );
+});
