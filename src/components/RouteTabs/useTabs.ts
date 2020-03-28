@@ -3,6 +3,7 @@ import { usePersistFn } from '@umijs/hooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
+import _omit from 'lodash/omit';
 
 import { useReallyPrevious } from '@/hooks/common';
 import { UmiChildren, RouteTab, UseTabsOptions } from './data';
@@ -17,7 +18,7 @@ export function useTabs(options: UseTabsOptions) {
     children,
   } = options;
 
-  console.log("useTabs originalMenuData:", originalMenuData);
+  console.log("[useTabs]: originalMenuData:", originalMenuData);
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(
@@ -132,7 +133,7 @@ export function useTabs(options: UseTabsOptions) {
   const goBackTab = usePersistFn(() => {
     if (!prevActiveKey || !getTab(prevActiveKey)) {
       console.warn(
-        '[Page Tabs]: go back failed, no previous actived key or previous tab is closed.',
+        '[useTabs]]: go back failed, no previous actived key or previous tab is closed.',
       );
       return;
     }
@@ -144,7 +145,7 @@ export function useTabs(options: UseTabsOptions) {
   const closeAndGoBackTab = usePersistFn(() => {
     if (!prevActiveKey || !getTab(prevActiveKey)) {
       console.warn(
-        '[Page Tabs]: close and go back failed, no previous actived key or previous tab is closed.',
+        '[useTabs]: close and go back failed, no previous actived key or previous tab is closed.',
       );
       return;
     }
@@ -159,7 +160,7 @@ export function useTabs(options: UseTabsOptions) {
 
     return () => {
       const hint = () => {
-        console.warn(`[Page Tabs]: PageTabs had unmounted.`);
+        console.warn(`[useTabs]: PageTabs had unmounted.`);
       };
 
       window.reloadCurrentTab = hint;
@@ -169,23 +170,27 @@ export function useTabs(options: UseTabsOptions) {
   }, []);
 
   useEffect(() => {
-    console.log('children effect', children);
+    console.log('[useTabs]: children effect', children);
+
+    const currentExtraTabProperties = { location: _omit(location, ['key']) };
     const activedTab = _find(tabs, { key: activeKey });
 
     if (activedTab) {
       const { extraTabProperties: prevExtraTabProperties } = activedTab;
-      console.log('current location', { location });
-      console.log('prev location', prevExtraTabProperties);
-      if (!_isEqual({ location }, prevExtraTabProperties)) {
-        reloadTab(activeKey, activeTitle, { location }, children);
+      // console.log('currentExtraTabProperties', currentExtraTabProperties);
+      // console.log('prevExtraTabProperties', prevExtraTabProperties);
+      if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
+        console.log('[useTabs]: reloadTab', currentExtraTabProperties);
+        reloadTab(activeKey, activeTitle, currentExtraTabProperties, children);
       }
     } else {
       const newTab = {
         tab: activeTitle,
         key: activeKey,
         content: children as any,
-        extraTabProperties: { location },
+        extraTabProperties: currentExtraTabProperties,
       };
+      console.log('[useTabs]: addTab', currentExtraTabProperties);
       addTab(newTab);
     }
   }, [children]);
