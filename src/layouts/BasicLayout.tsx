@@ -61,7 +61,7 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
  * use Authorized check all menu item
  */
 const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => {
-  console.log(menuList);
+  // console.log(menuList);
   return menuList.map(item => {
     const localItem = {
       ...item,

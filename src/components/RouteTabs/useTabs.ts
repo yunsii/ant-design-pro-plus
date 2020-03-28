@@ -190,7 +190,7 @@ export function useTabs(options: UseTabsOptions) {
     }
   }, [children]);
 
-  console.log("render tabs:", tabs);
+  // console.log("render tabs:", tabs);
 
   return {
     tabs,
