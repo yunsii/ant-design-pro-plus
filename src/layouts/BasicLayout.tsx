@@ -17,16 +17,15 @@ import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 
-import RouteTabs from '@/components/RouteTabs';
-import { UmiChildren } from '@/components/RouteTabs/data';
 import Authorized from '@/utils/Authorized';
-import PageLoading from '@/components/PageLoading';
 import RightContent from '@/components/GlobalHeader/RightContent';
+import { UmiChildren } from '@/components/RouteTabs/data';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
+import { DefaultSettings } from '@/../config/defaultSettings';
+import RouteTabsLayout from './RouteTabsLayout';
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
-import { DefaultSettings } from '@/../config/defaultSettings';
 
 const noMatch = (
   <Result
@@ -98,7 +97,7 @@ const defaultFooterDom = (
   />
 );
 
-const footerRender = () => {
+export const footerRender = () => {
   if (!isAntDesignPro()) {
     return defaultFooterDom;
   }
@@ -134,7 +133,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     settings: initSettings,
   } = props;
 
-  const [settings, setSettings] = useState<Partial<DefaultSettings>>(initSettings);
+  const [settings, setSettings] = useState<DefaultSettings>(initSettings);
 
   const [menuLoading] = useState(false);
   const [originalMenuData, setOriginalMenuData] = useState<MenuDataItem[]>();
@@ -159,30 +158,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   // get children authority
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
     authority: undefined,
-  };
-
-  const renderContent = () => {
-    if (settings.pageTabs) {
-      if (menuLoading) {
-        return <PageLoading />;
-      }
-      if (originalMenuData) {
-        return (
-          <RouteTabs
-            pageTabs={settings.pageTabs}
-            fixedPageTabs={settings.fixedPageTabs}
-            originalMenuData={originalMenuData}
-            // animated={false}
-          >
-            <div>
-              {children as UmiChildren}
-              <div>{footerRender()}</div>
-            </div>
-          </RouteTabs>
-        );
-      }
-    }
-    return children;
   };
 
   return (
@@ -232,13 +207,20 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       {...settings}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
-        {renderContent()}
+        <RouteTabsLayout
+          pageTabs={settings.pageTabs!}
+          fixedPageTabs={settings.fixedPageTabs}
+          menuLoading={menuLoading}
+          originalMenuData={originalMenuData}
+        >
+          {children as UmiChildren}
+        </RouteTabsLayout>
       </Authorized>
       <SettingDrawer
         settings={settings}
         onSettingChange={config => {
           console.log(config);
-          setSettings(config);
+          setSettings(config as DefaultSettings);
         }}
       />
     </ProLayout>
