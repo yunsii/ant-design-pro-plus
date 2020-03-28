@@ -20,7 +20,7 @@ export default () => {
           onPressEnter={() => {
             if (text?.trim()) {
               router.push({
-                pathname: `/page-tabs-demo/result/${text}`,
+                pathname: `/route-tabs-demo/result/${text}`,
                 state: options.includes("withState") ? { state: "yes" } : undefined,
                 query: options.includes("withQuery") ? { query: "yes" } : undefined,
               });

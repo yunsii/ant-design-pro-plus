@@ -26,7 +26,7 @@ export default ({ children, location }: { children: React.ReactChildren, locatio
         <Steps
           current={setCurrentByLocation()}
           onChange={(_current) => {
-            router.push(`/page-tabs-demo/parent/child${_current + 1}`);
+            router.push(`/route-tabs-demo/parent/child${_current + 1}`);
           }}
         >
           <Steps.Step title="child 1" />
