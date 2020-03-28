@@ -7,6 +7,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './index.less';
 
 export default ({ children, location }: { children: React.ReactChildren, location: H.Location }) => {
+  console.log("render Parent");
 
   const setCurrentByLocation = () => {
     if (location.pathname.endsWith('1')) {

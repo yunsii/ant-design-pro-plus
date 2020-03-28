@@ -5,6 +5,8 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import _find from 'lodash/find';
 
 export default () => {
+  console.log("render Query");
+
   const [text, setText] = useState<string>();
   const [options, setOptions] = useState<any[]>([]);
 
