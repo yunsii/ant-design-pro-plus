@@ -162,7 +162,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   return (
     <ProLayout
-      className={settings.pageTabs && styles.customByPageTabs}
+      className={settings.routeTabsMode && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
       menuHeaderRender={(logoDom, titleDom) => (
@@ -208,7 +208,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <RouteTabsLayout
-          pageTabs={settings.pageTabs!}
+          mode={settings.routeTabsMode!}
           fixedPageTabs={settings.fixedPageTabs}
           menuLoading={menuLoading}
           originalMenuData={originalMenuData}

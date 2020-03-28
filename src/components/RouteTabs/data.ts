@@ -5,6 +5,8 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 
 import { PageTab, PageTabsProps } from './components/PageTabs';
 
+export type RouteTabsMode = 'route' | 'args';
+
 export interface UmiChildren extends JSX.Element {
   props: {
     location: BeautifulLocation;
@@ -18,7 +20,7 @@ export interface RouteTab extends PageTab {
 
 export interface UseTabsOptions {
   location: BeautifulLocation;
-  pageTabs?: 'route' | 'path';
+  mode?: RouteTabsMode;
   children?: UmiChildren;
   originalMenuData: MenuDataItem[];
 

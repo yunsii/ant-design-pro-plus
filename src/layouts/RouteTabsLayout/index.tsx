@@ -11,11 +11,11 @@ import * as H from 'history';
 
 import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
-import { UmiChildren } from '@/components/RouteTabs/data';
+import { UmiChildren, RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
 
 export interface RouteTabsLayoutProps {
-  pageTabs?: 'route' | 'path' | false;
+  mode?: RouteTabsMode | false;
   fixedPageTabs?: boolean;
   children: UmiChildren;
   originalMenuData?: MenuDataItem[];
@@ -30,7 +30,7 @@ export interface RouteTabsLayoutProps {
 
 export function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
   const {
-    pageTabs,
+    mode,
     fixedPageTabs,
     menuLoading,
     originalMenuData,
@@ -38,13 +38,13 @@ export function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
     children,
   } = props;
 
-  if (pageTabs && menuLoading) {
+  if (mode && menuLoading) {
     return <PageLoading />;
   }
-  if (pageTabs && originalMenuData) {
+  if (mode && originalMenuData) {
     return (
       <RouteTabs
-        pageTabs={pageTabs}
+        mode={mode}
         fixedPageTabs={fixedPageTabs}
         originalMenuData={originalMenuData}
       // animated={false}

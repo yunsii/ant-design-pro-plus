@@ -6,7 +6,7 @@ import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
-import { RouteTab, RouteTabsProps, BeautifulLocation } from './data';
+import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
 
 export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
@@ -97,13 +97,13 @@ export function getActiveTabInfo(location: BeautifulLocation) {
    * @param setTabTitle
    */
   function getInfo(
-    pageTabs: 'route' | 'path',
+    mode: RouteTabsMode,
     originalMenuData: MenuDataItem[],
     setTabTitle: RouteTabsProps['setTabTitle'],
   ): [string, React.ReactNode] {
     const [pathID, title] = memoizeOneGetPathnameMetadata(location.pathname!, originalMenuData);
 
-    if (pageTabs === 'route') {
+    if (mode === 'route') {
       return [pathID, title];
     }
 

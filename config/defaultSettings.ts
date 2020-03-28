@@ -1,9 +1,9 @@
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 
 // 标签页功能配置
-const pageTabsMode = [
+const RouteTabsMode = [
   'route', // 使用页面路由定义作为标签页 id ，类似 /path/:name 这样的动态路由只会打开一个标签页
-  'path', // 使用页面路径作为标签页 id ，动态路由会打开不同的标签页，因此，可能需要再在 PageTabs 组件中动态设置标签页的标题
+  'args', // 使用页面路由参数作为标签页 id ，因此，可能需要再在 PageTabs 组件中动态设置标签页的标题
   false, // 不使用标签页功能
 ];
 
@@ -48,7 +48,7 @@ export interface DefaultSettings {
   iconfontUrl: string;
   colorWeak: boolean;
 
-  pageTabs: 'route' | 'path' | false;
+  routeTabsMode: 'route' | 'args' | false;
   /**
    * sticky page tabs
    */
@@ -74,7 +74,7 @@ export default {
   pwa: false,
   iconfontUrl: '',
 
-  pageTabs: pageTabsMode[0],
+  routeTabsMode: RouteTabsMode[0],
   fixedPageTabs: true,
   proRootPath: '/',
   reloadTab: true,

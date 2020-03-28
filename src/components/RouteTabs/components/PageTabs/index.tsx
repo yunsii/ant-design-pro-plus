@@ -35,7 +35,7 @@ export default function PageTabs(props: PageTabsProps) {
     children,
     setTabTitle,
     originalMenuData,
-    pageTabs,
+    mode,
     ...rest
   } = props;
 
@@ -51,7 +51,7 @@ export default function PageTabs(props: PageTabsProps) {
     children,
     setTabTitle,
     originalMenuData,
-    pageTabs,
+    mode,
   });
 
   const remove = usePersistFn((key: string) => { handleRemove(key); });

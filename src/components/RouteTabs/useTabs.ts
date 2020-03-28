@@ -11,7 +11,7 @@ import { getActiveTabInfo, routeTo } from './utils';
 export function useTabs(options: UseTabsOptions) {
   const {
     location,
-    pageTabs = 'route',
+    mode = 'route',
     setTabTitle,
     originalMenuData,
     children,
@@ -21,7 +21,7 @@ export function useTabs(options: UseTabsOptions) {
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(
-    pageTabs,
+    mode,
     originalMenuData,
     setTabTitle,
   );
