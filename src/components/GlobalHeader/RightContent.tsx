@@ -10,18 +10,19 @@ import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
+import { RouteTabsMode } from '../RouteTabs/data';
 
 export type SiderTheme = 'light' | 'dark';
 export interface GlobalHeaderRightProps extends ConnectProps {
   theme?: SiderTheme;
   layout: 'sidemenu' | 'topmenu';
 
-  pageTabs: 'route' | 'path' | false;
+  routeTabsMode?: RouteTabsMode | false;
   reloadTab: boolean;
 }
 
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
-  const { theme, layout, pageTabs, reloadTab } = props;
+  const { theme, layout, routeTabsMode, reloadTab } = props;
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'topmenu') {
@@ -53,7 +54,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
       //   //console.log('input', value);
       // }}
       />
-      {pageTabs && reloadTab ? (
+      {routeTabsMode && reloadTab ? (
         <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
           <a className={styles.action} onClick={() => window.reloadCurrentTab()}>
             <ReloadOutlined />
@@ -80,6 +81,6 @@ export default connect(({ settings }: ConnectState) => ({
   theme: settings.navTheme,
   layout: settings.layout,
 
-  pageTabs: settings.pageTabs,
+  routeTabsMode: settings.routeTabsMode,
   reloadTab: settings.reloadTab,
 }))(GlobalHeaderRight);
