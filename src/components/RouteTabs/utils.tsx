@@ -1,6 +1,8 @@
+import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
+import _omit from 'lodash/omit';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
@@ -129,4 +131,70 @@ export function getActiveTabInfo(location: BeautifulLocation) {
 
 export function routeTo(targetTab: RouteTab) {
   router.push(targetTab.extraTabProperties.location);
+}
+
+export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
+  const {
+    children: prevChildren,
+    computedMatch: prevComputedMatch,
+    history: prevHistory,
+    location: prevLocation,
+    match: prevMatch,
+    route: prevRoute,
+    staticContext: prevStaticContext,
+    ...prevRest
+  } = prevProps;
+  const {
+    children: nextChildren,
+    computedMatch: nextComputedMatch,
+    history: nextHistory,
+    location: nextLocation,
+    match: nextMatch,
+    route: nextRoute,
+    staticContext: nextStaticContext,
+    ...nextRest
+  } = nextProps;
+  // 注入数据变化，刷新组件
+  if (!_isEqual(prevRest, nextRest)) {
+    console.log('update by 数据变化', prevLocation.pathname);
+    console.log(prevRest);
+    console.log(nextRest);
+    return false;
+  }
+
+  const { pathname: prevPathname, search: prevSearch, state: prevState } = prevLocation || {};
+  const { pathname: nextPathname, search: nextSearch, state: nextState } = nextLocation || {};
+  const isLocationChange =
+    prevPathname !== nextPathname || prevSearch !== nextSearch || !_isEqual(prevState, nextState);
+  // 路由变化，刷新组件
+  if (isLocationChange) {
+    console.log('update by 路由变化', prevPathname, nextPathname);
+    console.log({ prevPathname, prevSearch, prevState });
+    console.log({ nextPathname, nextSearch, nextState });
+    return false;
+  }
+
+  console.log('nothing updated.', prevPathname);
+  return true;
+};
+
+export function withRouteTab<Props = any>(
+  WrappedComponent: React.ComponentClass<Props> | React.FC<Props>
+): React.MemoExoticComponent<any> {
+  const WithRoutePage = React.memo((props: any) => {
+    const { history, location, ...rest } = props;
+    console.log('render WithRoutePage ---------->', location.pathname);
+
+    return (
+      <WrappedComponent location={_omit(location, ['key'])} {...rest} />
+    );
+  }, routePagePropsAreEqual);
+
+  WithRoutePage.displayName = `WithRoutePage(${getDisplayName(WrappedComponent)})`;
+
+  return WithRoutePage;
+}
+
+function getDisplayName(WrappedComponent: React.ComponentClass<any> | React.FC<any>) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
