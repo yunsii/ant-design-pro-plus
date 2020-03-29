@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
@@ -174,7 +174,7 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
     return false;
   }
 
-  console.log('nothing updated.', prevPathname);
+  console.log('Route Page Props Are Equal', prevPathname);
   return true;
 };
 
@@ -183,7 +183,10 @@ export function withRouteTab<Props = any>(
 ): React.MemoExoticComponent<any> {
   const WithRoutePage = React.memo((props: any) => {
     const { history, location, ...rest } = props;
-    console.log('render WithRoutePage ---------->', location.pathname);
+
+    const renderCountRef = useRef(0);
+    renderCountRef.current += 1;
+    console.log('render WithRoutePage ->', location.pathname, 'count', renderCountRef.current);
 
     return (
       <WrappedComponent location={_omit(location, ['key'])} {...rest} />
