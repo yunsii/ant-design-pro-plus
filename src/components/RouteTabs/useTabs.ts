@@ -180,9 +180,10 @@ export function useTabs(options: UseTabsOptions) {
       // console.log('currentExtraTabProperties', currentExtraTabProperties);
       // console.log('prevExtraTabProperties', prevExtraTabProperties);
       if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
-        console.log('[useTabs]: reloadTab', currentExtraTabProperties);
+        console.log('[useTabs]: reloadTab', currentExtraTabProperties.location);
         reloadTab(activeKey, activeTitle, currentExtraTabProperties, children);
       }
+      console.log('[useTabs]: nothing happened.', currentExtraTabProperties.location);
     } else {
       const newTab = {
         tab: activeTitle,
@@ -190,7 +191,7 @@ export function useTabs(options: UseTabsOptions) {
         content: children as any,
         extraTabProperties: currentExtraTabProperties,
       };
-      console.log('[useTabs]: addTab', currentExtraTabProperties);
+      console.log('[useTabs]: addTab', currentExtraTabProperties.location);
       addTab(newTab);
     }
   }, [children]);
