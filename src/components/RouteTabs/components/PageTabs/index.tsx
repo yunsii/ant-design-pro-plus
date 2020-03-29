@@ -97,23 +97,6 @@ export default function PageTabs(props: PageTabsProps) {
     </span>
   ));
 
-  const renderTabs = usePersistFn(() => {
-    return (
-      !!tabs.length &&
-      tabs.map((item: PageTab, index) => {
-        return (
-          <Tabs.TabPane
-            tab={setTab(item.tab, item.key, index)}
-            key={item.key}
-            closable={item.closable}
-          >
-            {item.content}
-          </Tabs.TabPane>
-        );
-      })
-    );
-  });
-
   return (
     <Tabs
       tabPosition="top"
@@ -128,7 +111,17 @@ export default function PageTabs(props: PageTabsProps) {
       onEdit={handleTabEdit as TabsProps["onEdit"]}
       onChange={handleSwitch}
     >
-      {renderTabs()}
+      {tabs.map((item: PageTab, index) => {
+        return (
+          <Tabs.TabPane
+            tab={setTab(item.tab, item.key, index)}
+            key={item.key}
+            closable={item.closable}
+          >
+            {item.content}
+          </Tabs.TabPane>
+        );
+      })}
     </Tabs>
   );
 }
