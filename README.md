@@ -21,7 +21,7 @@
 * 两种标签页模式可选
   * 基于路由，每个路由只渲染一个标签页
   * 基于路由参数，计算出每个路由的所有参数的哈希值，不同的哈希值渲染不同的标签页
-* 固定标签栏
+* 可固定标签栏
 * 快捷操作
   * 刷新当前标签页 - `window.reloadCurrentTab()`
   * 返回之前标签页 - `window.goBackTab()`
@@ -53,4 +53,4 @@
 
 ### 性能问题
 
-原以为仍然通过之前像 `v2` 那样的高阶组件避免标签页的无用渲染，但是几经尝试，都无法在高阶函数中实现，可见 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L181) 方法。临时的解决方案是在每个页面中自行使用 `useMemo` 优化性能，参考自 [issue#15156](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
+原以为仍然可通过之前像 `v2` 那样的高阶组件避免标签页的无用渲染，但是几经尝试，都无法在高阶函数中实现，可见 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L181) 方法。临时的解决方案是在每个页面中自行使用 `useMemo` 优化性能，参考自 [issue#15156](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
