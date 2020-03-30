@@ -53,7 +53,6 @@ export interface DefaultSettings {
    * sticky page tabs
    */
   fixedPageTabs: boolean;
-  proRootPath: string;
   reloadTab: boolean;
 }
 
@@ -76,6 +75,5 @@ export default {
 
   routeTabsMode: RouteTabsMode[0],
   fixedPageTabs: true,
-  proRootPath: '/',
   reloadTab: true,
 } as DefaultSettings;
