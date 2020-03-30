@@ -24,6 +24,8 @@
 代码结构：
 
 ```
+├── config
+│   └── defaultSettings.ts   # 关于 RouteTabs 的配置
 ├── src
 │   └── components
 │       └── RouteTabs        # 核心组件
