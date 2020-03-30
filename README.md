@@ -23,7 +23,7 @@
   * 基于路由参数，计算出每个路由的所有参数的哈希值，不同的哈希值渲染不同的标签页
 * 固定标签栏
 
-代码结构：
+### 代码结构
 
 ```
 ├── config
@@ -39,8 +39,12 @@
 │       └── RouteTabsDemo    # 标签页功能展示
 ```
 
-新增依赖
+### 新增依赖
 
 * @umijs/hooks
 * fast-deep-equal
 * hash-string
+
+### 性能问题
+
+原以为仍然通过之前像 `v2` 那样的高阶组件避免标签页的无用渲染，但是几经尝试，都无法在高阶函数中实现，可见 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L181) 方法。临时的解决方案是在每个页面中自行使用 `useMemo` 优化性能，参考自 [issue#15156](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
