@@ -236,4 +236,6 @@ export default {
   //     pathRewrite: { '^/server': '' },
   //   },
   // },
+  base: '/ant-design-pro-plus/',
+  publicPath: '/ant-design-pro-plus/'
 } as IConfig;
