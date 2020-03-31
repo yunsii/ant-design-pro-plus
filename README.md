@@ -12,6 +12,8 @@
 
 原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2`](https://github.com/zpr1g/ant-design-pro-plus/tree/v2)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
+注：部署到 Github Pages 使用 isProductionEnv() 方法避免登录逻辑。
+
 ## ✨ 新增特性
 
 - [基于路由实现标签页切换](#基于路由实现标签页切换)
