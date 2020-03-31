@@ -21,7 +21,8 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { UmiChildren } from '@/components/RouteTabs/data';
 import { ConnectState } from '@/models/connect';
-import { isAntDesignPro, getAuthorityFromRouter } from '@/utils/utils';
+import { isAntDesignPro, getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
+import { setAuthority } from '@/utils/authority';
 import { DefaultSettings } from '@/../config/defaultSettings';
 import RouteTabsLayout from './RouteTabsLayout';
 import logo from '../assets/logo.svg';
@@ -155,10 +156,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     }
   };
 
+  if (isProductionEnv()) {
+    setAuthority('admin');
+  }
+
   // get children authority
-  const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
+  const authorized = isProductionEnv() ? { authority: ['admin'] } : (getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
     authority: undefined,
-  };
+  });
 
   return (
     <ProLayout
