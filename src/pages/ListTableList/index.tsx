@@ -8,6 +8,7 @@ import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
 import { queryRule, updateRule, addRule, removeRule } from './service';
 import styles from './index.less';
+import { isProductionEnv } from '@/utils/utils';
 
 /**
  * 添加节点
@@ -178,7 +179,16 @@ const TableList: React.FC<{}> = () => {
             </span>
           </div>
         )}
-        request={params => queryRule(params)}
+        request={async (params) => {
+          if (isProductionEnv()) {
+            return {
+              data: [],
+              success: true,
+              total: 0,
+            }
+          }
+          return queryRule(params);
+        }}
         columns={columns}
         rowSelection={{}}
         className={styles.proTable}
