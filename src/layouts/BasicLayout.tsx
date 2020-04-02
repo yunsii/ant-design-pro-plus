@@ -8,6 +8,8 @@ import ProLayout, {
   BasicLayoutProps as ProLayoutProps,
   DefaultFooter,
   SettingDrawer,
+  PageLoading,
+  getMenuData,
 } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +18,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
+import classNames from 'classnames';
 
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -61,16 +64,14 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
 /**
  * use Authorized check all menu item
  */
-const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] => {
-  // console.log(menuList);
-  return menuList.map(item => {
+const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
+  menuList.map(item => {
     const localItem = {
       ...item,
       children: item.children ? menuDataRender(item.children) : [],
     };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
-};
 
 const defaultFooterDom = (
   <DefaultFooter
@@ -135,9 +136,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   } = props;
 
   const [settings, setSettings] = useState<DefaultSettings>(initSettings);
+  const [menuLoading, setMenuLoading] = useState(true);
 
-  const [menuLoading] = useState(false);
-  const [originalMenuData, setOriginalMenuData] = useState<MenuDataItem[]>();
+  useEffect(() => {
+    setTimeout(() => {
+      setMenuLoading(false);
+    }, 2000);
+  }, []);
 
   useEffect(() => {
     if (dispatch) {
@@ -161,22 +166,42 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   }
 
   // get children authority
-  const authorized = isProductionEnv() ? { authority: ['admin'] } : (getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: undefined,
-  });
+  const authorized = isProductionEnv()
+    ? { authority: ['admin'] }
+    : getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
+        authority: undefined,
+      };
 
+  console.log(props.navTheme);
   return (
     <ProLayout
       className={settings.routeTabsMode && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
+      menuRender={(_, dom) =>
+        menuLoading ? (
+          <div
+            className={classNames(
+              styles.menuLoading,
+              styles[`menu-background-${props.settings.navTheme || 'dark'}`],
+            )}
+          >
+            <PageLoading />
+          </div>
+        ) : (
+          dom
+        )
+      }
       menuHeaderRender={(logoDom, titleDom) => (
         <Link to="/">
           {logoDom}
           {titleDom}
         </Link>
       )}
-      onCollapse={handleMenuCollapse}
+      onCollapse={collapsed => {
+        if (menuLoading) return;
+        handleMenuCollapse(collapsed);
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
           return defaultDom;
@@ -196,17 +221,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-            <span>{route.breadcrumbName}</span>
-          );
+          <span>{route.breadcrumbName}</span>
+        );
       }}
+      style={{ paddingLeft: 0 }}
       footerRender={false}
-      menuDataRender={menuData => {
-        if (!originalMenuData) {
-          setOriginalMenuData(menuData);
-        }
-
-        return menuDataRender(originalMenuData || []);
-      }}
+      menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}
@@ -216,7 +236,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           mode={settings.routeTabsMode!}
           fixedPageTabs={settings.fixedPageTabs}
           menuLoading={menuLoading}
-          originalMenuData={originalMenuData}
+          originalMenuData={
+            getMenuData(props.route.routes!, { locale: true }, formatMessage).menuData
+          }
         >
           {children as UmiChildren}
         </RouteTabsLayout>

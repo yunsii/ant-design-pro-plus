@@ -1,7 +1,29 @@
+@import '~antd/lib/style/themes/default.less';
+
 .customByPageTabs {
   :global {
     .ant-pro-basicLayout-content {
       margin: unset;
     }
+  }
+}
+
+.menuLoading {
+  position: fixed;
+  z-index: 10;
+  flex: 0 0 256px;
+  width: 256px;
+  min-width: 256px;
+  max-width: 256px;
+  min-height: 100%;
+}
+
+.menu-background {
+  &-dark {
+    background-color: @menu-dark-bg;
+  }
+
+  &-light {
+    background-color: @menu-bg;
   }
 }
