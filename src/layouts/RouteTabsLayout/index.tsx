@@ -3,9 +3,7 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-import {
-  MenuDataItem,
-} from '@ant-design/pro-layout';
+import { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
 import * as H from 'history';
 
@@ -28,7 +26,7 @@ export interface RouteTabsLayoutProps {
   menuLoading: boolean;
 }
 
-export function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
+function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
   const {
     mode,
     fixedPageTabs,
@@ -47,18 +45,16 @@ export function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
         mode={mode}
         fixedPageTabs={fixedPageTabs}
         originalMenuData={originalMenuData}
-      // animated={false}
+        // animated={false}
       >
         <div>
           {children as UmiChildren}
-          <footer>
-            {footerRender()}
-          </footer>
+          <footer>{footerRender()}</footer>
         </div>
       </RouteTabs>
     );
   }
   return children;
-};
+}
 
 export default RouteTabsLayout;
