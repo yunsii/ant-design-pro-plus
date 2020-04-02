@@ -9,7 +9,6 @@ import ProLayout, {
   DefaultFooter,
   SettingDrawer,
   PageLoading,
-  getMenuData,
 } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import React, { useEffect, useState } from 'react';
@@ -172,7 +171,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         authority: undefined,
       };
 
-  console.log(props.navTheme);
   return (
     <ProLayout
       className={settings.routeTabsMode && styles.customByPageTabs}
@@ -236,9 +234,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           mode={settings.routeTabsMode!}
           fixedPageTabs={settings.fixedPageTabs}
           menuLoading={menuLoading}
-          originalMenuData={
-            getMenuData(props.route.routes!, { locale: true }, formatMessage).menuData
-          }
+          routes={props.route.routes!}
         >
           {children as UmiChildren}
         </RouteTabsLayout>
