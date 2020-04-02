@@ -48,7 +48,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.3",
-    "@ant-design/pro-layout": "^5.0.2",
+    "@ant-design/pro-layout": "^5.0.8",
     "@ant-design/pro-table": "^2.1.7",
     "@antv/data-set": "^0.10.2",
     "@umijs/hooks": "^1.8.0",
