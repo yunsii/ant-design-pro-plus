@@ -232,7 +232,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <RouteTabsLayout
           mode={settings.routeTabsMode!}
-          fixedPageTabs={settings.fixedPageTabs}
+          fixedRouteTabs={settings.fixedRouteTabs}
           menuLoading={menuLoading}
           routes={props.route.routes!}
         >

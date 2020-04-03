@@ -50,9 +50,9 @@ export interface DefaultSettings {
 
   routeTabsMode: 'route' | 'args' | false;
   /**
-   * sticky page tabs
+   * sticky route tabs
    */
-  fixedPageTabs: boolean;
+  fixedRouteTabs: boolean;
   reloadTab: boolean;
 }
 
@@ -74,6 +74,6 @@ export default {
   iconfontUrl: '',
 
   routeTabsMode: RouteTabsMode[0],
-  fixedPageTabs: true,
+  fixedRouteTabs: false,
   reloadTab: true,
 } as DefaultSettings;

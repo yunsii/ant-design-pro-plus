@@ -3,7 +3,6 @@ import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps, ClickParam } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
-import _debounce from 'lodash/debounce';
 import classNames from 'classnames';
 import { usePersistFn } from '@umijs/hooks';
 
@@ -24,20 +23,14 @@ export interface PageTab {
   closable?: boolean;
 }
 
-export interface PageTabsProps extends UseTabsOptions, Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange'> {
-  fixedPageTabs?: boolean;
+export interface PageTabsProps
+  extends UseTabsOptions,
+    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange'> {
+  fixed?: boolean;
 }
 
 export default function PageTabs(props: PageTabsProps) {
-  const {
-    fixedPageTabs,
-    location,
-    children,
-    setTabTitle,
-    originalMenuData,
-    mode,
-    ...rest
-  } = props;
+  const { fixed, location, children, setTabTitle, originalMenuData, mode, ...rest } = props;
 
   const {
     tabs,
@@ -54,26 +47,30 @@ export default function PageTabs(props: PageTabsProps) {
     mode,
   });
 
-  const remove = usePersistFn((key: string) => { handleRemove(key); });
+  const remove = usePersistFn((key: string) => {
+    handleRemove(key);
+  });
 
-  const handleTabEdit = usePersistFn((targetKey: string, action: "add" | "remove") => {
+  const handleTabEdit = usePersistFn((targetKey: string, action: 'add' | 'remove') => {
     if (action === 'remove') {
       remove(targetKey);
     }
   });
 
-  const handleTabsMenuClick = usePersistFn((tabKey: string): MenuProps['onClick'] => (event: ClickParam) => {
-    const { key, domEvent } = event;
-    domEvent.stopPropagation();
+  const handleTabsMenuClick = usePersistFn(
+    (tabKey: string): MenuProps['onClick'] => (event: ClickParam) => {
+      const { key, domEvent } = event;
+      domEvent.stopPropagation();
 
-    if (key === closeCurrentTabMenuKey) {
-      handleRemove(tabKey);
-    } else if (key === closeOthersTabMenuKey) {
-      handleRemoveOthers(tabKey);
-    } else if (key === closeToRightTabMenuKey) {
-      handRemoveRightTabs(tabKey);
-    }
-  });
+      if (key === closeCurrentTabMenuKey) {
+        handleRemove(tabKey);
+      } else if (key === closeOthersTabMenuKey) {
+        handleRemoveOthers(tabKey);
+      } else if (key === closeToRightTabMenuKey) {
+        handRemoveRightTabs(tabKey);
+      }
+    },
+  );
 
   const setMenu = usePersistFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>
@@ -104,24 +101,22 @@ export default function PageTabs(props: PageTabsProps) {
       tabBarStyle={{ margin: 0 }}
       tabBarGutter={0}
       animated
-      className={classNames({ 'page-tabs-fixed': fixedPageTabs })}
+      className={classNames({ 'page-tabs-fixed': fixed })}
       {...rest}
       hideAdd
       activeKey={activeKey}
-      onEdit={handleTabEdit as TabsProps["onEdit"]}
+      onEdit={handleTabEdit as TabsProps['onEdit']}
       onChange={handleSwitch}
     >
-      {tabs.map((item: PageTab, index) => {
-        return (
-          <Tabs.TabPane
-            tab={setTab(item.tab, item.key, index)}
-            key={item.key}
-            closable={item.closable}
-          >
-            {item.content}
-          </Tabs.TabPane>
-        );
-      })}
+      {tabs.map((item: PageTab, index) => (
+        <Tabs.TabPane
+          tab={setTab(item.tab, item.key, index)}
+          key={item.key}
+          closable={item.closable}
+        >
+          {item.content}
+        </Tabs.TabPane>
+      ))}
     </Tabs>
   );
 }

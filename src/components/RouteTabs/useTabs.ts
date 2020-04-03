@@ -9,23 +9,13 @@ import { useReallyPrevious } from '@/hooks/common';
 import { UmiChildren, RouteTab, UseTabsOptions } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
 
-export function useTabs(options: UseTabsOptions) {
-  const {
-    location,
-    mode = 'route',
-    setTabTitle,
-    originalMenuData,
-    children,
-  } = options;
+function useTabs(options: UseTabsOptions) {
+  const { location, mode = 'route', setTabTitle, originalMenuData, children } = options;
 
-  console.log("[useTabs]: originalMenuData:", originalMenuData);
+  console.log('[useTabs]: originalMenuData:', originalMenuData);
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
-  const [activeKey, activeTitle] = getActiveTabInfo(location)(
-    mode,
-    originalMenuData,
-    setTabTitle,
-  );
+  const [activeKey, activeTitle] = getActiveTabInfo(location)(mode, originalMenuData, setTabTitle);
   const prevActiveKey = useReallyPrevious(activeKey);
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));

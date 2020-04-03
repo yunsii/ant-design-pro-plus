@@ -60,7 +60,7 @@ const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
 export interface RouteTabsLayoutProps {
   mode?: RouteTabsMode | false;
-  fixedPageTabs?: boolean;
+  fixedRouteTabs?: boolean;
   children: UmiChildren;
   routes?: Route[];
   setTabTitle?: (
@@ -75,7 +75,7 @@ export interface RouteTabsLayoutProps {
 function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
   const {
     mode,
-    fixedPageTabs,
+    fixedRouteTabs,
     menuLoading,
     routes,
 
@@ -89,7 +89,7 @@ function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
     return (
       <RouteTabs
         mode={mode}
-        fixedPageTabs={fixedPageTabs}
+        fixed={fixedRouteTabs}
         originalMenuData={memoizedOneLocaleRoutes(routes)}
         // animated={false}
       >
