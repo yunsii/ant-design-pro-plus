@@ -125,8 +125,8 @@ const TableList: React.FC<{}> = () => {
           >
             配置
           </a>
-          <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <Divider type='vertical' />
+          <a href=''>订阅警报</a>
         </>
       ),
     },
@@ -135,9 +135,9 @@ const TableList: React.FC<{}> = () => {
   return (
     <PageHeaderWrapper>
       <ProTable<TableListItem>
-        headerTitle="查询表格"
+        headerTitle='查询表格'
         actionRef={actionRef}
-        rowKey="key"
+        rowKey='key'
         onChange={(_, _filter, _sorter) => {
           setSorter(`${_sorter.field}_${_sorter.order}`);
         }}
@@ -145,7 +145,7 @@ const TableList: React.FC<{}> = () => {
           sorter,
         }}
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
+          <Button type='primary' onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
@@ -160,8 +160,8 @@ const TableList: React.FC<{}> = () => {
                   }}
                   selectedKeys={[]}
                 >
-                  <Menu.Item key="remove">批量删除</Menu.Item>
-                  <Menu.Item key="approval">批量审批</Menu.Item>
+                  <Menu.Item key='remove'>批量删除</Menu.Item>
+                  <Menu.Item key='approval'>批量审批</Menu.Item>
                 </Menu>
               }
             >
@@ -171,7 +171,7 @@ const TableList: React.FC<{}> = () => {
             </Dropdown>
           ),
         ]}
-        tableAlertRender={(selectedRowKeys, selectedRows) => (
+        tableAlertRender={({ selectedRowKeys, selectedRows }) => (
           <div>
             已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
             <span>
@@ -179,13 +179,13 @@ const TableList: React.FC<{}> = () => {
             </span>
           </div>
         )}
-        request={async (params) => {
+        request={async params => {
           if (isProductionEnv()) {
             return {
               data: [],
               success: true,
               total: 0,
-            }
+            };
           }
           return queryRule(params);
         }}
