@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { usePersistFn } from '@umijs/hooks';
+import { useLocation } from 'umi';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
@@ -8,13 +9,14 @@ import _partial from 'lodash/partial';
 
 import { useReallyPrevious } from '@/hooks/common';
 import { logger } from '@/utils/utils';
-import { UmiChildren, RouteTab, UseTabsOptions } from './data';
+import { RouteTab, UseTabsOptions, BeautifulLocation } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
 
 const Logger = _partial(logger, 'useTabs');
 
 function useTabs(options: UseTabsOptions) {
-  const { location, mode = 'route', setTabTitle, originalMenuData, children } = options;
+  const { mode = 'route', setTabTitle, originalMenuData, children } = options;
+  const location = useLocation() as BeautifulLocation;
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(mode, originalMenuData, setTabTitle);
@@ -94,7 +96,7 @@ function useTabs(options: UseTabsOptions) {
       reloadKey: string = activeKey,
       tabTitle?: React.ReactNode,
       extraTabProperties?: any,
-      content?: UmiChildren,
+      content?: React.ReactNode,
     ) => {
       if (tabs.length < 1) {
         return;
@@ -113,7 +115,9 @@ function useTabs(options: UseTabsOptions) {
             ...rest,
             tab: tabTitle || prevTabTitle,
             extraTabProperties: extraTabProperties || prevExtraTabProperties,
-            content: content || React.cloneElement(item.content, { key: new Date().valueOf() }),
+            content:
+              content ||
+              React.cloneElement(item.content as JSX.Element, { key: new Date().valueOf() }),
           };
         }
         return item;

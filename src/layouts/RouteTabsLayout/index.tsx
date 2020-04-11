@@ -7,14 +7,14 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
 import * as H from 'history';
 import { Route } from '@ant-design/pro-layout/lib/typings';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage } from 'umi';
 import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
 
 import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
-import { UmiChildren, RouteTabsMode } from '@/components/RouteTabs/data';
+import { RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
 
 /** 根据路由定义中的 name 本地化标题 */
@@ -61,7 +61,7 @@ const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 export interface RouteTabsLayoutProps {
   mode?: RouteTabsMode | false;
   fixedRouteTabs?: boolean;
-  children: UmiChildren;
+  children: React.ReactNode;
   routes?: Route[];
   setTabTitle?: (
     path: string,
@@ -94,13 +94,13 @@ function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
         // animated={false}
       >
         <div>
-          {children as UmiChildren}
+          {children}
           <footer>{footerRender()}</footer>
         </div>
       </RouteTabs>
     );
   }
-  return children;
+  return children as JSX.Element;
 }
 
 export default RouteTabsLayout;

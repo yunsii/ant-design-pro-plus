@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Input, Checkbox, Button } from 'antd';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import { withRouteTab } from '@/components/RouteTabs/utils';
@@ -17,7 +17,7 @@ export default withRouteTab(() => {
           onChange={e => setText(e.target.value)}
           onPressEnter={() => {
             if (text?.trim()) {
-              router.push({
+              history.push({
                 pathname: `/route-tabs-demo/result/${text}`,
                 state: options.includes('withState') ? { state: 'yes' } : undefined,
                 query: options.includes('withQuery') ? { query: 'yes' } : undefined,

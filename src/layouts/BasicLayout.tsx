@@ -10,9 +10,8 @@ import ProLayout, {
   SettingDrawer,
   PageLoading,
 } from '@ant-design/pro-layout';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage, Link } from 'umi';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'umi';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { GithubOutlined } from '@ant-design/icons';
@@ -21,7 +20,6 @@ import classNames from 'classnames';
 
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { UmiChildren } from '@/components/RouteTabs/data';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro, getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
@@ -33,11 +31,11 @@ import styles from './BasicLayout.less';
 const noMatch = (
   <Result
     status={403}
-    title="403"
-    subTitle="Sorry, you are not authorized to access this page."
+    title='403'
+    subTitle='Sorry, you are not authorized to access this page.'
     extra={
-      <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+      <Button type='primary'>
+        <Link to='/user/login'>Go Login</Link>
       </Button>
     }
   />
@@ -74,7 +72,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 蚂蚁金服体验技术部出品"
+    copyright='2019 蚂蚁金服体验技术部出品'
     links={[
       {
         key: 'Ant Design Pro',
@@ -112,11 +110,11 @@ export const footerRender = () => {
           textAlign: 'center',
         }}
       >
-        <a href="https://www.netlify.com" target="_blank" rel="noopener noreferrer">
+        <a href='https://www.netlify.com' target='_blank' rel='noopener noreferrer'>
           <img
-            src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"
-            width="82px"
-            alt="netlify logo"
+            src='https://www.netlify.com/img/global/badges/netlify-color-bg.svg'
+            width='82px'
+            alt='netlify logo'
           />
         </a>
       </div>
@@ -191,7 +189,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         )
       }
       menuHeaderRender={(logoDom, titleDom) => (
-        <Link to="/">
+        <Link to='/'>
           {logoDom}
           {titleDom}
         </Link>
@@ -236,7 +234,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           menuLoading={menuLoading}
           routes={props.route.routes!}
         >
-          {children as UmiChildren}
+          {children}
         </RouteTabsLayout>
       </Authorized>
       <SettingDrawer

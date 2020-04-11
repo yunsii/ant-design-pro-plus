@@ -1,11 +1,11 @@
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
-import { Link } from 'umi';
+import { Link, formatMessage, ConnectProps } from 'umi';
 import React from 'react';
-import { formatMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
+
 import SelectLang from '@/components/SelectLang';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 
@@ -39,7 +39,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
     <>
       <Helmet>
         <title>{title}</title>
-        <meta name="description" content={title} />
+        <meta name='description' content={title} />
       </Helmet>
 
       <div className={styles.container}>
@@ -49,8 +49,8 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
+              <Link to='/'>
+                <img alt='logo' className={styles.logo} src={logo} />
                 <span className={styles.title}>Ant Design</span>
               </Link>
             </div>

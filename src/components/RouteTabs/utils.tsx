@@ -2,7 +2,7 @@ import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
-import router from 'umi/router';
+import { history } from 'umi';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
@@ -129,7 +129,7 @@ export function getActiveTabInfo(location: BeautifulLocation) {
 }
 
 export function routeTo(targetTab: RouteTab) {
-  router.push(targetTab.extraTabProperties.location);
+  history.push(targetTab.extraTabProperties.location);
 }
 
 const Logger = _partial(logger, 'PropsAreEqual');

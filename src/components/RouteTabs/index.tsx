@@ -1,18 +1,19 @@
 import React from 'react';
-import withRouter from 'umi/withRouter';
+import { useLocation } from 'umi';
 
 import PageTabs from './components/PageTabs';
 import { RouteTabsProps } from './data';
 import { isPathInMenus } from './utils';
 
-function RouteTabs(props: RouteTabsProps) {
-  const { location, originalMenuData, children } = props;
+function RouteTabs(props: RouteTabsProps): JSX.Element {
+  const { originalMenuData, children } = props;
+  const location = useLocation();
 
   if (!isPathInMenus(location.pathname, originalMenuData)) {
-    return children;
+    return children as JSX.Element;
   }
 
   return <PageTabs {...props} />;
 }
 
-export default withRouter<RouteTabsProps, React.FC>(RouteTabs as React.FC);
+export default RouteTabs;

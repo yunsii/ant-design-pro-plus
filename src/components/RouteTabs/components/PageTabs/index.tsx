@@ -2,13 +2,12 @@ import React from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps, ClickParam } from 'antd/lib/menu';
-import { FormattedMessage } from 'umi-plugin-react/locale';
+import { FormattedMessage } from 'umi';
 import classNames from 'classnames';
 import { usePersistFn } from '@umijs/hooks';
 
 import { UseTabsOptions } from '@/components/RouteTabs/data';
 import useTabs from '../../useTabs';
-import { UmiChildren } from '../../data';
 import styles from './index.less';
 
 const closeCurrentTabMenuKey = 'closeCurrent';
@@ -19,7 +18,7 @@ export interface PageTab {
   /** tab's title */
   tab: React.ReactNode;
   key: string;
-  content: UmiChildren;
+  content: React.ReactNode;
   closable?: boolean;
 }
 
@@ -30,7 +29,7 @@ export interface PageTabsProps
 }
 
 export default function PageTabs(props: PageTabsProps) {
-  const { fixed, location, children, setTabTitle, originalMenuData, mode, ...rest } = props;
+  const { fixed, children, setTabTitle, originalMenuData, mode, ...rest } = props;
 
   const {
     tabs,
@@ -40,7 +39,6 @@ export default function PageTabs(props: PageTabsProps) {
     handleRemoveOthers,
     handRemoveRightTabs,
   } = useTabs({
-    location,
     children,
     setTabTitle,
     originalMenuData,

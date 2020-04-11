@@ -1,7 +1,7 @@
 import { Button, message, notification } from 'antd';
 
 import React from 'react';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { formatMessage } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
@@ -41,7 +41,7 @@ if (pwa) {
     const key = `open${Date.now()}`;
     const btn = (
       <Button
-        type="primary"
+        type='primary'
         onClick={() => {
           notification.close(key);
           reloadSW();
