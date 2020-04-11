@@ -55,4 +55,4 @@
 
 ### 性能问题
 
-原以为仍然可通过之前像 `v2` 那样的高阶组件避免标签页的无用渲染，但是几经尝试，都无法在高阶函数中实现，可见 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L181) 方法。临时的解决方案是在每个页面中自行使用 `useMemo` 优化性能，参考自 [issue#15156](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
+可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。目前准备升级到 `umi@3.x` ，发现了[一个很严重的问题](https://github.com/umijs/umi/issues/4425)。`umi@3.x` 确实精简了很多，但是这个问题解决不了的话，性能就是个大问题了，待深入研究了...
