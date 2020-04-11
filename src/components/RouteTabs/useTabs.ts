@@ -4,15 +4,17 @@ import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _omit from 'lodash/omit';
+import _partial from 'lodash/partial';
 
 import { useReallyPrevious } from '@/hooks/common';
+import { logger } from '@/utils/utils';
 import { UmiChildren, RouteTab, UseTabsOptions } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
 
+const Logger = _partial(logger, 'useTabs');
+
 function useTabs(options: UseTabsOptions) {
   const { location, mode = 'route', setTabTitle, originalMenuData, children } = options;
-
-  console.log('[useTabs]: originalMenuData:', originalMenuData);
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(mode, originalMenuData, setTabTitle);
@@ -89,7 +91,7 @@ function useTabs(options: UseTabsOptions) {
    */
   const reloadTab = usePersistFn(
     (
-      reloadKey: string,
+      reloadKey: string = activeKey,
       tabTitle?: React.ReactNode,
       extraTabProperties?: any,
       content?: UmiChildren,
@@ -98,6 +100,7 @@ function useTabs(options: UseTabsOptions) {
         return;
       }
 
+      Logger(`reload tab key: ${reloadKey}`);
       const updatedTabs = tabs.map(item => {
         if (item.key === reloadKey) {
           const {
@@ -122,9 +125,7 @@ function useTabs(options: UseTabsOptions) {
 
   const goBackTab = usePersistFn(() => {
     if (!prevActiveKey || !getTab(prevActiveKey)) {
-      console.warn(
-        '[useTabs]]: go back failed, no previous actived key or previous tab is closed.',
-      );
+      Logger('go back failed, no previous actived key or previous tab is closed.', 'warn');
       return;
     }
 
@@ -134,8 +135,9 @@ function useTabs(options: UseTabsOptions) {
   /** 关闭当前标签页并返回到上次打开的标签页 */
   const closeAndGoBackTab = usePersistFn(() => {
     if (!prevActiveKey || !getTab(prevActiveKey)) {
-      console.warn(
-        '[useTabs]: close and go back failed, no previous actived key or previous tab is closed.',
+      Logger(
+        'close and go back failed, no previous actived key or previous tab is closed.',
+        'warn',
       );
       return;
     }
@@ -144,13 +146,13 @@ function useTabs(options: UseTabsOptions) {
   });
 
   useEffect(() => {
-    window.reloadCurrentTab = () => reloadTab(activeKey);
+    window.reloadCurrentTab = () => reloadTab();
     window.goBackTab = goBackTab;
     window.closeAndGoBackTab = closeAndGoBackTab;
 
     return () => {
       const hint = () => {
-        console.warn(`[useTabs]: PageTabs had unmounted.`);
+        Logger(`PageTabs had unmounted.`);
       };
 
       window.reloadCurrentTab = hint;
@@ -160,20 +162,15 @@ function useTabs(options: UseTabsOptions) {
   }, []);
 
   useEffect(() => {
-    console.log('[useTabs]: children effect', children);
-
     const currentExtraTabProperties = { location: _omit(location, ['key']) };
     const activedTab = _find(tabs, { key: activeKey });
 
     if (activedTab) {
       const { extraTabProperties: prevExtraTabProperties } = activedTab;
-      // console.log('currentExtraTabProperties', currentExtraTabProperties);
-      // console.log('prevExtraTabProperties', prevExtraTabProperties);
       if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
-        console.log('[useTabs]: reloadTab', currentExtraTabProperties.location);
         reloadTab(activeKey, activeTitle, currentExtraTabProperties, children);
       }
-      console.log('[useTabs]: nothing happened.', currentExtraTabProperties.location);
+      Logger(`no effect of tab key: ${activeKey}`);
     } else {
       const newTab = {
         tab: activeTitle,
@@ -181,12 +178,10 @@ function useTabs(options: UseTabsOptions) {
         content: children as any,
         extraTabProperties: currentExtraTabProperties,
       };
-      console.log('[useTabs]: addTab', currentExtraTabProperties.location);
+      Logger(`add tab key: ${activeKey}`);
       addTab(newTab);
     }
   }, [children]);
-
-  // console.log("render tabs:", tabs);
 
   return {
     tabs,

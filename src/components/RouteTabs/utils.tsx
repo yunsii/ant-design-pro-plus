@@ -1,22 +1,21 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
-import _omit from 'lodash/omit';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
+import _partial from 'lodash/partial';
 
 import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
 import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
+import { useConsole } from '@/hooks/test/lifeCycle';
+import { logger } from '@/utils/utils';
 
 export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
   function isInMenus(menuData: MenuDataItem[]) {
-    const targetMenuItem = _find(
-      menuData,
-      item => pathToRegexp(`${item.path}(.*)`).test(pathname),
-    );
+    const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
 
     return !!targetMenuItem;
   }
@@ -133,6 +132,8 @@ export function routeTo(targetTab: RouteTab) {
   router.push(targetTab.extraTabProperties.location);
 }
 
+const Logger = _partial(logger, 'PropsAreEqual');
+
 export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const {
     children: prevChildren,
@@ -154,11 +155,10 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
     staticContext: nextStaticContext,
     ...nextRest
   } = nextProps;
-  // 注入数据变化，刷新组件
   if (!_isEqual(prevRest, nextRest)) {
-    console.log('update by 数据变化', prevLocation.pathname);
-    console.log(prevRest);
-    console.log(nextRest);
+    Logger(`${prevLocation.pathname}: update by props`);
+    // console.log(prevRest);
+    // console.log(nextRest);
     return false;
   }
 
@@ -166,31 +166,24 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const { pathname: nextPathname, search: nextSearch, state: nextState } = nextLocation || {};
   const isLocationChange =
     prevPathname !== nextPathname || prevSearch !== nextSearch || !_isEqual(prevState, nextState);
-  // 路由变化，刷新组件
   if (isLocationChange) {
-    console.log('update by 路由变化', prevPathname, nextPathname);
-    console.log({ prevPathname, prevSearch, prevState });
-    console.log({ nextPathname, nextSearch, nextState });
+    Logger(`${prevLocation.pathname} -> ${nextPathname}: update by route or params`);
+    // console.log({ prevPathname, prevSearch, prevState });
+    // console.log({ nextPathname, nextSearch, nextState });
     return false;
   }
 
-  console.log('Route Page Props Are Equal', prevPathname);
+  Logger(`without re-render: ${prevPathname}`);
   return true;
 };
 
 export function withRouteTab<Props = any>(
-  WrappedComponent: React.ComponentClass<Props> | React.FC<Props>
+  WrappedComponent: React.ComponentClass<Props> | React.FC<Props>,
 ): React.MemoExoticComponent<any> {
   const WithRoutePage = React.memo((props: any) => {
-    const { history, location, ...rest } = props;
+    useConsole(props.location.pathname);
 
-    const renderCountRef = useRef(0);
-    renderCountRef.current += 1;
-    console.log('render WithRoutePage ->', location.pathname, 'count', renderCountRef.current);
-
-    return (
-      <WrappedComponent location={_omit(location, ['key'])} {...rest} />
-    );
+    return <WrappedComponent {...props} />;
   }, routePagePropsAreEqual);
 
   WithRoutePage.displayName = `WithRoutePage(${getDisplayName(WrappedComponent)})`;
