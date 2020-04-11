@@ -75,13 +75,13 @@ export default function PageTabs(props: PageTabsProps) {
   const setMenu = usePersistFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>
       <Menu.Item disabled={tabs.length === 1} key={closeCurrentTabMenuKey}>
-        <FormattedMessage id="component.childrenTabs.closeCurrent" />
+        <FormattedMessage id='component.childrenTabs.closeCurrent' />
       </Menu.Item>
       <Menu.Item disabled={tabs.length === 1} key={closeOthersTabMenuKey}>
-        <FormattedMessage id="component.childrenTabs.closeOthers" />
+        <FormattedMessage id='component.childrenTabs.closeOthers' />
       </Menu.Item>
       <Menu.Item disabled={tabs.length === index + 1} key={closeToRightTabMenuKey}>
-        <FormattedMessage id="component.childrenTabs.closeToRight" />
+        <FormattedMessage id='component.childrenTabs.closeToRight' />
       </Menu.Item>
     </Menu>
   ));
@@ -96,8 +96,8 @@ export default function PageTabs(props: PageTabsProps) {
 
   return (
     <Tabs
-      tabPosition="top"
-      type="editable-card"
+      tabPosition='top'
+      type='editable-card'
       tabBarStyle={{ margin: 0 }}
       tabBarGutter={0}
       animated
