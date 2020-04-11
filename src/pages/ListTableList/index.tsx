@@ -3,12 +3,14 @@ import { Button, Divider, Dropdown, Menu, message } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+
+import { isProductionEnv } from '@/utils/utils';
+import { withRouteTab } from '@/components/RouteTabs/utils';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
 import { queryRule, updateRule, addRule, removeRule } from './service';
 import styles from './index.less';
-import { isProductionEnv } from '@/utils/utils';
 
 /**
  * 添加节点
@@ -74,7 +76,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   }
 };
 
-const TableList: React.FC<{}> = () => {
+const TableList = withRouteTab(() => {
   const [sorter, setSorter] = useState({});
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
@@ -228,6 +230,6 @@ const TableList: React.FC<{}> = () => {
       ) : null}
     </PageHeaderWrapper>
   );
-};
+});
 
 export default TableList;

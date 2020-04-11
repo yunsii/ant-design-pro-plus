@@ -1,6 +1,8 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Typography, Alert } from 'antd';
+
+import { withRouteTab } from '@/components/RouteTabs/utils';
 import styles from './Welcome.less';
 
 const CodePreview: React.FC<{}> = ({ children }) => (
@@ -11,12 +13,12 @@ const CodePreview: React.FC<{}> = ({ children }) => (
   </pre>
 );
 
-export default (): React.ReactNode => (
+export default withRouteTab(() => (
   <PageHeaderWrapper>
     <Card>
       <Alert
-        message="umi ui 现已发布，点击右下角 umi 图标即可使用"
-        type="success"
+        message='umi ui 现已发布，点击右下角 umi 图标即可使用'
+        type='success'
         showIcon
         banner
         style={{
@@ -25,7 +27,7 @@ export default (): React.ReactNode => (
         }}
       />
       <Typography.Text strong>
-        <a target="_blank" rel="noopener noreferrer" href="https://pro.ant.design/docs/block">
+        <a target='_blank' rel='noopener noreferrer' href='https://pro.ant.design/docs/block'>
           基于 block 开发，快速构建标准页面
         </a>
       </Typography.Text>
@@ -37,9 +39,9 @@ export default (): React.ReactNode => (
         }}
       >
         <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://pro.ant.design/docs/available-script#npm-run-fetchblocks"
+          target='_blank'
+          rel='noopener noreferrer'
+          href='https://pro.ant.design/docs/available-script#npm-run-fetchblocks'
         >
           获取全部区块
         </a>
@@ -53,10 +55,10 @@ export default (): React.ReactNode => (
       }}
     >
       Want to add more pages? Please refer to{' '}
-      <a href="https://pro.ant.design/docs/block-cn" target="_blank" rel="noopener noreferrer">
+      <a href='https://pro.ant.design/docs/block-cn' target='_blank' rel='noopener noreferrer'>
         use block
       </a>
       。
     </p>
   </PageHeaderWrapper>
-);
+));
