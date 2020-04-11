@@ -1,5 +1,6 @@
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
+
 import { Route } from '@/models/connect';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
@@ -60,6 +61,15 @@ export const getRouteAuthority = (path: string, routeData: Route[]) => {
   return authorities;
 };
 
-export function isProductionEnv() {
-  return process.env.NODE_ENV === 'production';
-}
+export const isProductionEnv = () => process.env.NODE_ENV === 'production';
+
+export const logger = (
+  domain: string,
+  message: string,
+  type: keyof Console = 'log',
+  force: boolean = false,
+) => {
+  if (console && (process.env.NODE_ENV !== 'production' || force)) {
+    console[type](`%c[${domain}] %c${message}`, 'font-weight: bolder', 'font-weight: normal');
+  }
+};
