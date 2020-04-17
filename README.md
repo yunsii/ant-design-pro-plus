@@ -55,4 +55,14 @@
 
 ### 性能问题
 
-可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。目前准备升级到 `umi@3.x` ，发现了[一个很严重的问题](https://github.com/umijs/umi/issues/4425)。`umi@3.x` 确实精简了很多，但是这个问题解决不了的话，性能就是个大问题了，待深入研究...
+可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。
+
+## 关于 umi 3.x
+
+在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。参考我在 issue [想了解一下 umi 2 与 3 对路由组件处理的异同](https://github.com/umijs/umi/issues/4425) 中的相关分析。这里说明一下：
+
+**umi 2** 是将所有子路由通过 [`renderRoutes()`](https://github.com/umijs/umi/blob/c0a2ac5aa9/packages/umi/src/renderRoutes.js#L129) 打包进 `react-router` 中的 `Switch` 中，这就使得 `BasicLayout` 下的所有标签页都能拿到一个**完整的** `Switch` 组件。
+
+**umi 3** 当前内部实现了一个 [`Switch`](https://github.com/umijs/umi/blob/master/packages/renderer-react/src/renderRoutes/Switch.tsx#L2) 组件，通过 `__RouterContext` 消费当前 `location` 状态，遍历所有子组件，只通过 `React.createElement()` 创建匹配的**唯一路由组件**，这就导致了 `BasicLayout` 下的所有标签页在切换时都会全部卸载再加载为当前路由的页面，故该方案暂时无法使用。
+
+![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
