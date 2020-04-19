@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as H from 'history';
-import { RouteComponentProps } from 'react-router';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
 import { PageTab, PageTabsProps } from './components/PageTabs';
@@ -43,4 +42,4 @@ export interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Locati
   query: Q;
 }
 
-export interface RouteTabsProps extends PageTabsProps, Omit<RouteComponentProps<any>, 'location'> {}
+export interface RouteTabsProps extends PageTabsProps {}

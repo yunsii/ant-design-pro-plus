@@ -11,7 +11,7 @@ function RouteTabs(props: RouteTabsProps) {
   const location = useLocation();
 
   if (!isPathInMenus(location.pathname, originalMenuData)) {
-    return children;
+    return children!;
   }
 
   return <PageTabs {...props} />;
