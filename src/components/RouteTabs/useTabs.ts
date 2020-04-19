@@ -5,9 +5,9 @@ import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _omit from 'lodash/omit';
 import _partial from 'lodash/partial';
+import { useLocation } from 'react-router';
 
 import { useReallyPrevious } from '@/hooks/common';
-import { useLocation } from '@/hooks/route';
 import { logger } from '@/utils/utils';
 import { UmiChildren, RouteTab, UseTabsOptions, BeautifulLocation } from './data';
 import { getActiveTabInfo, routeTo } from './utils';

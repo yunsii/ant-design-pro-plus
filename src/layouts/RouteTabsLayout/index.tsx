@@ -12,13 +12,12 @@ import _isArray from 'lodash/isArray';
 import _find from 'lodash/find';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
-import { matchPath } from 'react-router';
+import { matchPath, useLocation } from 'react-router';
 
 import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
 import { UmiChildren, RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
-import { useLocation } from '@/hooks/route';
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): MenuDataItem[] {
