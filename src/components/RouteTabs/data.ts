@@ -2,7 +2,7 @@
 import * as H from 'history';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
-import { PageTab, PageTabsProps } from './components/PageTabs';
+import { PageTab, PageTabsProps } from '.';
 
 export type RouteTabsMode = 'route' | 'args';
 

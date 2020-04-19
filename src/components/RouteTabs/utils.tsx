@@ -7,21 +7,12 @@ import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import _partial from 'lodash/partial';
+import pathToRegexp from 'path-to-regexp';
+import { matchPath } from 'react-router';
 
-import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
-import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
 import { useConsole } from '@/hooks/test/lifeCycle';
 import { logger } from '@/utils/utils';
-
-export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
-  function isInMenus(menuData: MenuDataItem[]) {
-    const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
-
-    return !!targetMenuItem;
-  }
-
-  return isInMenus(originalMenuData);
-}
+import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -75,13 +66,8 @@ const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
  * @param pathname 当前的页面路由
  */
 export function getParams(path: string, pathname: string): { [key: string]: string } {
-  const match = pathToRegexpMatch(path);
-  const result = match(pathname) as {
-    index: number;
-    params: { [k: string]: string };
-    path: string;
-  };
-  return result.params;
+  const { params } = matchPath(pathname, path) || {};
+  return params || {};
 }
 
 /**
