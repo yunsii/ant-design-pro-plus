@@ -30,7 +30,7 @@ export interface PageTabsProps
 }
 
 export default function PageTabs(props: PageTabsProps) {
-  const { fixed, location, children, setTabTitle, originalMenuData, mode, ...rest } = props;
+  const { fixed, children, setTabTitle, originalMenuData, mode, ...rest } = props;
 
   const {
     tabs,
@@ -40,7 +40,6 @@ export default function PageTabs(props: PageTabsProps) {
     handleRemoveOthers,
     handRemoveRightTabs,
   } = useTabs({
-    location,
     children,
     setTabTitle,
     originalMenuData,

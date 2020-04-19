@@ -1,12 +1,14 @@
 import React from 'react';
-import withRouter from 'umi/withRouter';
 
+import { useLocation } from '@/hooks/route';
 import PageTabs from './components/PageTabs';
 import { RouteTabsProps } from './data';
 import { isPathInMenus } from './utils';
 
 function RouteTabs(props: RouteTabsProps) {
-  const { location, originalMenuData, children } = props;
+  const { originalMenuData, children } = props;
+
+  const location = useLocation();
 
   if (!isPathInMenus(location.pathname, originalMenuData)) {
     return children;
@@ -15,4 +17,4 @@ function RouteTabs(props: RouteTabsProps) {
   return <PageTabs {...props} />;
 }
 
-export default withRouter<RouteTabsProps, React.FC>(RouteTabs as React.FC);
+export default RouteTabs;

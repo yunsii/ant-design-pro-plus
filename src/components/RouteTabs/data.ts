@@ -19,7 +19,6 @@ export interface RouteTab extends PageTab {
 }
 
 export interface UseTabsOptions {
-  location: BeautifulLocation;
   mode?: RouteTabsMode;
   children?: UmiChildren;
   originalMenuData: MenuDataItem[];

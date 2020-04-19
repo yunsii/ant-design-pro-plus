@@ -7,14 +7,16 @@ import _omit from 'lodash/omit';
 import _partial from 'lodash/partial';
 
 import { useReallyPrevious } from '@/hooks/common';
+import { useLocation } from '@/hooks/route';
 import { logger } from '@/utils/utils';
-import { UmiChildren, RouteTab, UseTabsOptions } from './data';
+import { UmiChildren, RouteTab, UseTabsOptions, BeautifulLocation } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
 
 const Logger = _partial(logger, 'useTabs');
 
 function useTabs(options: UseTabsOptions) {
-  const { location, mode = 'route', setTabTitle, originalMenuData, children } = options;
+  const location = useLocation() as BeautifulLocation;
+  const { mode = 'route', setTabTitle, originalMenuData, children } = options;
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const [activeKey, activeTitle] = getActiveTabInfo(location)(mode, originalMenuData, setTabTitle);
