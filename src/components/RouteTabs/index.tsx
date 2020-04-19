@@ -6,30 +6,15 @@ import { FormattedMessage } from 'umi-plugin-react/locale';
 import classNames from 'classnames';
 import { usePersistFn } from '@umijs/hooks';
 
-import { UseTabsOptions } from '@/components/RouteTabs/data';
+import { RouteTabsProps } from './data';
 import useTabs from './useTabs';
-import { UmiChildren } from './data';
 import styles from './index.less';
 
 const closeCurrentTabMenuKey = 'closeCurrent';
 const closeOthersTabMenuKey = 'closeOthers';
 const closeToRightTabMenuKey = 'closeToRight';
 
-export interface PageTab {
-  /** tab's title */
-  tab: React.ReactNode;
-  key: string;
-  content: UmiChildren;
-  closable?: boolean;
-}
-
-export interface PageTabsProps
-  extends UseTabsOptions,
-    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange'> {
-  fixed?: boolean;
-}
-
-export default function PageTabs(props: PageTabsProps) {
+export default function RouteTabs(props: RouteTabsProps) {
   const { fixed, children, setTabTitle, originalMenuData, mode, ...rest } = props;
 
   const {
@@ -107,7 +92,7 @@ export default function PageTabs(props: PageTabsProps) {
       onEdit={handleTabEdit as TabsProps['onEdit']}
       onChange={handleSwitch}
     >
-      {tabs.map((item: PageTab, index) => (
+      {tabs.map((item, index) => (
         <Tabs.TabPane
           tab={setTab(item.tab, item.key, index)}
           key={item.key}

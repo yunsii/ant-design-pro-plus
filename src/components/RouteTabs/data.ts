@@ -1,8 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as H from 'history';
 import { MenuDataItem } from '@ant-design/pro-layout';
-
-import { PageTab, PageTabsProps } from '.';
+import { TabsProps } from 'antd/lib/tabs';
 
 export type RouteTabsMode = 'route' | 'args';
 
@@ -12,9 +11,20 @@ export interface UmiChildren extends JSX.Element {
   };
 }
 
-export interface RouteTab extends PageTab {
+export interface RouteTab {
+  /** tab's title */
+  tab: React.ReactNode;
+  key: string;
+  content: UmiChildren;
+  closable?: boolean;
   /** used to extends tab's properties */
   extraTabProperties: { location: BeautifulLocation };
+}
+
+export interface RouteTabsProps
+  extends UseTabsOptions,
+    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange'> {
+  fixed?: boolean;
 }
 
 export interface UseTabsOptions {
@@ -41,5 +51,3 @@ export interface UseTabsOptions {
 export interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Location<S> {
   query: Q;
 }
-
-export interface RouteTabsProps extends PageTabsProps {}
