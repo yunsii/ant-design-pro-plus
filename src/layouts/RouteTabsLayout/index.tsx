@@ -9,13 +9,16 @@ import * as H from 'history';
 import { Route } from '@ant-design/pro-layout/lib/typings';
 import { formatMessage } from 'umi-plugin-react/locale';
 import _isArray from 'lodash/isArray';
+import _find from 'lodash/find';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
+import { matchPath } from 'react-router';
 
 import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
 import { UmiChildren, RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
+import { useLocation } from '@/hooks/route';
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): MenuDataItem[] {
@@ -58,6 +61,16 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
 
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
+export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
+  function isInMenus(menuData: MenuDataItem[]) {
+    const targetMenuItem = _find(menuData, item => matchPath(pathname, item.path!));
+
+    return !!targetMenuItem;
+  }
+
+  return isInMenus(originalMenuData);
+}
+
 export interface RouteTabsLayoutProps {
   mode?: RouteTabsMode | false;
   fixedRouteTabs?: boolean;
@@ -82,15 +95,23 @@ function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
     children,
   } = props;
 
+  const location = useLocation();
+
   if (mode && menuLoading) {
     return <PageLoading />;
   }
   if (mode && routes) {
+    const originalMenuData = memoizedOneLocaleRoutes(routes);
+
+    if (!isPathInMenus(location.pathname, originalMenuData)) {
+      return children!;
+    }
+
     return (
       <RouteTabs
         mode={mode}
         fixed={fixedRouteTabs}
-        originalMenuData={memoizedOneLocaleRoutes(routes)}
+        originalMenuData={originalMenuData}
         // animated={false}
       >
         <div>
