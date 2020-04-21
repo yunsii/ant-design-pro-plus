@@ -125,18 +125,18 @@ function useTabs(options: UseTabsOptions) {
     },
   );
 
-  const goBackTab = usePersistFn(() => {
-    if (!prevActiveKey || !getTab(prevActiveKey)) {
+  const goBackTab = usePersistFn((path?: string) => {
+    if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
       Logger('go back failed, no previous actived key or previous tab is closed.', 'warn');
       return;
     }
 
-    handleSwitch(prevActiveKey);
+    handleSwitch(path || prevActiveKey!);
   });
 
   /** 关闭当前标签页并返回到上次打开的标签页 */
-  const closeAndGoBackTab = usePersistFn(() => {
-    if (!prevActiveKey || !getTab(prevActiveKey)) {
+  const closeAndGoBackTab = usePersistFn((path?: string) => {
+    if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
       Logger(
         'close and go back failed, no previous actived key or previous tab is closed.',
         'warn',
@@ -144,7 +144,7 @@ function useTabs(options: UseTabsOptions) {
       return;
     }
 
-    handleRemove(activeKey, prevActiveKey);
+    handleRemove(activeKey, path || prevActiveKey);
   });
 
   useEffect(() => {

@@ -33,8 +33,8 @@ interface Window {
   routerBase: string;
 
   reloadCurrentTab: () => void;
-  goBackTab: () => void;
-  closeAndGoBackTab: () => void;
+  goBackTab: (path?: string) => void;
+  closeAndGoBackTab: (path?: string) => void;
 }
 
 declare let ga: Function;
