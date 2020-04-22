@@ -40,8 +40,13 @@ function useTabs(options: UseTabsOptions) {
       return;
     }
 
-    const targetTab = _find(tabs, { key: keyToSwitch })!;
-    routeTo(targetTab);
+    /**
+     * `keyToSwitch` 有值时，`targetTab` 可能为空。
+     *
+     * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在刷新之后
+     */
+    const targetTab = _find(tabs, { key: keyToSwitch });
+    routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
   });
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
