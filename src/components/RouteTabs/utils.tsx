@@ -12,7 +12,7 @@ import { matchPath } from 'react-router';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
 import { logger } from '@/utils/utils';
-import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
+import { RouteTabsMode, RouteTabsProps, BeautifulLocation } from './data';
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -114,8 +114,8 @@ export function getActiveTabInfo(location: BeautifulLocation) {
   return getInfo;
 }
 
-export function routeTo(targetTab: RouteTab) {
-  router.push(targetTab.extraTabProperties.location);
+export function routeTo(path: string | BeautifulLocation) {
+  router.push(path);
 }
 
 const Logger = _partial(logger, 'PropsAreEqual');
