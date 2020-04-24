@@ -56,7 +56,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
       />
       {routeTabsMode && reloadTab ? (
         <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
-          <a className={styles.action} onClick={() => window.reloadCurrentTab()}>
+          <a className={styles.action} onClick={() => window.reloadTab()}>
             <ReloadOutlined />
           </a>
         </Tooltip>
