@@ -24,8 +24,8 @@
   - 基于路由，每个路由只渲染一个标签页
   - 基于路由参数，计算出每个路由的所有参数的哈希值，不同的哈希值渲染不同的标签页
 - 可固定标签栏
-- 快捷操作
-  - 刷新当前标签页 - `window.reloadCurrentTab()`
+- [快捷操作](/src/typings.d.ts#L35)
+  - 刷新标签页 - `window.reloadTab()`
   - 返回之前标签页 - `window.goBackTab()`
   - 关闭并返回之前标签页 - `window.closeAndGoBackTab()`
 
