@@ -35,7 +35,7 @@ function useTabs(options: UseTabsOptions) {
     return tabs[nextIndex];
   });
 
-  const handleSwitch = usePersistFn((keyToSwitch: string) => {
+  const handleSwitch = usePersistFn((keyToSwitch: string, callback?: () => void) => {
     if (!keyToSwitch) {
       return;
     }
@@ -47,27 +47,30 @@ function useTabs(options: UseTabsOptions) {
      */
     const targetTab = _find(tabs, { key: keyToSwitch });
     routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
+    targetTab && callback?.();
   });
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
-  const handleRemove = usePersistFn((removeKey: string, nextTabKey?: string) => {
-    const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
-    handleSwitch(nextTabKey || getNextTabKeyByRemove());
+  const handleRemove = usePersistFn(
+    (removeKey: string, nextTabKey?: string, callback?: () => void) => {
+      const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
+      handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
 
-    const restTabs = tabs.filter(item => item.key !== removeKey);
-    setTabsAfterDelete(restTabs);
-  });
+      const restTabs = tabs.filter(item => item.key !== removeKey);
+      setTabsAfterDelete(restTabs);
+    },
+  );
 
-  const handleRemoveOthers = usePersistFn((currentKey: string) => {
-    handleSwitch(currentKey);
+  const handleRemoveOthers = usePersistFn((currentKey: string, callback?: () => void) => {
+    handleSwitch(currentKey, callback);
 
     const restTabs = tabs.filter(item => item.key === currentKey);
     setTabsAfterDelete(restTabs);
   });
 
-  const handRemoveRightTabs = usePersistFn((currentKey: string) => {
+  const handRemoveRightTabs = usePersistFn((currentKey: string, callback?: () => void) => {
     const currentIndex = _findIndex(tabs, { key: currentKey });
-    handleSwitch(tabs[currentIndex].key);
+    handleSwitch(tabs[currentIndex].key, callback);
 
     const restTabs = tabs.slice(0, currentIndex + 1);
     setTabsAfterDelete(restTabs);
@@ -130,17 +133,17 @@ function useTabs(options: UseTabsOptions) {
     },
   );
 
-  const goBackTab = usePersistFn((path?: string) => {
+  const goBackTab = usePersistFn((path?: string, callback?: () => void) => {
     if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
       Logger('go back failed, no previous actived key or previous tab is closed.', 'warn');
       return;
     }
 
-    handleSwitch(path || prevActiveKey!);
+    handleSwitch(path || prevActiveKey!, callback);
   });
 
   /** 关闭当前标签页并返回到上次打开的标签页 */
-  const closeAndGoBackTab = usePersistFn((path?: string) => {
+  const closeAndGoBackTab = usePersistFn((path?: string, callback?: () => void) => {
     if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
       Logger(
         'close and go back failed, no previous actived key or previous tab is closed.',
@@ -149,11 +152,11 @@ function useTabs(options: UseTabsOptions) {
       return;
     }
 
-    handleRemove(activeKey, path || prevActiveKey);
+    handleRemove(activeKey, path || prevActiveKey, callback);
   });
 
   useEffect(() => {
-    window.reloadCurrentTab = () => reloadTab();
+    window.reloadTab = reloadTab;
     window.goBackTab = goBackTab;
     window.closeAndGoBackTab = closeAndGoBackTab;
 
@@ -162,7 +165,7 @@ function useTabs(options: UseTabsOptions) {
         Logger(`PageTabs had unmounted.`);
       };
 
-      window.reloadCurrentTab = hint;
+      window.reloadTab = hint;
       window.goBackTab = hint;
       window.closeAndGoBackTab = hint;
     };

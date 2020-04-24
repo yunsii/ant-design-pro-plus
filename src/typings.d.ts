@@ -32,9 +32,10 @@ interface Window {
   reloadAuthorized: () => void;
   routerBase: string;
 
-  reloadCurrentTab: () => void;
-  goBackTab: (path?: string) => void;
-  closeAndGoBackTab: (path?: string) => void;
+  reloadTab: (path?: string) => void;
+  /** 如果已经打开的标签页会触发 callback */
+  goBackTab: (path?: string, callback?: () => void) => void;
+  closeAndGoBackTab: (path?: string, callback?: () => void) => void;
 }
 
 declare let ga: Function;
