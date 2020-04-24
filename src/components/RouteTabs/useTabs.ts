@@ -63,18 +63,19 @@ function useTabs(options: UseTabsOptions) {
   );
 
   const handleRemoveOthers = usePersistFn((currentKey: string, callback?: () => void) => {
-    handleSwitch(currentKey, callback);
-
     const restTabs = tabs.filter(item => item.key === currentKey);
     setTabsAfterDelete(restTabs);
+
+    handleSwitch(currentKey, callback);
   });
 
   const handRemoveRightTabs = usePersistFn((currentKey: string, callback?: () => void) => {
     const currentIndex = _findIndex(tabs, { key: currentKey });
-    handleSwitch(tabs[currentIndex].key, callback);
-
+    
     const restTabs = tabs.slice(0, currentIndex + 1);
     setTabsAfterDelete(restTabs);
+    
+    handleSwitch(tabs[currentIndex].key, callback);
   });
 
   /**
