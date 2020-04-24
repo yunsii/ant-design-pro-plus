@@ -25,7 +25,7 @@ function useTabs(options: UseTabsOptions) {
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
   const setTabsAfterDelete = (_tabs: RouteTab[]) => {
-    setTabs(_tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)));
+    setTabs(() => _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)));
   };
 
   /** 获取激活标签页的相邻标签页 */
@@ -54,10 +54,11 @@ function useTabs(options: UseTabsOptions) {
   const handleRemove = usePersistFn(
     (removeKey: string, nextTabKey?: string, callback?: () => void) => {
       const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
-      handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
-
+      
       const restTabs = tabs.filter(item => item.key !== removeKey);
       setTabsAfterDelete(restTabs);
+      
+      handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
     },
   );
 
@@ -82,7 +83,7 @@ function useTabs(options: UseTabsOptions) {
    * @param newTab
    */
   const addTab = usePersistFn((newTab: RouteTab) => {
-    setTabs(
+    setTabs(() =>
       [...tabs, newTab].map((item, index) =>
         tabs.length === 0 && index === 0
           ? { ...item, closable: false }
@@ -129,7 +130,7 @@ function useTabs(options: UseTabsOptions) {
         return item;
       });
 
-      setTabs(updatedTabs);
+      setTabs(() => updatedTabs);
     },
   );
 
