@@ -69,7 +69,7 @@ export const logger = (
   type: keyof Console = 'log',
   force: boolean = false,
 ) => {
-  if (console && (process.env.NODE_ENV !== 'production' || force)) {
+  if (console && (!isProductionEnv() || force)) {
     console[type](`%c[${domain}] %c${message}`, 'font-weight: bolder', 'font-weight: normal');
   }
 };
