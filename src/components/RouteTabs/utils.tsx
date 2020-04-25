@@ -1,7 +1,6 @@
 import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
-import _isArray from 'lodash/isArray';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
@@ -46,7 +45,7 @@ export function getPathnameMetadata(
     }
 
     /** 递归设置 `pathID` 和 `title` */
-    if (_isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
+    if (Array.isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
       result = getMetadata(targetMenuItem!.children!, targetMenuItem!) || result;
     }
 
@@ -163,8 +162,8 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   return true;
 };
 
-export function withRouteTab<Props = any>(
-  WrappedComponent: React.ComponentClass<Props> | React.FC<Props>,
+export function withRouteTab<Props = unknown>(
+  WrappedComponent: React.ComponentType<Props>,
 ): React.MemoExoticComponent<any> {
   const WithRoutePage = React.memo((props: any) => {
     useConsole(props.location.pathname);
@@ -177,6 +176,6 @@ export function withRouteTab<Props = any>(
   return WithRoutePage;
 }
 
-function getDisplayName(WrappedComponent: React.ComponentClass<any> | React.FC<any>) {
+function getDisplayName(WrappedComponent: React.ComponentType<any>) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
