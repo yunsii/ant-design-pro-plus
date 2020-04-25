@@ -47,17 +47,17 @@ function useTabs(options: UseTabsOptions) {
      */
     const targetTab = _find(tabs, { key: keyToSwitch });
     routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
+
     targetTab && callback?.();
   });
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
     (removeKey: string, nextTabKey?: string, callback?: () => void) => {
-      const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
-      
       const restTabs = tabs.filter(item => item.key !== removeKey);
       setTabsAfterDelete(restTabs);
-      
+
+      const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
       handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
     },
   );
@@ -71,10 +71,9 @@ function useTabs(options: UseTabsOptions) {
 
   const handRemoveRightTabs = usePersistFn((currentKey: string, callback?: () => void) => {
     const currentIndex = _findIndex(tabs, { key: currentKey });
-    
     const restTabs = tabs.slice(0, currentIndex + 1);
     setTabsAfterDelete(restTabs);
-    
+
     handleSwitch(tabs[currentIndex].key, callback);
   });
 
@@ -108,30 +107,26 @@ function useTabs(options: UseTabsOptions) {
       extraTabProperties?: any,
       content?: UmiChildren,
     ) => {
-      if (tabs.length < 1) {
-        return;
-      }
-
       Logger(`reload tab key: ${reloadKey}`);
-      const updatedTabs = tabs.map(item => {
-        if (item.key === reloadKey) {
-          const {
-            tab: prevTabTitle,
-            extraTabProperties: prevExtraTabProperties,
-            content: prevContent,
-            ...rest
-          } = item;
-          return {
-            ...rest,
-            tab: tabTitle || prevTabTitle,
-            extraTabProperties: extraTabProperties || prevExtraTabProperties,
-            content: content || React.cloneElement(item.content, { key: new Date().valueOf() }),
-          };
-        }
-        return item;
-      });
-
-      setTabs(() => updatedTabs);
+      setTabs(prevTabs =>
+        prevTabs.map(item => {
+          if (item.key === reloadKey) {
+            const {
+              tab: prevTabTitle,
+              extraTabProperties: prevExtraTabProperties,
+              content: prevContent,
+              ...rest
+            } = item;
+            return {
+              ...rest,
+              tab: tabTitle || prevTabTitle,
+              extraTabProperties: extraTabProperties || prevExtraTabProperties,
+              content: content || React.cloneElement(item.content, { key: new Date().valueOf() }),
+            };
+          }
+          return item;
+        }),
+      );
     },
   );
 
