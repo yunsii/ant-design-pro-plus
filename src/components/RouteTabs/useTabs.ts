@@ -43,7 +43,7 @@ function useTabs(options: UseTabsOptions) {
     /**
      * `keyToSwitch` 有值时，`targetTab` 可能为空。
      *
-     * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在刷新之后
+     * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
      */
     const targetTab = _find(tabs, { key: keyToSwitch });
     routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
