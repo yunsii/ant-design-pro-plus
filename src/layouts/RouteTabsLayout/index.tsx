@@ -8,7 +8,6 @@ import React from 'react';
 import * as H from 'history';
 import { Route } from '@ant-design/pro-layout/lib/typings';
 import { formatMessage } from 'umi-plugin-react/locale';
-import _isArray from 'lodash/isArray';
 import _find from 'lodash/find';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
@@ -45,7 +44,7 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
       name: formatMessage({ id: localeId }),
     };
 
-    if (_isArray(itemRoutes) && itemRoutes.length) {
+    if (Array.isArray(itemRoutes) && itemRoutes.length) {
       newItem = {
         ...newItem,
         children: localeRoutes(itemRoutes, newItem),
