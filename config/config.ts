@@ -165,6 +165,8 @@ export default {
                   path: '/route-tabs-demo/result/:id',
                   hideInMenu: true,
                   component: './RouteTabsDemo/Result',
+
+                  followPath: '/route-tabs-demo/query',
                 },
               ],
             },
@@ -237,5 +239,5 @@ export default {
   //   },
   // },
   base: '/ant-design-pro-plus/',
-  publicPath: '/ant-design-pro-plus/'
+  publicPath: '/ant-design-pro-plus/',
 } as IConfig;

@@ -19,8 +19,17 @@ function useTabs(options: UseTabsOptions) {
   const { mode = 'route', setTabTitle, originalMenuData, children } = options;
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
-  const [activeKey, activeTitle] = getActiveTabInfo(location)(mode, originalMenuData, setTabTitle);
+  const { id: activeKey, hash, title: activeTitle, item: menuItem } = getActiveTabInfo(location)(
+    mode,
+    originalMenuData,
+    setTabTitle,
+  );
   const prevActiveKey = useReallyPrevious(activeKey);
+  console.log(menuItem);
+
+  const getTabKey = usePersistFn((key?: string) =>
+    hash ? `${key || activeKey}-${hash}` : key || activeKey,
+  );
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
@@ -80,14 +89,27 @@ function useTabs(options: UseTabsOptions) {
    *
    * @param newTab
    */
-  const addTab = usePersistFn((newTab: RouteTab) => {
-    setTabs(() =>
-      [...tabs, newTab].map((item, index) =>
+  const addTab = usePersistFn((newTab: RouteTab, followPath?: string) => {
+    setTabs(prevTabs => {
+      let result = [...prevTabs];
+      console.log('followPath', followPath);
+      if (followPath) {
+        const targetIndex = _findIndex(prevTabs, { key: getTabKey(followPath) });
+        if (targetIndex >= 0) {
+          result.splice(targetIndex + 1, 0, newTab);
+        } else {
+          result = [...result, newTab];
+        }
+      } else {
+        result = [...result, newTab];
+      }
+
+      return result.map((item, index) =>
         tabs.length === 0 && index === 0
           ? { ...item, closable: false }
           : { ...item, closable: true },
-      ),
-    );
+      );
+    });
   });
 
   /**
@@ -179,12 +201,15 @@ function useTabs(options: UseTabsOptions) {
     } else {
       const newTab = {
         tab: activeTitle,
-        key: activeKey,
+        key: getTabKey(),
         content: children as any,
         extraTabProperties: currentExtraTabProperties,
       };
+
+      const { followPath } = menuItem || {};
+
       Logger(`add tab key: ${activeKey}`);
-      addTab(newTab);
+      addTab(newTab, followPath);
     }
   }, [children]);
 

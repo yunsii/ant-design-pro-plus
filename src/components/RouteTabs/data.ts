@@ -27,10 +27,15 @@ export interface RouteTabsProps
   fixed?: boolean;
 }
 
+export interface CustomMenuDataItem extends MenuDataItem {
+  /** 配置该路由是否紧跟指定的某个路由 */
+  followPath?: string;
+}
+
 export interface UseTabsOptions {
   mode?: RouteTabsMode;
   children?: UmiChildren;
-  originalMenuData: MenuDataItem[];
+  originalMenuData: CustomMenuDataItem[];
 
   /**
    *

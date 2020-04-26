@@ -4,14 +4,13 @@ import _isEqual from 'lodash/isEqual';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
-import { MenuDataItem } from '@ant-design/pro-layout';
 import _partial from 'lodash/partial';
 import pathToRegexp from 'path-to-regexp';
 import { matchPath } from 'react-router';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
 import { logger } from '@/utils/utils';
-import { RouteTabsMode, RouteTabsProps, BeautifulLocation } from './data';
+import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -21,13 +20,13 @@ import { RouteTabsMode, RouteTabsProps, BeautifulLocation } from './data';
  */
 export function getPathnameMetadata(
   pathname: string,
-  originalMenuData: MenuDataItem[],
-): [string, string] {
+  originalMenuData: CustomMenuDataItem[],
+): [string, string, CustomMenuDataItem | undefined] {
   function getMetadata(
-    menuData: MenuDataItem[],
-    parent: MenuDataItem | null,
-  ): [string, string] | null {
-    let result: [string, string] | null = null;
+    menuData: CustomMenuDataItem[],
+    parent: CustomMenuDataItem | null,
+  ): [string, string, CustomMenuDataItem | undefined] | null {
+    let result: [string, string, CustomMenuDataItem | undefined] | null = null;
 
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
     const targetMenuItem = _find(
@@ -37,11 +36,11 @@ export function getPathnameMetadata(
 
     /** 如果为 **一级路由** 直接写入 `result` ，否则父级没有 `component` 时才能写入 `result` */
     if ((!parent && targetMenuItem) || (parent && !parent.component && targetMenuItem)) {
-      result = [targetMenuItem.path!, targetMenuItem.name!];
+      result = [targetMenuItem.path!, targetMenuItem.name!, targetMenuItem];
     }
     /** 如果父级配置了 `hideChildrenInMenu` ，子级配置了 `name` 则重写 `result` */
     if (parent?.hideChildrenInMenu && targetMenuItem) {
-      result = [parent.path!, targetMenuItem.name!];
+      result = [parent.path!, targetMenuItem.name!, targetMenuItem];
     }
 
     /** 递归设置 `pathID` 和 `title` */
@@ -51,7 +50,8 @@ export function getPathnameMetadata(
 
     return result;
   }
-  return getMetadata(originalMenuData, null) || ['404', 'Error'];
+
+  return getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
 }
 
 const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
@@ -84,13 +84,25 @@ export function getActiveTabInfo(location: BeautifulLocation) {
    */
   function getInfo(
     mode: RouteTabsMode,
-    originalMenuData: MenuDataItem[],
+    originalMenuData: CustomMenuDataItem[],
     setTabTitle: RouteTabsProps['setTabTitle'],
-  ): [string, React.ReactNode] {
-    const [pathID, title] = memoizeOneGetPathnameMetadata(location.pathname!, originalMenuData);
+  ): {
+    id: string;
+    hash?: string;
+    title: React.ReactNode;
+    item?: CustomMenuDataItem;
+  } {
+    const [pathID, title, item] = memoizeOneGetPathnameMetadata(
+      location.pathname!,
+      originalMenuData,
+    );
 
     if (mode === 'route') {
-      return [pathID, title];
+      return {
+        id: pathID,
+        title,
+        item,
+      };
     }
 
     // 以下为 **路径** 模式的处理逻辑：
@@ -108,8 +120,14 @@ export function getActiveTabInfo(location: BeautifulLocation) {
       }),
     );
 
-    return [`${pathID}-${hashPart}`, setTabTitle?.(pathID, title, params, location) || title];
+    return {
+      id: pathID,
+      hash: hashPart,
+      title: setTabTitle?.(pathID, title, params, location) || title,
+      item,
+    };
   }
+
   return getInfo;
 }
 
