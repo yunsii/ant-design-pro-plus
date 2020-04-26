@@ -24,8 +24,9 @@ function useTabs(options: UseTabsOptions) {
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
-  const processTabs = (_tabs: RouteTab[]) =>
-    _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item));
+  const processTabs = usePersistFn((_tabs: RouteTab[]) =>
+    _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)),
+  );
 
   /** 获取激活标签页的相邻标签页 */
   const getNextTab = usePersistFn(() => {
