@@ -24,9 +24,8 @@ function useTabs(options: UseTabsOptions) {
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
-  const setTabsAfterDelete = (_tabs: RouteTab[]) => {
-    setTabs(() => _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)));
-  };
+  const processTabs = (_tabs: RouteTab[]) =>
+    _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item));
 
   /** 获取激活标签页的相邻标签页 */
   const getNextTab = usePersistFn(() => {
@@ -45,7 +44,7 @@ function useTabs(options: UseTabsOptions) {
      *
      * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
      */
-    const targetTab = _find(tabs, { key: keyToSwitch });
+    const targetTab = getTab(keyToSwitch);
     routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
 
     targetTab && callback?.();
@@ -54,27 +53,25 @@ function useTabs(options: UseTabsOptions) {
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
     (removeKey: string, nextTabKey?: string, callback?: () => void) => {
-      const restTabs = tabs.filter(item => item.key !== removeKey);
-      setTabsAfterDelete(restTabs);
-
       const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
       handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
+
+      setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key !== removeKey)));
     },
   );
 
   const handleRemoveOthers = usePersistFn((currentKey: string, callback?: () => void) => {
-    const restTabs = tabs.filter(item => item.key === currentKey);
-    setTabsAfterDelete(restTabs);
-
     handleSwitch(currentKey, callback);
+
+    setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key === currentKey)));
   });
 
   const handRemoveRightTabs = usePersistFn((currentKey: string, callback?: () => void) => {
-    const currentIndex = _findIndex(tabs, { key: currentKey });
-    const restTabs = tabs.slice(0, currentIndex + 1);
-    setTabsAfterDelete(restTabs);
+    handleSwitch(getTab(currentKey)!.key, callback);
 
-    handleSwitch(tabs[currentIndex].key, callback);
+    setTabs(prevTabs =>
+      processTabs(prevTabs.slice(0, _findIndex(prevTabs, { key: currentKey }) + 1)),
+    );
   });
 
   /**
@@ -170,7 +167,7 @@ function useTabs(options: UseTabsOptions) {
 
   useEffect(() => {
     const currentExtraTabProperties = { location: _omit(location, ['key']) };
-    const activedTab = _find(tabs, { key: activeKey });
+    const activedTab = getTab(activeKey);
 
     if (activedTab) {
       const { extraTabProperties: prevExtraTabProperties } = activedTab;
