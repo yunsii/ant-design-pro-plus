@@ -25,7 +25,6 @@ function useTabs(options: UseTabsOptions) {
     setTabTitle,
   );
   const prevActiveKey = useReallyPrevious(activeKey);
-  console.log(menuItem);
 
   const getTabKey = usePersistFn((key?: string) =>
     hash ? `${key || activeKey}-${hash}` : key || activeKey,
@@ -92,7 +91,6 @@ function useTabs(options: UseTabsOptions) {
   const addTab = usePersistFn((newTab: RouteTab, followPath?: string) => {
     setTabs(prevTabs => {
       let result = [...prevTabs];
-      console.log('followPath', followPath);
       if (followPath) {
         const targetIndex = _findIndex(prevTabs, { key: getTabKey(followPath) });
         if (targetIndex >= 0) {
