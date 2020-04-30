@@ -32,6 +32,13 @@ export interface CustomMenuDataItem extends MenuDataItem {
   followPath?: string;
 }
 
+export interface SetTabTitlePayload {
+  path: string;
+  locale: string;
+  params: any;
+  location: H.Location;
+}
+
 export interface UseTabsOptions {
   mode?: RouteTabsMode;
   children?: UmiChildren;
@@ -45,12 +52,7 @@ export interface UseTabsOptions {
    * @param params 根据路由解析得到的参数
    * @param location
    */
-  setTabTitle?: (
-    path: string,
-    locale: string,
-    params: any,
-    location: H.Location,
-  ) => React.ReactNode;
+  setTabTitle?: (payload: SetTabTitlePayload) => React.ReactNode | void;
 }
 
 export interface BeautifulLocation<Q = {}, S = H.LocationState> extends H.Location<S> {

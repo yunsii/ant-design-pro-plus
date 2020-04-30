@@ -1,10 +1,11 @@
 import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
+import _partial from 'lodash/partial';
+import _mapValues from 'lodash/mapValues';
 import router from 'umi/router';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
-import _partial from 'lodash/partial';
 import pathToRegexp from 'path-to-regexp';
 import { matchPath } from 'react-router';
 
@@ -115,7 +116,12 @@ export function getActiveTabInfo(location: BeautifulLocation) {
     const hashPart = hash(
       JSON.stringify({
         ...params,
-        ...query,
+        /**
+         * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
+         * 导致了计算的 hash 值可能不唯一
+         * 故统一转换为 string 类型
+         */
+        ..._mapValues(query, String),
         ...state,
       }),
     );
@@ -123,7 +129,7 @@ export function getActiveTabInfo(location: BeautifulLocation) {
     return {
       id: pathID,
       hash: hashPart,
-      title: setTabTitle?.(pathID, title, params, location) || title,
+      title: setTabTitle?.({ path: pathID, locale: title, params, location }) || title,
       item,
     };
   }
