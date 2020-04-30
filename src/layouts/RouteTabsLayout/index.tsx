@@ -25,7 +25,7 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
   routes.forEach(item => {
     const { routes: itemRoutes, ...rest } = item;
 
-    if (!item.name) {
+    if (!rest.path || rest.redirect) {
       return;
     }
 
@@ -36,12 +36,22 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
       locale: item.name,
     };
 
-    const localeId = parent ? `${parent.locale}.${newItem.locale}` : `menu.${newItem.locale}`;
+    const getLocaleId = () => {
+      if (!parent && newItem.locale) {
+        return `menu.${newItem.locale}`;
+      }
+
+      if (parent && parent.locale) {
+        return newItem.locale ? `${parent.locale}.${newItem.locale}` : parent.locale;
+      }
+
+      return undefined;
+    };
 
     newItem = {
       ...rest,
-      locale: localeId,
-      name: formatMessage({ id: localeId }),
+      locale: getLocaleId(),
+      name: getLocaleId() ? formatMessage({ id: getLocaleId()! }) : '未命名',
     };
 
     if (Array.isArray(itemRoutes) && itemRoutes.length) {
