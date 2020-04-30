@@ -24,11 +24,13 @@ function useTabs(options: UseTabsOptions) {
     originalMenuData,
     setTabTitle,
   );
-  const prevActiveKey = useReallyPrevious(activeKey);
 
+  /** 可指定 key，默认使用 activeKey */
   const getTabKey = usePersistFn((key?: string) =>
-    hash ? `${key || activeKey}-${hash}` : key || activeKey,
+    mode === 'args' ? `${key || activeKey}-${hash}` : key || activeKey,
   );
+
+  const prevActiveKey = useReallyPrevious(getTabKey());
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
@@ -38,7 +40,7 @@ function useTabs(options: UseTabsOptions) {
 
   /** 获取激活标签页的相邻标签页 */
   const getNextTab = usePersistFn(() => {
-    const removeIndex = _findIndex(tabs, { key: activeKey });
+    const removeIndex = _findIndex(tabs, { key: getTabKey() });
     const nextIndex = removeIndex >= 1 ? removeIndex - 1 : removeIndex + 1;
     return tabs[nextIndex];
   });
@@ -62,7 +64,8 @@ function useTabs(options: UseTabsOptions) {
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
     (removeKey: string, nextTabKey?: string, callback?: () => void) => {
-      const getNextTabKeyByRemove = () => (removeKey === activeKey ? getNextTab()?.key : activeKey);
+      const getNextTabKeyByRemove = () =>
+        removeKey === getTabKey() ? getNextTab()?.key : getTabKey();
       handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback);
 
       setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key !== removeKey)));
@@ -120,7 +123,7 @@ function useTabs(options: UseTabsOptions) {
    */
   const reloadTab = usePersistFn(
     (
-      reloadKey: string = activeKey,
+      reloadKey: string = getTabKey(),
       tabTitle?: React.ReactNode,
       extraTabProperties?: any,
       content?: UmiChildren,
@@ -167,7 +170,7 @@ function useTabs(options: UseTabsOptions) {
       return;
     }
 
-    handleRemove(activeKey, path || prevActiveKey, callback);
+    handleRemove(getTabKey(), path || prevActiveKey, callback);
   });
 
   useEffect(() => {
@@ -188,14 +191,14 @@ function useTabs(options: UseTabsOptions) {
 
   useEffect(() => {
     const currentExtraTabProperties = { location: _omit(location, ['key']) };
-    const activedTab = getTab(activeKey);
+    const activedTab = getTab(getTabKey());
 
     if (activedTab) {
       const { extraTabProperties: prevExtraTabProperties } = activedTab;
       if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
-        reloadTab(activeKey, activeTitle, currentExtraTabProperties, children);
+        reloadTab(getTabKey(), activeTitle, currentExtraTabProperties, children);
       }
-      Logger(`no effect of tab key: ${activeKey}`);
+      Logger(`no effect of tab key: ${getTabKey()}`);
     } else {
       const newTab = {
         tab: activeTitle,
@@ -206,14 +209,14 @@ function useTabs(options: UseTabsOptions) {
 
       const { followPath } = menuItem || {};
 
-      Logger(`add tab key: ${activeKey}`);
+      Logger(`add tab key: ${getTabKey()}`);
       addTab(newTab, followPath);
     }
   }, [children]);
 
   return {
     tabs,
-    activeKey,
+    activeKey: getTabKey(),
     handleSwitch,
     handleRemove,
     handleRemoveOthers,
