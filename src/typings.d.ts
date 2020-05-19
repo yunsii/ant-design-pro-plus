@@ -33,9 +33,9 @@ interface Window {
   routerBase: string;
 
   reloadTab: (path?: string) => void;
-  /** 如果已经打开的标签页会触发 callback */
-  goBackTab: (path?: string, callback?: () => void) => void;
-  closeAndGoBackTab: (path?: string, callback?: () => void) => void;
+  /** 如果已经打开的标签页会触发 callback ，如果 force 为 true ，总会调用 callback */
+  goBackTab: (path?: string, callback?: () => void, force?: boolean) => void;
+  closeAndGoBackTab: (path?: string, callback?: () => void, force?: boolean) => void;
 }
 
 declare let ga: Function;
