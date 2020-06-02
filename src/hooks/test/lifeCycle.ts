@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import _partial from 'lodash/partial';
 
-import { logger } from '@/utils/utils';
+import Logger from '@/utils/Logger';
 
-const Logger = _partial(logger, 'useConsole');
+const logger = new Logger('useConsole');
 
 export const useConsole = (name: string) => {
-  Logger(`render ${name}`);
+  logger.log(`render ${name}`);
   useEffect(() => {
-    Logger(`mounted ${name}`);
+    logger.log(`mounted ${name}`);
     return () => {
-      Logger(`will unmount ${name}`);
+      logger.log(`will unmount ${name}`);
     };
   }, []);
 };

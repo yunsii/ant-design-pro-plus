@@ -10,7 +10,7 @@ import pathToRegexp from 'path-to-regexp';
 import { matchPath } from 'react-router';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
-import { logger } from '@/utils/utils';
+import Logger from '@/utils/Logger';
 import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
 
 /**
@@ -141,7 +141,7 @@ export function routeTo(path: string | BeautifulLocation) {
   router.push(path);
 }
 
-const Logger = _partial(logger, 'PropsAreEqual');
+const logger = new Logger('PropsAreEqual');
 
 export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const {
@@ -165,7 +165,7 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
     ...nextRest
   } = nextProps;
   if (!_isEqual(prevRest, nextRest)) {
-    Logger(`${prevLocation.pathname}: update by props`);
+    logger.log(`${prevLocation.pathname}: update by props`);
     // console.log(prevRest);
     // console.log(nextRest);
     return false;
@@ -176,13 +176,13 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const isLocationChange =
     prevPathname !== nextPathname || prevSearch !== nextSearch || !_isEqual(prevState, nextState);
   if (isLocationChange) {
-    Logger(`${prevLocation.pathname} -> ${nextPathname}: update by route or params`);
+    logger.log(`${prevLocation.pathname} -> ${nextPathname}: update by route or params`);
     // console.log({ prevPathname, prevSearch, prevState });
     // console.log({ nextPathname, nextSearch, nextState });
     return false;
   }
 
-  Logger(`without re-render: ${prevPathname}`);
+  logger.log(`without re-render: ${prevPathname}`);
   return true;
 };
 

@@ -8,11 +8,11 @@ import _partial from 'lodash/partial';
 import { useLocation } from 'react-router';
 
 import { useReallyPrevious } from '@/hooks/common';
-import { logger } from '@/utils/utils';
+import Logger from '@/utils/Logger';
 import { UmiChildren, RouteTab, UseTabsOptions, BeautifulLocation } from './data';
 import { getActiveTabInfo, routeTo } from './utils';
 
-const Logger = _partial(logger, 'useTabs');
+const logger = new Logger('useTabs');
 
 function useTabs(options: UseTabsOptions) {
   const location = useLocation() as BeautifulLocation;
@@ -48,25 +48,27 @@ function useTabs(options: UseTabsOptions) {
   /**
    * force: 是否在目标标签页不存在的时候强制回调函数
    */
-  const handleSwitch = usePersistFn((keyToSwitch: string, callback?: () => void, force: boolean = false) => {
-    if (!keyToSwitch) {
-      return;
-    }
+  const handleSwitch = usePersistFn(
+    (keyToSwitch: string, callback?: () => void, force: boolean = false) => {
+      if (!keyToSwitch) {
+        return;
+      }
 
-    /**
-     * `keyToSwitch` 有值时，`targetTab` 可能为空。
-     *
-     * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
-     */
-    const targetTab = getTab(keyToSwitch);
-    routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
+      /**
+       * `keyToSwitch` 有值时，`targetTab` 可能为空。
+       *
+       * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
+       */
+      const targetTab = getTab(keyToSwitch);
+      routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
 
-    if (force) {
-      callback?.();
-    } else {
-      targetTab && callback?.();
-    }
-  });
+      if (force) {
+        callback?.();
+      } else {
+        targetTab && callback?.();
+      }
+    },
+  );
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
@@ -135,7 +137,7 @@ function useTabs(options: UseTabsOptions) {
       extraTabProperties?: any,
       content?: UmiChildren,
     ) => {
-      Logger(`reload tab key: ${reloadKey}`);
+      logger.log(`reload tab key: ${reloadKey}`);
       setTabs(prevTabs =>
         prevTabs.map(item => {
           if (item.key === reloadKey) {
@@ -160,7 +162,7 @@ function useTabs(options: UseTabsOptions) {
 
   const goBackTab = usePersistFn((path?: string, callback?: () => void, force?: boolean) => {
     if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
-      Logger('go back failed, no previous actived key or previous tab is closed.', 'warn');
+      logger.log('go back failed, no previous actived key or previous tab is closed.', 'warn');
       return;
     }
 
@@ -168,17 +170,19 @@ function useTabs(options: UseTabsOptions) {
   });
 
   /** 关闭当前标签页并返回到上次打开的标签页 */
-  const closeAndGoBackTab = usePersistFn((path?: string, callback?: () => void, force?: boolean) => {
-    if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
-      Logger(
-        'close and go back failed, no previous actived key or previous tab is closed.',
-        'warn',
-      );
-      return;
-    }
+  const closeAndGoBackTab = usePersistFn(
+    (path?: string, callback?: () => void, force?: boolean) => {
+      if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
+        logger.log(
+          'close and go back failed, no previous actived key or previous tab is closed.',
+          'warn',
+        );
+        return;
+      }
 
-    handleRemove(getTabKey(), path || prevActiveKey, callback, force);
-  });
+      handleRemove(getTabKey(), path || prevActiveKey, callback, force);
+    },
+  );
 
   useEffect(() => {
     window.reloadTab = reloadTab;
@@ -187,7 +191,7 @@ function useTabs(options: UseTabsOptions) {
 
     return () => {
       const hint = () => {
-        Logger(`PageTabs had unmounted.`);
+        logger.log(`PageTabs had unmounted.`);
       };
 
       window.reloadTab = hint;
@@ -205,7 +209,7 @@ function useTabs(options: UseTabsOptions) {
       if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
         reloadTab(getTabKey(), activeTitle, currentExtraTabProperties, children);
       }
-      Logger(`no effect of tab key: ${getTabKey()}`);
+      logger.log(`no effect of tab key: ${getTabKey()}`);
     } else {
       const newTab = {
         tab: activeTitle,
@@ -216,7 +220,7 @@ function useTabs(options: UseTabsOptions) {
 
       const { followPath } = menuItem || {};
 
-      Logger(`add tab key: ${getTabKey()}`);
+      logger.log(`add tab key: ${getTabKey()}`);
       addTab(newTab, followPath);
     }
   }, [children]);

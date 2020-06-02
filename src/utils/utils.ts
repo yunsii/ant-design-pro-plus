@@ -62,14 +62,3 @@ export const getRouteAuthority = (path: string, routeData: Route[]) => {
 };
 
 export const isProductionEnv = () => process.env.NODE_ENV === 'production';
-
-export const logger = (
-  domain: string,
-  message: string,
-  type: keyof Console = 'log',
-  force: boolean = false,
-) => {
-  if (console && (!isProductionEnv() || force)) {
-    console[type](`%c[${domain}] %c${message}`, 'font-weight: bolder', 'font-weight: normal');
-  }
-};
