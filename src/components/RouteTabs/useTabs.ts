@@ -72,10 +72,14 @@ function useTabs(options: UseTabsOptions) {
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
-    (removeKey: string, nextTabKey?: string, callback?: () => void, force?: boolean) => {
+    (removeKey: string, nextTabKey?: string | false, callback?: () => void, force?: boolean) => {
       const getNextTabKeyByRemove = () =>
         removeKey === getTabKey() ? getNextTab()?.key : getTabKey();
-      handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback, force);
+
+      /** 如果 nextTabKey 为 false 时，不执行切换便签页操作，因此需要注意如此调用后应该还有已打开的标签页 */
+      if (nextTabKey !== false) {
+        handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback, force);
+      }
 
       setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key !== removeKey)));
     },
@@ -162,21 +166,28 @@ function useTabs(options: UseTabsOptions) {
 
   const goBackTab = usePersistFn((path?: string, callback?: () => void, force?: boolean) => {
     if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
-      logger.log('go back failed, no previous actived key or previous tab is closed.', 'warn');
+      logger.warn('go back failed, no previous actived key or previous tab is closed.');
       return;
     }
 
     handleSwitch(path || prevActiveKey!, callback, force);
   });
 
+  /** 关闭后切记需要激活另一个标签页，否则会导致页面空白 */
+  const closeTab = usePersistFn((path?: string, callback?: () => void, force?: boolean) => {
+    if (path && !getTab(path)) {
+      logger.warn('close failed, target tab is closed.');
+      return;
+    }
+
+    handleRemove(path || getTabKey(), false, callback, force);
+  });
+
   /** 关闭当前标签页并返回到上次打开的标签页 */
   const closeAndGoBackTab = usePersistFn(
     (path?: string, callback?: () => void, force?: boolean) => {
       if (!path && (!prevActiveKey || !getTab(prevActiveKey))) {
-        logger.log(
-          'close and go back failed, no previous actived key or previous tab is closed.',
-          'warn',
-        );
+        logger.warn('close and go back failed, no previous actived key or previous tab is closed.');
         return;
       }
 
@@ -187,11 +198,12 @@ function useTabs(options: UseTabsOptions) {
   useEffect(() => {
     window.reloadTab = reloadTab;
     window.goBackTab = goBackTab;
+    window.closeTab = closeTab;
     window.closeAndGoBackTab = closeAndGoBackTab;
 
     return () => {
       const hint = () => {
-        logger.log(`PageTabs had unmounted.`);
+        logger.warn(`PageTabs had unmounted.`);
       };
 
       window.reloadTab = hint;
