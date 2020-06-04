@@ -33,14 +33,14 @@ export default class Logger {
     this._prefix = `${this.name}`;
   }
 
-  _canPrint(type: keyof Console) {
+  _canPrint(type: LoggerLevel) {
     if (isProductionEnv()) {
       return this._map[this.level] <= (this._map[type] || 2);
     }
     return true;
   }
 
-  _print(type: keyof Console = 'log') {
+  _print(type: LoggerLevel = 'log') {
     return (message: string, ...params: any[]) => {
       if (this.disabled || !this._canPrint(type)) {
         return;
