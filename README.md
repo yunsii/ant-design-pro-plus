@@ -26,6 +26,7 @@
 - 可固定标签栏
 - [快捷操作](/src/typings.d.ts#L35)
   - 刷新标签页 - `window.reloadTab()`
+  - 关闭标签页 - `window.closeTab()`
   - 返回之前标签页 - `window.goBackTab()`
   - 关闭并返回之前标签页 - `window.closeAndGoBackTab()`
 - `followPath`，路由定义中新增配置，默认打开方式是添加到所有标签页最后面，可通过配置该属性，使得一个标签页在 `followPath` 指定的标签页后面打开
