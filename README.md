@@ -12,7 +12,7 @@
 
 原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/zpr1g/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
-注：预览由于是部署到 Github Pages ，所以使用 `isProductionEnv()` 方法避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
+注：预览由于是部署到 Github Pages ，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic) ，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv()` 方法避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
 
 ## ✨ 新增特性
 
