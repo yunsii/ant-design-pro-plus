@@ -48,7 +48,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.3",
-    "@ant-design/pro-layout": "^5.0.8",
+    "@ant-design/pro-layout": "5.0.8",
     "@ant-design/pro-table": "^2.2.2",
     "@antv/data-set": "^0.10.2",
     "ahooks": "^2.0.0",
@@ -115,9 +115,6 @@
     "umi-plugin-gh-pages": "^0.2.0",
     "umi-plugin-pro": "^1.0.2",
     "umi-types": "^0.5.14"
-  },
-  "optionalDependencies": {
-    "puppeteer": "^2.0.0"
   },
   "engines": {
     "node": ">=10.0.0"
