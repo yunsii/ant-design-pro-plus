@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+      - run: rm ./node_modules -fr
       - run: npm install
       - run: npm run build
       - name: Deploy
