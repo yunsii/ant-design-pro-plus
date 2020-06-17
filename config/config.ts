@@ -162,7 +162,7 @@ export default {
                 },
                 {
                   name: 'result',
-                  path: '/route-tabs-demo/result/:id',
+                  path: '/route-tabs-demo/result',
                   hideInMenu: true,
                   component: './RouteTabsDemo/Result',
 
@@ -238,6 +238,7 @@ export default {
   //     pathRewrite: { '^/server': '' },
   //   },
   // },
-  base: '/ant-design-pro-plus/',
+  base: '/ant-design-pro-plus',
   publicPath: '/ant-design-pro-plus/',
+  exportStatic: {},
 } as IConfig;

@@ -18,9 +18,9 @@ export default withRouteTab(() => {
           onPressEnter={() => {
             if (text?.trim()) {
               router.push({
-                pathname: `/route-tabs-demo/result/${text}`,
-                state: options.includes('withState') ? { state: 'yes' } : undefined,
-                query: options.includes('withQuery') ? { query: 'yes' } : undefined,
+                pathname: `/route-tabs-demo/result`,
+                state: options.includes('withState') ? { state: 'yes', id: text } : undefined,
+                query: options.includes('withQuery') ? { query: 'yes', id: text } : undefined,
               });
             }
           }}
