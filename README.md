@@ -51,7 +51,7 @@
 
 ### 新增依赖
 
-- @umijs/hooks
+- ahooks
 - fast-deep-equal
 - hash-string
 

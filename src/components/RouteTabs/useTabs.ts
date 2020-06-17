@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { usePersistFn } from '@umijs/hooks';
+import { usePersistFn } from 'ahooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _omit from 'lodash/omit';
-import _partial from 'lodash/partial';
 import { useLocation } from 'react-router';
 
 import { useReallyPrevious } from '@/hooks/common';

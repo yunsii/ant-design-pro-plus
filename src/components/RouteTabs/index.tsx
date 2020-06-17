@@ -4,7 +4,7 @@ import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps, ClickParam } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import classNames from 'classnames';
-import { usePersistFn } from '@umijs/hooks';
+import { usePersistFn } from 'ahooks';
 
 import { RouteTabsProps } from './data';
 import useTabs from './useTabs';
