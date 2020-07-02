@@ -4,7 +4,6 @@ import _isEqual from 'lodash/isEqual';
 import _partial from 'lodash/partial';
 import _mapValues from 'lodash/mapValues';
 import router from 'umi/router';
-import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import pathToRegexp from 'path-to-regexp';
 import { matchPath } from 'react-router';
@@ -12,6 +11,8 @@ import { matchPath } from 'react-router';
 import { useConsole } from '@/hooks/test/lifeCycle';
 import Logger from '@/utils/Logger';
 import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
+
+const map = {};
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -23,6 +24,10 @@ export function getPathnameMetadata(
   pathname: string,
   originalMenuData: CustomMenuDataItem[],
 ): [string, string, CustomMenuDataItem | undefined] {
+  if (map[pathname]) {
+    return map[pathname];
+  }
+
   function getMetadata(
     menuData: CustomMenuDataItem[],
     parent: CustomMenuDataItem | null,
@@ -52,10 +57,11 @@ export function getPathnameMetadata(
     return result;
   }
 
-  return getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
-}
+  const result = getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
 
-const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
+  map[pathname] = result;
+  return result;
+}
 
 /**
  * 解析路由定义中参数
@@ -93,10 +99,7 @@ export function getActiveTabInfo(location: BeautifulLocation) {
     title: React.ReactNode;
     item?: CustomMenuDataItem;
   } {
-    const [pathID, title, item] = memoizeOneGetPathnameMetadata(
-      location.pathname!,
-      originalMenuData,
-    );
+    const [pathID, title, item] = getPathnameMetadata(location.pathname!, originalMenuData);
 
     if (mode === 'route') {
       return {
