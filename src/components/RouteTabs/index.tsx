@@ -97,6 +97,9 @@ export default function RouteTabs(props: RouteTabsProps) {
           tab={setTab(item.tab, item.key, index)}
           key={item.key}
           closable={item.closable}
+          style={{
+            visibility: 'visible',
+          }}
         >
           {item.content}
         </Tabs.TabPane>
