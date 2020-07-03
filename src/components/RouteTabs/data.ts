@@ -23,7 +23,7 @@ export interface RouteTab {
 
 export interface RouteTabsProps
   extends UseTabsOptions,
-    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange'> {
+    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
 }
 
