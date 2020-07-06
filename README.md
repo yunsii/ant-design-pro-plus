@@ -57,11 +57,11 @@
 
 ## FAQ
 
-## 性能问题
+### 性能问题
 
 可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。
 
-## 关于 umi 3.x
+### 关于 umi 3.x
 
 在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。参考我在 issue [想了解一下 umi 2 与 3 对路由组件处理的异同](https://github.com/umijs/umi/issues/4425) 中的相关分析。这里说明一下：
 
@@ -71,6 +71,6 @@
 
 ![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
 
-## 标签闪烁的问题
+### 标签闪烁的问题
 
 在切换的时候标签会出现闪烁的情况，感谢这个 [issue](https://github.com/zpr1g/ant-design-pro-plus/issues/5) 提出的这个问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
