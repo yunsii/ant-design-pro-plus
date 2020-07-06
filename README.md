@@ -55,7 +55,9 @@
 - fast-deep-equal
 - hash-string
 
-### 性能问题
+## FAQ
+
+## 性能问题
 
 可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。
 
@@ -68,3 +70,7 @@
 **umi 3** 当前内部实现了一个 [`Switch`](https://github.com/umijs/umi/blob/master/packages/renderer-react/src/renderRoutes/Switch.tsx#L2) 组件，通过 `__RouterContext` 消费当前 `location` 状态，遍历所有子组件，只通过 `React.cloneElement()` 创建匹配的**唯一路由组件**，这就导致了 `BasicLayout` 下的所有标签页在切换时都会全部卸载再加载为当前路由的页面，故该方案暂时无法使用。
 
 ![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
+
+## 标签闪烁的问题
+
+在切换的时候标签会出现闪烁的情况，感谢这个 [issue](https://github.com/zpr1g/ant-design-pro-plus/issues/5) 提出的这个问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
