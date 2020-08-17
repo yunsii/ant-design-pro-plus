@@ -59,7 +59,7 @@
 
 ### 性能问题
 
-可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。
+可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook ，会导致无法优化。如果一定要用的话，只能自行使用 `useMemo` 优化了。
 
 ### 关于 umi 3.x
 
