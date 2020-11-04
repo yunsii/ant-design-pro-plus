@@ -55,7 +55,7 @@
 - fast-deep-equal
 - hash-string
 
-## FAQ
+## Q&A
 
 ### 性能问题
 
