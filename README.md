@@ -71,6 +71,8 @@
 
 ![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
 
+经过 issue [想了解一下 umi 2 与 3 对路由组件处理的异同](https://github.com/umijs/umi/issues/4425) 中 @Github-FP 的提醒，恍然大悟的一个骚操作，通过 `chidlren.props.children` 结合 react-router 替换到 umi 提供的 Switch 组件。
+
 ### 标签闪烁的问题
 
 在切换的时候标签会出现闪烁的情况，感谢这个 [issue](https://github.com/zpr1g/ant-design-pro-plus/issues/5) 提出的这个问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
