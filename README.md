@@ -71,7 +71,7 @@
 
 ![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
 
-经过 issue [想了解一下 umi 2 与 3 对路由组件处理的异同](https://github.com/umijs/umi/issues/4425) 中 @Github-FP 的提醒，恍然大悟的一个骚操作，通过 `chidlren.props.children` 结合 react-router 替换到 umi 提供的 Switch 组件。
+在上述 issue 中的[最新回复](https://github.com/umijs/umi/issues/4425#issuecomment-735339723)，恍然大悟的一个骚操作，通过 `chidlren.props.children` 结合 react-router 替换到 umi 提供的 Switch 组件。
 
 ### 标签闪烁的问题
 
