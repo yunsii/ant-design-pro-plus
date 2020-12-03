@@ -2,6 +2,7 @@ import { Effect } from 'dva';
 import { Reducer } from 'redux';
 
 import { queryCurrent, query as queryUsers } from '@/services/user';
+import { isProductionEnv } from '@/utils/utils';
 
 export interface CurrentUser {
   avatar?: string;
@@ -38,7 +39,12 @@ const UserModel: UserModelType = {
   namespace: 'user',
 
   state: {
-    currentUser: {},
+    currentUser: isProductionEnv
+      ? {
+          name: 'Serati Ma',
+          avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        }
+      : {},
   },
 
   effects: {
@@ -50,6 +56,8 @@ const UserModel: UserModelType = {
       });
     },
     *fetchCurrent(_, { call, put }) {
+      if (isProductionEnv) return;
+
       const response = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',

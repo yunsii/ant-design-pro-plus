@@ -1,9 +1,10 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import React from 'react';
 import { Avatar, Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
-import React from 'react';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import { router } from 'umi';
+
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
@@ -44,20 +45,20 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
         {menu && (
-          <Menu.Item key="center">
+          <Menu.Item key='center'>
             <UserOutlined />
             个人中心
           </Menu.Item>
         )}
         {menu && (
-          <Menu.Item key="settings">
+          <Menu.Item key='settings'>
             <SettingOutlined />
             个人设置
           </Menu.Item>
         )}
         {menu && <Menu.Divider />}
 
-        <Menu.Item key="logout">
+        <Menu.Item key='logout'>
           <LogoutOutlined />
           退出登录
         </Menu.Item>
@@ -66,16 +67,18 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     return currentUser && currentUser.name ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+          <Avatar size='small' className={styles.avatar} src={currentUser.avatar} alt='avatar' />
           <span className={styles.name}>{currentUser.name}</span>
         </span>
       </HeaderDropdown>
     ) : (
       <Spin
-        size="small"
+        size='small'
         style={{
           marginLeft: 8,
           marginRight: 8,
+          display: 'flex',
+          alignItems: 'center',
         }}
       />
     );
