@@ -15,11 +15,14 @@ export interface LoggerOptions {
 
 export default class Logger {
   name: string;
+
   level: LoggerLevel;
+
   disabled: boolean;
 
-  _prefix: string;
-  _map = {
+  private prefix: string;
+
+  private map = {
     log: 0,
     warn: 1,
     error: 2,
@@ -30,24 +33,24 @@ export default class Logger {
     this.level = options?.level || 'warn';
     this.disabled = options?.disabled || false;
 
-    this._prefix = `${this.name}`;
+    this.prefix = `${this.name}`;
   }
 
-  _canPrint(type: LoggerLevel) {
-    if (isProductionEnv()) {
-      return this._map[this.level] <= (this._map[type] || 2);
+  private canPrint(type: LoggerLevel) {
+    if (isProductionEnv) {
+      return this.map[this.level] <= (this.map[type] || 2);
     }
     return true;
   }
 
-  _print(type: LoggerLevel = 'log') {
+  private print(type: LoggerLevel = 'log') {
     return (message: string, ...params: any[]) => {
-      if (this.disabled || !this._canPrint(type)) {
+      if (this.disabled || !this.canPrint(type)) {
         return;
       }
 
       console[type](
-        `%c[${this._prefix}] %c${message}`,
+        `%c[${this.prefix}] %c${message}`,
         'font-weight: bolder',
         'font-weight: normal',
         ...params,
@@ -56,14 +59,14 @@ export default class Logger {
   }
 
   log(message: string, ...params: any[]) {
-    this._print('log')(message, ...params);
+    this.print('log')(message, ...params);
   }
 
   warn(message: string, ...params: any[]) {
-    this._print('warn')(message, ...params);
+    this.print('warn')(message, ...params);
   }
 
   error(message: string, ...params: any[]) {
-    this._print('error')(message, ...params);
+    this.print('error')(message, ...params);
   }
 }

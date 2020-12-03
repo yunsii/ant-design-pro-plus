@@ -160,12 +160,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     }
   };
 
-  if (isProductionEnv()) {
+  if (isProductionEnv) {
     setAuthority('admin');
   }
 
   // get children authority
-  const authorized = isProductionEnv()
+  const authorized = isProductionEnv
     ? { authority: ['admin'] }
     : getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
         authority: undefined,

@@ -1,8 +1,10 @@
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message } from 'antd';
 import React, { useState, useRef } from 'react';
+import { Button, Divider, Dropdown, Menu, message } from 'antd';
+import { SorterResult } from 'antd/lib/table/interface';
+
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 
 import { isProductionEnv } from '@/utils/utils';
 import { withRouteTab } from '@/components/RouteTabs/utils';
@@ -141,7 +143,11 @@ const TableList = withRouteTab(() => {
         actionRef={actionRef}
         rowKey='key'
         onChange={(_, _filter, _sorter) => {
-          setSorter(`${_sorter.field}_${_sorter.order}`);
+          setSorter(
+            `${(_sorter as SorterResult<TableListItem>).field}_${
+              (_sorter as SorterResult<TableListItem>).order
+            }`,
+          );
         }}
         params={{
           sorter,
@@ -182,7 +188,7 @@ const TableList = withRouteTab(() => {
           </div>
         )}
         request={async params => {
-          if (isProductionEnv()) {
+          if (isProductionEnv) {
             return {
               data: [],
               success: true,
