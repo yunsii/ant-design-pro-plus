@@ -71,7 +71,7 @@
 
 ![IMG_0013.PNG](https://i.loli.net/2020/04/17/W3gOx26dFb8Qjsc.png)
 
-在上述 issue 中的[最新回复](https://github.com/umijs/umi/issues/4425#issuecomment-735339723)，恍然大悟的一个骚操作，通过 `chidlren.props.children` 结合 react-router 替换到 umi 提供的 Switch 组件。
+在上述 issue 中的[最新回复](https://github.com/umijs/umi/issues/4425#issuecomment-735339723)中恍然大悟了一个骚操作：通过 `chidlren.props.children` 结合 react-router 替换掉 umi 提供的 Switch 组件。
 
 ### 标签闪烁的问题
 
