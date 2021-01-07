@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { usePersistFn } from 'ahooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
@@ -25,8 +25,9 @@ function useTabs(options: UseTabsOptions) {
   );
 
   /** 可指定 key，默认使用 activeKey */
-  const getTabKey = usePersistFn((key?: string) =>
-    mode === 'args' ? `${key || activeKey}-${hash}` : key || activeKey,
+  const getTabKey = useCallback(
+    (key?: string) => (mode === 'args' ? `${key || activeKey}-${hash}` : key || activeKey),
+    [activeKey],
   );
 
   const prevActiveKey = useReallyPrevious(getTabKey());
