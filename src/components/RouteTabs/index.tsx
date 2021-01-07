@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
 import { TabsProps } from 'antd/lib/tabs';
-import { MenuProps, ClickParam } from 'antd/lib/menu';
+import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import classNames from 'classnames';
 import { usePersistFn } from 'ahooks';
@@ -41,20 +41,18 @@ export default function RouteTabs(props: RouteTabsProps) {
     }
   });
 
-  const handleTabsMenuClick = usePersistFn(
-    (tabKey: string): MenuProps['onClick'] => (event: ClickParam) => {
-      const { key, domEvent } = event;
-      domEvent.stopPropagation();
+  const handleTabsMenuClick = usePersistFn((tabKey: string): MenuProps['onClick'] => event => {
+    const { key, domEvent } = event;
+    domEvent.stopPropagation();
 
-      if (key === closeCurrentTabMenuKey) {
-        handleRemove(tabKey);
-      } else if (key === closeOthersTabMenuKey) {
-        handleRemoveOthers(tabKey);
-      } else if (key === closeToRightTabMenuKey) {
-        handRemoveRightTabs(tabKey);
-      }
-    },
-  );
+    if (key === closeCurrentTabMenuKey) {
+      handleRemove(tabKey);
+    } else if (key === closeOthersTabMenuKey) {
+      handleRemoveOthers(tabKey);
+    } else if (key === closeToRightTabMenuKey) {
+      handRemoveRightTabs(tabKey);
+    }
+  });
 
   const setMenu = usePersistFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>

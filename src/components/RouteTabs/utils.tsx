@@ -12,7 +12,9 @@ import { useConsole } from '@/hooks/test/lifeCycle';
 import Logger from '@/utils/Logger';
 import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
 
-const map = {};
+const mapCache: {
+  [k: string]: any;
+} = {};
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -24,8 +26,8 @@ export function getPathnameMetadata(
   pathname: string,
   originalMenuData: CustomMenuDataItem[],
 ): [string, string, CustomMenuDataItem | undefined] {
-  if (map[pathname]) {
-    return map[pathname];
+  if (mapCache[pathname]) {
+    return mapCache[pathname];
   }
 
   function getMetadata(
@@ -59,7 +61,7 @@ export function getPathnameMetadata(
 
   const result = getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
 
-  map[pathname] = result;
+  mapCache[pathname] = result;
   return result;
 }
 
@@ -125,7 +127,7 @@ export function getActiveTabInfo(location: BeautifulLocation) {
          * 故统一转换为 string 类型
          */
         ..._mapValues(query, String),
-        ...state,
+        ...(state as any),
       }),
     );
 
