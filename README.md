@@ -4,13 +4,13 @@
 
 官方说明请参阅 [/master/README.zh-CN](https://github.com/ant-design/ant-design-pro/blob/master/README.zh-CN.md)
 
-![github pages](https://github.com/zpr1g/ant-design-pro-plus/workflows/github%20pages/badge.svg) [![GitHub license](https://img.shields.io/github/license/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/commits/master)
+![github pages](https://github.com/theprimone/ant-design-pro-plus/workflows/github%20pages/badge.svg) [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/commits/master)
 
 </div>
 
 ![GudmSe.png](https://s1.ax1x.com/2020/03/30/GudmSe.png)
 
-原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/zpr1g/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
+原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
 注：预览由于是部署到 Github Pages ，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic) ，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
 
@@ -75,4 +75,4 @@
 
 ### 标签闪烁的问题
 
-在切换的时候标签会出现闪烁的情况，感谢这个 [issue](https://github.com/zpr1g/ant-design-pro-plus/issues/5) 提出的这个问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
+在切换的时候标签会出现闪烁的情况，感谢这个 [issue](https://github.com/theprimone/ant-design-pro-plus/issues/5) 提出的这个问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
