@@ -8,7 +8,7 @@ export type RouteTabsMode = 'route' | 'args';
 
 export interface RouteTab extends PageTab {
   /** used to extends tab's properties */
-  extraTabProperties: { location: BeautifulLocation };
+  extraTabProperties: { location: BeautifulLocation<{}, {} | undefined> };
 }
 
 export interface UseTabsOptions {

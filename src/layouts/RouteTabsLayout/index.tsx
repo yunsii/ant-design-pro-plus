@@ -12,10 +12,10 @@ import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
 
-import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
 import { RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
+import GlobalFooter from '@/components/GlobalFooter';
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): MenuDataItem[] {
@@ -61,7 +61,7 @@ const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 export interface RouteTabsLayoutProps {
   mode?: RouteTabsMode | false;
   fixedRouteTabs?: boolean;
-  children: React.ReactNode;
+  children: React.ReactElement;
   routes?: Route[];
   setTabTitle?: (
     path: string,
@@ -93,14 +93,11 @@ function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
         originalMenuData={memoizedOneLocaleRoutes(routes)}
         // animated={false}
       >
-        <div>
-          {children}
-          <footer>{footerRender()}</footer>
-        </div>
+        {children}
       </RouteTabs>
     );
   }
-  return children as JSX.Element;
+  return <GlobalFooter content={children} />;
 }
 
 export default RouteTabsLayout;

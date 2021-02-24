@@ -1,0 +1,4 @@
+# more about: https://yarnpkg.com/configuration/yarnrc
+
+# httpProxy: 'http://127.0.0.1:8999'
+npmRegistryServer: 'https://registry.npm.taobao.org'

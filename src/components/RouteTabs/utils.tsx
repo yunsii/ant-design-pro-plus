@@ -2,14 +2,14 @@ import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
 import _isArray from 'lodash/isArray';
+import _partial from 'lodash/partial';
 import { history } from 'umi';
 import memoizeOne from 'memoize-one';
 import hash from 'hash-string';
 import { MenuDataItem } from '@ant-design/pro-layout';
-import _partial from 'lodash/partial';
+import { pathToRegexp, match as pathToRegexpMatch } from '@qixian.cs/path-to-regexp';
 
 import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
-import { pathToRegexp, match as pathToRegexpMatch } from './dependencies/path-to-regexp-v6';
 import { useConsole } from '@/hooks/test/lifeCycle';
 import { logger } from '@/utils/utils';
 
@@ -89,7 +89,7 @@ export function getParams(path: string, pathname: string): { [key: string]: stri
  *
  * @param location 必须是 `withRouter` 注入的 `location`
  */
-export function getActiveTabInfo(location: BeautifulLocation) {
+export function getActiveTabInfo(location: BeautifulLocation<{}, {}>) {
   /**
    * 获取标签页的 id 和标题
    *

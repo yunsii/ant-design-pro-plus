@@ -6,7 +6,6 @@
 import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
-  DefaultFooter,
   SettingDrawer,
   PageLoading,
 } from '@ant-design/pro-layout';
@@ -14,14 +13,13 @@ import { formatMessage, Link } from 'umi';
 import React, { useEffect, useState } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import classNames from 'classnames';
 
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
-import { isAntDesignPro, getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
+import { getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
 import { DefaultSettings } from '@/../config/defaultSettings';
 import RouteTabsLayout from './RouteTabsLayout';
@@ -41,7 +39,7 @@ const noMatch = (
   />
 );
 
-export interface BasicLayoutProps extends ProLayoutProps {
+export interface BasicLayoutProps extends Omit<ProLayoutProps, 'children'> {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
   };
@@ -50,6 +48,7 @@ export interface BasicLayoutProps extends ProLayoutProps {
   };
   settings: DefaultSettings;
   dispatch: Dispatch;
+  children: React.ReactElement;
 }
 
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
@@ -69,58 +68,6 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
     };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
-
-const defaultFooterDom = (
-  <DefaultFooter
-    copyright='2019 蚂蚁金服体验技术部出品'
-    links={[
-      {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
-        blankTarget: true,
-      },
-      {
-        key: 'github',
-        title: <GithubOutlined />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
-        blankTarget: true,
-      },
-    ]}
-  />
-);
-
-export const footerRender = () => {
-  if (!isAntDesignPro()) {
-    return defaultFooterDom;
-  }
-
-  return (
-    <>
-      {defaultFooterDom}
-      <div
-        style={{
-          padding: '0px 24px 24px',
-          textAlign: 'center',
-        }}
-      >
-        <a href='https://www.netlify.com' target='_blank' rel='noopener noreferrer'>
-          <img
-            src='https://www.netlify.com/img/global/badges/netlify-color-bg.svg'
-            width='82px'
-            alt='netlify logo'
-          />
-        </a>
-      </div>
-    </>
-  );
-};
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const {
@@ -240,7 +187,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       <SettingDrawer
         settings={settings}
         onSettingChange={config => {
-          console.log(config);
           setSettings(config as DefaultSettings);
         }}
       />
