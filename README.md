@@ -64,8 +64,8 @@
 
 ### 关于 umi@&#8203;3.x
 
-在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。相关讨论和分析参考 issue [想了解一下 umi 2 与 3 对路由组件处理的异同](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，顺便提了 [PR](https://github.com/umijs/umi/pull/6101)，如果能够通过，那么升级 umi@&#8203;3.x 就没什么问题了。
+在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，顺便提了 PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101)，如果能够通过，那么升级 umi@&#8203;3.x 就没什么问题了。
 
 ### 标签闪烁的问题
 
-在切换的时候标签会出现闪烁的情况，感谢 [issue](https://github.com/theprimone/ant-design-pro-plus/issues/5) 提出的问题。刚开始还没在意，后来发现了原因，参考 [Tabs 内容过大在切换时会出现内容闪烁，但是 antd@4.3.1 不会](https://github.com/ant-design/ant-design/issues/25343)。
+在切换的时候标签会出现闪烁的情况 [#5](https://github.com/theprimone/ant-design-pro-plus/issues/5)，刚开始还没在意，后来发现了原因，参考 [ant-design/ant-design#25343](https://github.com/ant-design/ant-design/issues/25343)。
