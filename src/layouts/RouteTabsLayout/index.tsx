@@ -7,16 +7,15 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
 import * as H from 'history';
 import { Route } from '@ant-design/pro-layout/lib/typings';
-import { formatMessage } from 'umi-plugin-react/locale';
-import _find from 'lodash/find';
+import { formatMessage } from 'umi';
+import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
-import { matchPath, useLocation } from 'react-router';
 
-import { footerRender } from '@/layouts/BasicLayout';
 import RouteTabs from '@/components/RouteTabs';
-import { UmiChildren, RouteTabsMode } from '@/components/RouteTabs/data';
+import { RouteTabsMode } from '@/components/RouteTabs/data';
 import PageLoading from '@/components/PageLoading';
+import GlobalFooter from '@/components/GlobalFooter';
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): MenuDataItem[] {
@@ -25,7 +24,7 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
   routes.forEach(item => {
     const { routes: itemRoutes, ...rest } = item;
 
-    if (!rest.path || rest.redirect) {
+    if (!item.name) {
       return;
     }
 
@@ -36,25 +35,15 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
       locale: item.name,
     };
 
-    const getLocaleId = () => {
-      if (!parent && newItem.locale) {
-        return `menu.${newItem.locale}`;
-      }
-
-      if (parent && parent.locale) {
-        return newItem.locale ? `${parent.locale}.${newItem.locale}` : parent.locale;
-      }
-
-      return undefined;
-    };
+    const localeId = parent ? `${parent.locale}.${newItem.locale}` : `menu.${newItem.locale}`;
 
     newItem = {
       ...rest,
-      locale: getLocaleId(),
-      name: getLocaleId() ? formatMessage({ id: getLocaleId()! }) : '未命名',
+      locale: localeId,
+      name: formatMessage({ id: localeId }),
     };
 
-    if (Array.isArray(itemRoutes) && itemRoutes.length) {
+    if (_isArray(itemRoutes) && itemRoutes.length) {
       newItem = {
         ...newItem,
         children: localeRoutes(itemRoutes, newItem),
@@ -69,20 +58,10 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
 
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
-export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
-  function isInMenus(menuData: MenuDataItem[]) {
-    const targetMenuItem = _find(menuData, item => matchPath(pathname, item.path!));
-
-    return !!targetMenuItem;
-  }
-
-  return isInMenus(originalMenuData);
-}
-
 export interface RouteTabsLayoutProps {
   mode?: RouteTabsMode | false;
   fixedRouteTabs?: boolean;
-  children: UmiChildren;
+  children: React.ReactElement;
   routes?: Route[];
   setTabTitle?: (
     path: string,
@@ -103,33 +82,22 @@ function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
     children,
   } = props;
 
-  const location = useLocation();
-
   if (mode && menuLoading) {
     return <PageLoading />;
   }
   if (mode && routes) {
-    const originalMenuData = memoizedOneLocaleRoutes(routes);
-
-    if (!isPathInMenus(location.pathname, originalMenuData)) {
-      return children!;
-    }
-
     return (
       <RouteTabs
         mode={mode}
         fixed={fixedRouteTabs}
-        originalMenuData={originalMenuData}
+        originalMenuData={memoizedOneLocaleRoutes(routes)}
         // animated={false}
       >
-        <div>
-          {children as UmiChildren}
-          <footer>{footerRender()}</footer>
-        </div>
+        {children}
       </RouteTabs>
     );
   }
-  return children;
+  return <GlobalFooter content={children} />;
 }
 
 export default RouteTabsLayout;

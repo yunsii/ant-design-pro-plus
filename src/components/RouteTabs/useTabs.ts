@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { usePersistFn } from 'ahooks';
+import { useLocation, history } from 'umi';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _omit from 'lodash/omit';
-import { useLocation } from 'react-router';
 
 import { useReallyPrevious } from '@/hooks/common';
 import Logger from '@/utils/Logger';
-import { UmiChildren, RouteTab, UseTabsOptions, BeautifulLocation } from './data';
-import { getActiveTabInfo, routeTo } from './utils';
+import { RouteTab, UseTabsOptions, BeautifulLocation } from './data';
+import { getActiveTabInfo } from './utils';
 
 const logger = new Logger('useTabs');
 
 function useTabs(options: UseTabsOptions) {
-  const location = useLocation() as BeautifulLocation;
   const { mode = 'route', setTabTitle, originalMenuData, children } = options;
+  const location = useLocation() as BeautifulLocation<{}, {}>;
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
   const { id: activeKey, hash, title: activeTitle, item: menuItem } = getActiveTabInfo(location)(
@@ -60,7 +60,8 @@ function useTabs(options: UseTabsOptions) {
        * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
        */
       const targetTab = getTab(keyToSwitch);
-      routeTo(targetTab ? targetTab.extraTabProperties.location : keyToSwitch);
+      // history.push(targetTab.extraTabProperties.location);
+      history.push(targetTab ? targetTab.extraTabProperties.location : (keyToSwitch as any));
 
       if (force) {
         callback?.();
@@ -139,28 +140,34 @@ function useTabs(options: UseTabsOptions) {
       reloadKey: string = getTabKey(),
       tabTitle?: React.ReactNode,
       extraTabProperties?: any,
-      content?: UmiChildren,
+      content?: React.ReactNode,
     ) => {
+      if (tabs.length < 1) {
+        return;
+      }
+
       logger.log(`reload tab key: ${reloadKey}`);
-      setTabs(prevTabs =>
-        prevTabs.map(item => {
-          if (item.key === reloadKey) {
-            const {
-              tab: prevTabTitle,
-              extraTabProperties: prevExtraTabProperties,
-              content: prevContent,
-              ...rest
-            } = item;
-            return {
-              ...rest,
-              tab: tabTitle || prevTabTitle,
-              extraTabProperties: extraTabProperties || prevExtraTabProperties,
-              content: content || React.cloneElement(item.content, { key: new Date().valueOf() }),
-            };
-          }
-          return item;
-        }),
-      );
+      const updatedTabs = tabs.map(item => {
+        if (item.key === reloadKey) {
+          const {
+            tab: prevTabTitle,
+            extraTabProperties: prevExtraTabProperties,
+            content: prevContent,
+            ...rest
+          } = item;
+          return {
+            ...rest,
+            tab: tabTitle || prevTabTitle,
+            extraTabProperties: extraTabProperties || prevExtraTabProperties,
+            content:
+              content ||
+              React.cloneElement(item.content as JSX.Element, { key: new Date().valueOf() }),
+          };
+        }
+        return item;
+      });
+
+      setTabs(updatedTabs);
     },
   );
 

@@ -49,6 +49,7 @@ export default class Logger {
         return;
       }
 
+      // eslint-disable-next-line no-console
       console[type](
         `%c[${this.prefix}] %c${message}`,
         'font-weight: bolder',

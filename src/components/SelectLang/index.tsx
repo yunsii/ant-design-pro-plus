@@ -1,6 +1,6 @@
 import { GlobalOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { getLocale, setLocale } from 'umi-plugin-react/locale';
+import { getLocale, setLocale } from 'umi';
 import { ClickParam } from 'antd/es/menu';
 import React from 'react';
 import classNames from 'classnames';
@@ -34,7 +34,7 @@ const SelectLang: React.FC<SelectLangProps> = props => {
     <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={changeLang}>
       {locales.map(locale => (
         <Menu.Item key={locale}>
-          <span role="img" aria-label={languageLabels[locale]}>
+          <span role='img' aria-label={languageLabels[locale]}>
             {languageIcons[locale]}
           </span>{' '}
           {languageLabels[locale]}
@@ -43,9 +43,9 @@ const SelectLang: React.FC<SelectLangProps> = props => {
     </Menu>
   );
   return (
-    <HeaderDropdown overlay={langMenu} placement="bottomRight">
+    <HeaderDropdown overlay={langMenu} placement='bottomRight'>
       <span className={classNames(styles.dropDown, className)}>
-        <GlobalOutlined title="语言" />
+        <GlobalOutlined title='语言' />
       </span>
     </HeaderDropdown>
   );

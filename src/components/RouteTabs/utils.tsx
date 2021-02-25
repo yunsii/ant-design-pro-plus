@@ -1,16 +1,23 @@
 import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
-import _partial from 'lodash/partial';
 import _mapValues from 'lodash/mapValues';
-import router from 'umi/router';
 import hash from 'hash-string';
-import pathToRegexp from 'path-to-regexp';
-import { matchPath } from 'react-router';
+import { pathToRegexp, match as pathMatch } from '@qixian.cs/path-to-regexp';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
 import Logger from '@/utils/Logger';
 import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
+
+export function isPathInMenus(pathname: string, originalMenuData: CustomMenuDataItem[]): boolean {
+  function isInMenus(menuData: CustomMenuDataItem[]) {
+    const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
+
+    return !!targetMenuItem;
+  }
+
+  return isInMenus(originalMenuData);
+}
 
 const mapCache: {
   [k: string]: any;
@@ -74,8 +81,13 @@ export function getPathnameMetadata(
  * @param pathname 当前的页面路由
  */
 export function getParams(path: string, pathname: string): { [key: string]: string } {
-  const { params } = matchPath(pathname, path) || {};
-  return params || {};
+  const match = pathMatch(path);
+  const result = match(pathname) as {
+    index: number;
+    params: { [k: string]: string };
+    path: string;
+  };
+  return result.params;
 }
 
 /**
@@ -83,7 +95,7 @@ export function getParams(path: string, pathname: string): { [key: string]: stri
  *
  * @param location 必须是 `withRouter` 注入的 `location`
  */
-export function getActiveTabInfo(location: BeautifulLocation) {
+export function getActiveTabInfo(location: BeautifulLocation<{}, {}>) {
   /**
    * 获取标签页的 id 和标题
    *
@@ -140,10 +152,6 @@ export function getActiveTabInfo(location: BeautifulLocation) {
   }
 
   return getInfo;
-}
-
-export function routeTo(path: string | BeautifulLocation) {
-  router.push(path);
 }
 
 const logger = new Logger('PropsAreEqual');

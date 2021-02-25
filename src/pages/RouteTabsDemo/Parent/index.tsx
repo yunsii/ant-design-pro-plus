@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Steps } from 'antd';
 import * as H from 'history';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import { withRouteTab } from '@/components/RouteTabs/utils';
@@ -25,7 +25,7 @@ export default withRouteTab(
           <Steps
             current={setCurrentByLocation()}
             onChange={_current => {
-              router.push(`/route-tabs-demo/parent/child${_current + 1}`);
+              history.push(`/route-tabs-demo/parent/child${_current + 1}`);
             }}
           >
             <Steps.Step title='child 1' />

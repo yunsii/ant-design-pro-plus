@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import _partial from 'lodash/partial';
 
 import Logger from '@/utils/Logger';
 

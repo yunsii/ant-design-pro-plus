@@ -1,4 +1,5 @@
 import { MenuTheme } from 'antd/es/menu/MenuContext';
+import { BasicLayoutProps as ProLayoutProps } from '@ant-design/pro-layout';
 
 // 标签页功能配置
 const RouteTabsMode = [
@@ -21,7 +22,7 @@ export interface DefaultSettings {
   /**
    * nav menu position: `sidemenu` or `topmenu`
    */
-  layout: 'sidemenu' | 'topmenu';
+  layout: ProLayoutProps['layout'];
   /**
    * layout of content: `Fluid` or `Fixed`, only works when layout is topmenu
    */
@@ -60,7 +61,7 @@ export default {
   navTheme: 'dark',
   // 拂晓蓝
   primaryColor: '#1890ff',
-  layout: 'sidemenu',
+  layout: 'side',
   contentWidth: 'Fluid',
   fixedHeader: false,
   autoHideHeader: false,
