@@ -1,0 +1,30 @@
+.tabTitle {
+  position: relative;
+  font-weight: initial;
+
+  &::before {
+    position: absolute;
+    top: -12px;
+    right: 0;
+    bottom: -12px;
+    left: -16px;
+    content: '';
+  }
+}
+
+:global {
+  .page-tabs-fixed {
+    > .ant-tabs-bar {
+      // height: 41px;
+      // border-bottom: 1px solid #fff;
+      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+    }
+
+    > .ant-tabs-content {
+      .ant-tabs-tabpane-active {
+        height: calc(100vh - 108px);
+        overflow: auto;
+      }
+    }
+  }
+}

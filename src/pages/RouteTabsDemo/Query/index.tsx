@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Input, Checkbox, Button } from 'antd';
+import { Card, Input, Checkbox, Button, Form } from 'antd';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -9,45 +9,60 @@ export default withRouteTab(() => {
   const [text, setText] = useState<string>();
   const [options, setOptions] = useState<any[]>([]);
 
+  const handleSearch = () => {
+    history.push({
+      pathname: `/route-tabs-demo/result`,
+      state: options.includes('withState') ? { state: 'yes', id: text } : null,
+      query: options.includes('withQuery') ? { query: 'yes', id: text || null } : undefined,
+    });
+  };
+
   return (
     <PageHeaderWrapper title='Query' content='Input and press enter to new page'>
       <Card title='Query'>
-        <Input
-          value={text}
-          onChange={e => setText(e.target.value)}
-          onPressEnter={() => {
-            if (text?.trim()) {
-              history.push({
-                pathname: `/route-tabs-demo/result/${text}`,
-                state: options.includes('withState') ? { state: 'yes' } : undefined,
-                query: options.includes('withQuery') ? { query: 'yes' } : undefined,
-              });
-            }
-          }}
-        />
-        <Checkbox.Group
-          style={{ marginTop: 12 }}
-          value={options}
-          options={[
-            {
-              label: 'with state (`{ state: "yes"}`)',
-              value: 'withState',
-            },
-            {
-              label: 'with query (`{ query: "yes"}`)',
-              value: 'withQuery',
-            },
-          ]}
-          onChange={_options => {
-            setOptions(_options);
-          }}
-        />
-        <Button
-          onClick={() => {
-            setText('123');
-          }}
+        <Form.Item
+          labelCol={{ xs: 24 }}
+          labelAlign='left'
+          label='Text'
+          extra={
+            <>
+              <Checkbox.Group
+                style={{ marginTop: 12 }}
+                value={options}
+                options={[
+                  {
+                    label: 'with state (`{ state: "yes"}`)',
+                    value: 'withState',
+                  },
+                  {
+                    label: 'with query (`{ query: "yes"}`)',
+                    value: 'withQuery',
+                  },
+                ]}
+                onChange={_options => {
+                  setOptions(_options);
+                }}
+              />
+              <Button
+                onClick={() => {
+                  setText('nice');
+                }}
+              >
+                setText: nice
+              </Button>
+            </>
+          }
         >
-          setText: 123
+          <Input
+            value={text}
+            onChange={e => setText(e.target.value)}
+            onPressEnter={() => {
+              handleSearch();
+            }}
+          />
+        </Form.Item>
+        <Button type='primary' onClick={() => handleSearch()}>
+          查询
         </Button>
       </Card>
     </PageHeaderWrapper>

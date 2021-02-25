@@ -43,4 +43,5 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   base: '/ant-design-pro-plus/',
   publicPath: '/ant-design-pro-plus/',
+  exportStatic: {},
 });

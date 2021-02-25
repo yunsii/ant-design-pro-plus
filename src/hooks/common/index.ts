@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { usePrevious } from '@umijs/hooks';
+import { usePrevious } from 'ahooks';
 import deepEqual from 'fast-deep-equal';
 
 /**

@@ -4,15 +4,16 @@
 
 官方说明请参阅 [/master/README.zh-CN](https://github.com/ant-design/ant-design-pro/blob/master/README.zh-CN.md)
 
-[![GitHub license](https://img.shields.io/github/license/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/zpr1g/ant-design-pro-plus.svg)](https://github.com/zpr1g/ant-design-pro-plus/commits/master)
+![github pages](https://github.com/theprimone/ant-design-pro-plus/workflows/github%20pages/badge.svg) [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/commits/master)
 
 </div>
 
-![GudmSe.png](https://s1.ax1x.com/2020/03/30/GudmSe.png)
+<!-- ![GudmSe.png](https://s1.ax1x.com/2020/03/30/GudmSe.png) -->
+<img alt="Snapshot" src="static/snapshot.svg" width="100%" />
 
-原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/zpr1g/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
+原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
-注：预览由于是部署到 Github Pages ，所以使用 isProductionEnv() 方法避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
+注：预览由于是部署到 Github Pages ，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic) ，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
 
 ## ✨ 新增特性
 
@@ -24,10 +25,12 @@
   - 基于路由，每个路由只渲染一个标签页
   - 基于路由参数，计算出每个路由的所有参数的哈希值，不同的哈希值渲染不同的标签页
 - 可固定标签栏
-- 快捷操作
-  - 刷新当前标签页 - `window.reloadCurrentTab()`
+- [快捷操作](/src/typings.d.ts#L35)
+  - 刷新标签页 - `window.reloadTab()`
+  - 关闭标签页 - `window.closeTab()`
   - 返回之前标签页 - `window.goBackTab()`
   - 关闭并返回之前标签页 - `window.closeAndGoBackTab()`
+- `followPath`，路由定义中新增配置，默认打开方式是添加到所有标签页最后面，可通过配置该属性，使得一个标签页在 `followPath` 指定的标签页后面打开（可参考查询页 Demo）
 
 注：返回默认只会返回上次的路由，所以如果上次的路由没有关闭，会在两个路由之前反复横跳，当删除上次打开的标签页之后再调用该返回方法时只会打印警告。
 
@@ -49,10 +52,20 @@
 
 ### 新增依赖
 
-- @umijs/hooks
+- ahooks
 - fast-deep-equal
 - hash-string
 
+## Q & A
+
 ### 性能问题
 
-原以为仍然可通过之前像 `v2` 那样的高阶组件避免标签页的无用渲染，但是几经尝试，都无法在高阶函数中实现，可见 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L181) 方法。临时的解决方案是在每个页面中自行使用 `useMemo` 优化性能，参考自 [issue#15156](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
+可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook ，会导致无法优化。如果一定要用的话，只能自行使用 `useMemo` 优化了。
+
+### 关于 umi@&#8203;3.x
+
+在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，顺便提了 PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101)，如果能够通过，那么升级 umi@&#8203;3.x 就没什么问题了。
+
+### 标签闪烁的问题
+
+在切换的时候标签会出现闪烁的情况 [#5](https://github.com/theprimone/ant-design-pro-plus/issues/5)，刚开始还没在意，后来发现了原因，参考 [ant-design/ant-design#25343](https://github.com/ant-design/ant-design/issues/25343)。

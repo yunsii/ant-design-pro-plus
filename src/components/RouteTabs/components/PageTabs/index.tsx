@@ -4,7 +4,7 @@ import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
 import { FormattedMessage } from 'umi';
 import classNames from 'classnames';
-import { usePersistFn } from '@umijs/hooks';
+import { usePersistFn } from 'ahooks';
 
 import { UseTabsOptions } from '@/components/RouteTabs/data';
 import GlobalFooter from '@/components/GlobalFooter';

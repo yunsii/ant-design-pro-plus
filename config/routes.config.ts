@@ -83,7 +83,7 @@ export default [
               },
               {
                 name: 'result',
-                path: '/route-tabs-demo/result/:id',
+                path: '/route-tabs-demo/result',
                 hideInMenu: true,
                 component: './RouteTabsDemo/Result',
               },

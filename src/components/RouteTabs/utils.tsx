@@ -1,20 +1,16 @@
 import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
-import _isArray from 'lodash/isArray';
-import _partial from 'lodash/partial';
-import { history } from 'umi';
-import memoizeOne from 'memoize-one';
+import _mapValues from 'lodash/mapValues';
 import hash from 'hash-string';
-import { MenuDataItem } from '@ant-design/pro-layout';
-import { pathToRegexp, match as pathToRegexpMatch } from '@qixian.cs/path-to-regexp';
+import { pathToRegexp, match as pathMatch } from '@qixian.cs/path-to-regexp';
 
-import { RouteTabsMode, RouteTab, RouteTabsProps, BeautifulLocation } from './data';
 import { useConsole } from '@/hooks/test/lifeCycle';
-import { logger } from '@/utils/utils';
+import Logger from '@/utils/Logger';
+import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
 
-export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]): boolean {
-  function isInMenus(menuData: MenuDataItem[]) {
+export function isPathInMenus(pathname: string, originalMenuData: CustomMenuDataItem[]): boolean {
+  function isInMenus(menuData: CustomMenuDataItem[]) {
     const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
 
     return !!targetMenuItem;
@@ -22,6 +18,10 @@ export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]
 
   return isInMenus(originalMenuData);
 }
+
+const mapCache: {
+  [k: string]: any;
+} = {};
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
@@ -31,13 +31,17 @@ export function isPathInMenus(pathname: string, originalMenuData: MenuDataItem[]
  */
 export function getPathnameMetadata(
   pathname: string,
-  originalMenuData: MenuDataItem[],
-): [string, string] {
+  originalMenuData: CustomMenuDataItem[],
+): [string, string, CustomMenuDataItem | undefined] {
+  if (mapCache[pathname]) {
+    return mapCache[pathname];
+  }
+
   function getMetadata(
-    menuData: MenuDataItem[],
-    parent: MenuDataItem | null,
-  ): [string, string] | null {
-    let result: [string, string] | null = null;
+    menuData: CustomMenuDataItem[],
+    parent: CustomMenuDataItem | null,
+  ): [string, string, CustomMenuDataItem | undefined] | null {
+    let result: [string, string, CustomMenuDataItem | undefined] | null = null;
 
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
     const targetMenuItem = _find(
@@ -47,24 +51,26 @@ export function getPathnameMetadata(
 
     /** 如果为 **一级路由** 直接写入 `result` ，否则父级没有 `component` 时才能写入 `result` */
     if ((!parent && targetMenuItem) || (parent && !parent.component && targetMenuItem)) {
-      result = [targetMenuItem.path!, targetMenuItem.name!];
+      result = [targetMenuItem.path!, targetMenuItem.name!, targetMenuItem];
     }
     /** 如果父级配置了 `hideChildrenInMenu` ，子级配置了 `name` 则重写 `result` */
     if (parent?.hideChildrenInMenu && targetMenuItem) {
-      result = [parent.path!, targetMenuItem.name!];
+      result = [parent.path!, targetMenuItem.name!, targetMenuItem];
     }
 
     /** 递归设置 `pathID` 和 `title` */
-    if (_isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
+    if (Array.isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
       result = getMetadata(targetMenuItem!.children!, targetMenuItem!) || result;
     }
 
     return result;
   }
-  return getMetadata(originalMenuData, null) || ['404', 'Error'];
-}
 
-const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
+  const result = getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
+
+  mapCache[pathname] = result;
+  return result;
+}
 
 /**
  * 解析路由定义中参数
@@ -75,7 +81,7 @@ const memoizeOneGetPathnameMetadata = memoizeOne(getPathnameMetadata, _isEqual);
  * @param pathname 当前的页面路由
  */
 export function getParams(path: string, pathname: string): { [key: string]: string } {
-  const match = pathToRegexpMatch(path);
+  const match = pathMatch(path);
   const result = match(pathname) as {
     index: number;
     params: { [k: string]: string };
@@ -99,13 +105,22 @@ export function getActiveTabInfo(location: BeautifulLocation<{}, {}>) {
    */
   function getInfo(
     mode: RouteTabsMode,
-    originalMenuData: MenuDataItem[],
+    originalMenuData: CustomMenuDataItem[],
     setTabTitle: RouteTabsProps['setTabTitle'],
-  ): [string, React.ReactNode] {
-    const [pathID, title] = memoizeOneGetPathnameMetadata(location.pathname!, originalMenuData);
+  ): {
+    id: string;
+    hash?: string;
+    title: React.ReactNode;
+    item?: CustomMenuDataItem;
+  } {
+    const [pathID, title, item] = getPathnameMetadata(location.pathname!, originalMenuData);
 
     if (mode === 'route') {
-      return [pathID, title];
+      return {
+        id: pathID,
+        title,
+        item,
+      };
     }
 
     // 以下为 **路径** 模式的处理逻辑：
@@ -118,21 +133,28 @@ export function getActiveTabInfo(location: BeautifulLocation<{}, {}>) {
     const hashPart = hash(
       JSON.stringify({
         ...params,
-        ...query,
-        ...state,
+        /**
+         * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
+         * 导致了计算的 hash 值可能不唯一
+         * 故统一转换为 string 类型
+         */
+        ..._mapValues(query, String),
+        ...(state as any),
       }),
     );
 
-    return [`${pathID}-${hashPart}`, setTabTitle?.(pathID, title, params, location) || title];
+    return {
+      id: pathID,
+      hash: hashPart,
+      title: setTabTitle?.({ path: pathID, locale: title, params, location }) || title,
+      item,
+    };
   }
+
   return getInfo;
 }
 
-export function routeTo(targetTab: RouteTab) {
-  history.push(targetTab.extraTabProperties.location);
-}
-
-const Logger = _partial(logger, 'PropsAreEqual');
+const logger = new Logger('PropsAreEqual');
 
 export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const {
@@ -156,7 +178,7 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
     ...nextRest
   } = nextProps;
   if (!_isEqual(prevRest, nextRest)) {
-    Logger(`${prevLocation.pathname}: update by props`);
+    logger.log(`${prevLocation.pathname}: update by props`);
     // console.log(prevRest);
     // console.log(nextRest);
     return false;
@@ -167,18 +189,18 @@ export const routePagePropsAreEqual = (prevProps: any, nextProps: any) => {
   const isLocationChange =
     prevPathname !== nextPathname || prevSearch !== nextSearch || !_isEqual(prevState, nextState);
   if (isLocationChange) {
-    Logger(`${prevLocation.pathname} -> ${nextPathname}: update by route or params`);
+    logger.log(`${prevLocation.pathname} -> ${nextPathname}: update by route or params`);
     // console.log({ prevPathname, prevSearch, prevState });
     // console.log({ nextPathname, nextSearch, nextState });
     return false;
   }
 
-  Logger(`without re-render: ${prevPathname}`);
+  logger.log(`without re-render: ${prevPathname}`);
   return true;
 };
 
-export function withRouteTab<Props = any>(
-  WrappedComponent: React.ComponentClass<Props> | React.FC<Props>,
+export function withRouteTab<Props = unknown>(
+  WrappedComponent: React.ComponentType<Props>,
 ): React.MemoExoticComponent<any> {
   const WithRoutePage = React.memo((props: any) => {
     useConsole(props.location.pathname);
@@ -191,6 +213,6 @@ export function withRouteTab<Props = any>(
   return WithRoutePage;
 }
 
-function getDisplayName(WrappedComponent: React.ComponentClass<any> | React.FC<any>) {
+function getDisplayName(WrappedComponent: React.ComponentType<any>) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
