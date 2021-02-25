@@ -11,10 +11,6 @@
 <!-- ![GudmSe.png](https://s1.ax1x.com/2020/03/30/GudmSe.png) -->
 <img alt="Snapshot" src="static/snapshot.svg" width="100%" />
 
-原仓库名称 `ant design pro v2 plus` ，代码移到分支 [`v2-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v2-legacy)。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
-
-注：预览由于是部署到 Github Pages ，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic) ，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是标签页功能 \_(:з」∠)\_
-
 ## ✨ 新增特性
 
 - [基于路由实现标签页切换](#基于路由实现标签页切换)
@@ -56,15 +52,29 @@
 - fast-deep-equal
 - hash-string
 
+## 分支说明
+
+### [`v2-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v2-legacy)
+
+原仓库名称 `ant design pro v2 plus` ，代码移到此分支。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
+
+### [`umi/v2.x`](https://github.com/theprimone/ant-design-pro-plus/tree/umi/v2.x)
+
+基于 umi@&#8203;2.x 的功能实现。
+
 ## Q & A
+
+### 预览页面不能使用动态路由
+
+由于是部署到 Github Pages，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic)，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是功能实现 \_(:з」∠)\_
 
 ### 性能问题
 
-可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook ，会导致无法优化。如果一定要用的话，只能自行使用 `useMemo` 优化了。
+可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
 
-### 关于 umi@&#8203;3.x
+### 基于 `children` 的标签页功能实现从 umi@&#8203;2.x 升级到 umi@&#8203;3.x 的问题
 
-在分支 `feat/umi3` 中尝试升级后发现基于路由的标签页存在极大的问题。相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，顺便提了 PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101)，如果能够通过，那么升级 umi@&#8203;3.x 就没什么问题了。
+相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101) 修复了该问题，但需要使用 umi@&#8203;3.3.8 以上版本。
 
 ### 标签闪烁的问题
 
