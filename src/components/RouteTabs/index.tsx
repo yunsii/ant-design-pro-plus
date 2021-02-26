@@ -104,7 +104,7 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
       tabBarStyle={{ margin: 0 }}
       tabBarGutter={0}
       animated
-      className={classNames({ 'page-tabs-fixed': fixed })}
+      className={classNames('route-tabs', { 'page-tabs-fixed': fixed })}
       {...rest}
       hideAdd
       activeKey={activeKey}
