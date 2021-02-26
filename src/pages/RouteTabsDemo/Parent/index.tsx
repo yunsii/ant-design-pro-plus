@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Steps } from 'antd';
-import * as H from 'history';
+import * as H from 'history-with-query';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
