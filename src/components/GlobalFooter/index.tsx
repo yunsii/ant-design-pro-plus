@@ -31,7 +31,7 @@ const defaultFooterDom = (
 );
 
 export interface FooterProps {
-  content?: React.ReactElement;
+  content?: JSX.Element;
 }
 
 export default function GlobalFooter(props: FooterProps) {

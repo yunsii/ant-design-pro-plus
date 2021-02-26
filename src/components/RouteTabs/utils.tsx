@@ -4,19 +4,22 @@ import _isEqual from 'lodash/isEqual';
 import _mapValues from 'lodash/mapValues';
 import hash from 'hash-string';
 import { pathToRegexp, match as pathMatch } from '@qixian.cs/path-to-regexp';
+import * as H from 'history-with-query';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
 import Logger from '@/utils/Logger';
-import { RouteTabsMode, RouteTabsProps, BeautifulLocation, CustomMenuDataItem } from './data';
+import { CustomRoute } from './useTabs';
+import { Mode } from './config';
+import { RouteTabsProps } from '.';
 
-export function isPathInMenus(pathname: string, originalMenuData: CustomMenuDataItem[]): boolean {
-  function isInMenus(menuData: CustomMenuDataItem[]) {
+export function isRouteTab(pathname: string, originalRoutes: CustomRoute[]): boolean {
+  function isInMenus(menuData: CustomRoute[]) {
     const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
 
     return !!targetMenuItem;
   }
 
-  return isInMenus(originalMenuData);
+  return isInMenus(originalRoutes);
 }
 
 const mapCache: {
@@ -31,17 +34,17 @@ const mapCache: {
  */
 export function getPathnameMetadata(
   pathname: string,
-  originalMenuData: CustomMenuDataItem[],
-): [string, string, CustomMenuDataItem | undefined] {
+  originalMenuData: CustomRoute[],
+): [string, string, CustomRoute | undefined] {
   if (mapCache[pathname]) {
     return mapCache[pathname];
   }
 
   function getMetadata(
-    menuData: CustomMenuDataItem[],
-    parent: CustomMenuDataItem | null,
-  ): [string, string, CustomMenuDataItem | undefined] | null {
-    let result: [string, string, CustomMenuDataItem | undefined] | null = null;
+    menuData: CustomRoute[],
+    parent: CustomRoute | null,
+  ): [string, string, CustomRoute | undefined] | null {
+    let result: [string, string, CustomRoute | undefined] | null = null;
 
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
     const targetMenuItem = _find(
@@ -95,27 +98,27 @@ export function getParams(path: string, pathname: string): { [key: string]: stri
  *
  * @param location 必须是 `withRouter` 注入的 `location`
  */
-export function getActiveTabInfo(location: BeautifulLocation<{}, {}>) {
+export function getActiveTabInfo(location: H.Location) {
   /**
    * 获取标签页的 id 和标题
    *
    * @param pageTabs
-   * @param originalMenuData
+   * @param originalRoutes
    * @param setTabTitle
    */
   function getInfo(
-    mode: RouteTabsMode,
-    originalMenuData: CustomMenuDataItem[],
+    mode: Mode,
+    originalRoutes: CustomRoute[],
     setTabTitle: RouteTabsProps['setTabTitle'],
   ): {
     id: string;
     hash?: string;
     title: React.ReactNode;
-    item?: CustomMenuDataItem;
+    item?: CustomRoute;
   } {
-    const [pathID, title, item] = getPathnameMetadata(location.pathname!, originalMenuData);
+    const [pathID, title, item] = getPathnameMetadata(location.pathname!, originalRoutes);
 
-    if (mode === 'route') {
+    if (mode === Mode.Route) {
       return {
         id: pathID,
         title,

@@ -21,7 +21,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
-import { DefaultSettings } from '@/../config/defaultSettings';
+import { DefaultSettings } from '../../config/defaultSettings';
 import RouteTabsLayout from './RouteTabsLayout';
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
@@ -118,7 +118,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   return (
     <ProLayout
-      className={settings.routeTabsMode && styles.customByPageTabs}
+      className={settings.routeTabs?.mode && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
       menuRender={(_, dom) =>
@@ -176,8 +176,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <RouteTabsLayout
-          mode={settings.routeTabsMode!}
-          fixedRouteTabs={settings.fixedRouteTabs}
+          mode={settings?.routeTabs?.mode}
+          fixed={settings?.routeTabs?.fixed}
           menuLoading={menuLoading}
           routes={props.route.routes!}
         >
@@ -187,7 +187,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       <SettingDrawer
         settings={settings}
         onSettingChange={config => {
-          setSettings(config as DefaultSettings);
+          setSettings({ ...config, routeTabs: settings.routeTabs } as DefaultSettings);
         }}
       />
     </ProLayout>

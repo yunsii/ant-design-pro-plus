@@ -5,20 +5,20 @@
  */
 import { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
-import * as H from 'history';
-import { Route } from '@ant-design/pro-layout/lib/typings';
-import { formatMessage } from 'umi';
+import * as H from 'history-with-query';
+import { formatMessage, useLocation } from 'umi';
 import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
 
-import RouteTabs from '@/components/RouteTabs';
-import { RouteTabsMode } from '@/components/RouteTabs/data';
+import RouteTabs, { Mode } from '@/components/RouteTabs';
+import { CustomRoute } from '@/components/RouteTabs/useTabs';
+import { isRouteTab } from '@/components/RouteTabs/utils';
 import PageLoading from '@/components/PageLoading';
 import GlobalFooter from '@/components/GlobalFooter';
 
 /** 根据路由定义中的 name 本地化标题 */
-function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): MenuDataItem[] {
+function localeRoutes(routes: CustomRoute[], parent: MenuDataItem | null = null): MenuDataItem[] {
   const result: MenuDataItem[] = [];
 
   routes.forEach(item => {
@@ -59,10 +59,10 @@ function localeRoutes(routes: Route[], parent: MenuDataItem | null = null): Menu
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
 export interface RouteTabsLayoutProps {
-  mode?: RouteTabsMode | false;
-  fixedRouteTabs?: boolean;
+  mode?: Mode | false;
+  fixed?: boolean;
   children: React.ReactElement;
-  routes?: Route[];
+  routes?: CustomRoute[];
   setTabTitle?: (
     path: string,
     locale: string,
@@ -72,32 +72,28 @@ export interface RouteTabsLayoutProps {
   menuLoading: boolean;
 }
 
-function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
-  const {
-    mode,
-    fixedRouteTabs,
-    menuLoading,
-    routes,
+export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
+  const { mode, fixed, menuLoading, routes, children } = props;
 
-    children,
-  } = props;
+  const location = useLocation();
+  const originalRoutes = memoizedOneLocaleRoutes(routes!);
 
-  if (mode && menuLoading) {
-    return <PageLoading />;
-  }
-  if (mode && routes) {
-    return (
-      <RouteTabs
-        mode={mode}
-        fixed={fixedRouteTabs}
-        originalMenuData={memoizedOneLocaleRoutes(routes)}
-        // animated={false}
-      >
-        {children}
-      </RouteTabs>
-    );
+  if (mode && isRouteTab(location.pathname, originalRoutes)) {
+    if (menuLoading) {
+      return <PageLoading />;
+    }
+    if (routes) {
+      return (
+        <RouteTabs
+          mode={mode}
+          fixed={fixed}
+          originalRoutes={originalRoutes}
+          // animated={false}
+        >
+          {children}
+        </RouteTabs>
+      );
+    }
   }
   return <GlobalFooter content={children} />;
 }
-
-export default RouteTabsLayout;

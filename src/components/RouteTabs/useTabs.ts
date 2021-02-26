@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { usePersistFn } from 'ahooks';
 import { useLocation, history } from 'umi';
+import * as H from 'history-with-query';
+import { Route } from '@ant-design/pro-layout/lib/typings';
+import { usePersistFn } from 'ahooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
@@ -8,25 +10,51 @@ import _omit from 'lodash/omit';
 
 import { useReallyPrevious } from '@/hooks/common';
 import Logger from '@/utils/Logger';
-import { RouteTab, UseTabsOptions, BeautifulLocation } from './data';
 import { getActiveTabInfo } from './utils';
+import { Mode } from './config';
+import { RouteTab } from '.';
 
 const logger = new Logger('useTabs');
 
+export interface CustomRoute extends Route {
+  /** 配置该路由标签页紧跟指定的某个路由 */
+  follow?: string;
+}
+export interface SetTabTitlePayload {
+  path: string;
+  locale: string;
+  params: any;
+  location: H.Location;
+}
+
+export interface UseTabsOptions {
+  mode?: Mode;
+  children?: JSX.Element;
+  originalRoutes: CustomRoute[];
+
+  /**
+   *
+   *
+   * @param path 标签页路由
+   * @param locale 国际化后的标题
+   * @param params 根据路由解析得到的参数
+   * @param location
+   */
+  setTabTitle?: (payload: SetTabTitlePayload) => React.ReactNode | void;
+}
+
 function useTabs(options: UseTabsOptions) {
-  const { mode = 'route', setTabTitle, originalMenuData, children } = options;
-  const location = useLocation() as BeautifulLocation<{}, {}>;
+  const { mode = Mode.Route, setTabTitle, originalRoutes, children } = options;
+  const location = useLocation();
 
   const [tabs, setTabs] = useState<RouteTab[]>([]);
-  const { id: activeKey, hash, title: activeTitle, item: menuItem } = getActiveTabInfo(location)(
-    mode,
-    originalMenuData,
-    setTabTitle,
-  );
+  const { id: activeKey, hash, title: activeTitle, item: menuItem } = getActiveTabInfo(
+    location as H.Location,
+  )(mode, originalRoutes, setTabTitle);
 
   /** 可指定 key，默认使用 activeKey */
   const getTabKey = useCallback(
-    (key?: string) => (mode === 'args' ? `${key || activeKey}-${hash}` : key || activeKey),
+    (key?: string) => (mode === Mode.Dynamic ? `${key || activeKey}-${hash}` : key || activeKey),
     [activeKey],
   );
 
@@ -105,11 +133,12 @@ function useTabs(options: UseTabsOptions) {
    *
    * @param newTab
    */
-  const addTab = usePersistFn((newTab: RouteTab, followPath?: string) => {
+  const addTab = usePersistFn((newTab: RouteTab, follow?: string) => {
     setTabs(prevTabs => {
       let result = [...prevTabs];
-      if (followPath) {
-        const targetIndex = _findIndex(prevTabs, { key: getTabKey(followPath) });
+      if (follow) {
+        logger.log(`follow: ${follow}`);
+        const targetIndex = _findIndex(prevTabs, { key: getTabKey(follow) });
         if (targetIndex >= 0) {
           result.splice(targetIndex + 1, 0, newTab);
         } else {
@@ -140,7 +169,7 @@ function useTabs(options: UseTabsOptions) {
       reloadKey: string = getTabKey(),
       tabTitle?: React.ReactNode,
       extraTabProperties?: any,
-      content?: React.ReactNode,
+      content?: JSX.Element,
     ) => {
       if (tabs.length < 1) {
         return;
@@ -162,7 +191,7 @@ function useTabs(options: UseTabsOptions) {
             content:
               content ||
               React.cloneElement(item.content as JSX.Element, { key: new Date().valueOf() }),
-          };
+          } as RouteTab;
         }
         return item;
       });
@@ -237,10 +266,10 @@ function useTabs(options: UseTabsOptions) {
         extraTabProperties: currentExtraTabProperties,
       };
 
-      const { followPath } = menuItem || {};
+      const { follow } = menuItem || {};
 
       logger.log(`add tab key: ${getTabKey()}`);
-      addTab(newTab, followPath);
+      addTab(newTab, follow);
     }
   }, [children]);
 

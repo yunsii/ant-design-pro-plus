@@ -84,6 +84,7 @@ export default [
               {
                 name: 'result',
                 path: '/route-tabs-demo/result',
+                follow: '/route-tabs-demo/query',
                 hideInMenu: true,
                 component: './RouteTabsDemo/Result',
               },

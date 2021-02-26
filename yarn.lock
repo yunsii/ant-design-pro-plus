@@ -3392,6 +3392,13 @@
     dva-immer "^0.5.2"
     dva-loading "^3.0.20"
 
+"@umijs/plugin-esbuild@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@umijs/plugin-esbuild/-/plugin-esbuild-1.1.0.tgz#d5b30ea1fd7a903e9f601dc76cb1c3849b78db8d"
+  integrity sha512-f+4NJ5zLAqQD9Qywjmr2lrxRPK+rwZXoP65SLQglLxwrPjmqShCa9Vb5nC6dAPJydw8JgUfMAj85IN6uB09vMA==
+  dependencies:
+    esbuild-loader "~2.6.3"
+
 "@umijs/plugin-helmet@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@umijs/plugin-helmet/-/plugin-helmet-1.1.1.tgz#841aea37b5076b51c2f332659bf9c671cf63794d"
@@ -7252,6 +7259,21 @@ es6-weak-map@^2.0.3:
     es6-iterator "^2.0.3"
     es6-symbol "^3.1.1"
 
+esbuild-loader@~2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/esbuild-loader/-/esbuild-loader-2.6.3.tgz#8a885cca4235c8fe58e5ef3d1427633bb4566f32"
+  integrity sha512-zUzxOJGfgoEKEXuBCtyothM5XulbQBvHlt0yLWBWWXe7QKJ9T8O8itsqTR4nHgUN0yCRgm3+uliNZssiXPM9/g==
+  dependencies:
+    esbuild "^0.8.17"
+    loader-utils "^2.0.0"
+    type-fest "^0.20.2"
+    webpack-sources "^2.2.0"
+
+esbuild@^0.8.17:
+  version "0.8.52"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.8.52.tgz#6dabf11c517af449a96d66da20dfc204ee7b5294"
+  integrity sha512-b5KzFweLLXoXQwdC/e2+Z80c8uo2M5MgP7yQEEebkFw6In4T9CvYcNoM2ElvJt8ByO04zAZUV0fZkXmXoi2s9A==
+
 escalade@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
@@ -9212,7 +9234,7 @@ history-with-query@4.10.4:
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
 
-history@^4.10.1, history@^4.7.2, history@^4.9.0:
+history@^4.7.2, history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/history/-/history-4.10.1.tgz#33371a65e3a83b267434e2b3f3b1b4c58aad4cf3"
   integrity sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
@@ -16607,7 +16629,7 @@ sort-package-json@^1.22.1:
     is-plain-obj "2.1.0"
     sort-object-keys "^1.1.3"
 
-source-list-map@^2.0.0:
+source-list-map@^2.0.0, source-list-map@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
@@ -17982,6 +18004,11 @@ type-fest@^0.18.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
   integrity sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==
 
+type-fest@^0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.20.2.tgz#1bf207f4b28f91583666cb5fbd327887301cd5f4"
+  integrity sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
+
 type-fest@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.6.0.tgz#8d2a2370d3df886eb5c90ada1c5bf6188acf838b"
@@ -18705,6 +18732,14 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1, webpack-
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
+
+webpack-sources@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-2.2.0.tgz#058926f39e3d443193b6c31547229806ffd02bac"
+  integrity sha512-bQsA24JLwcnWGArOKUxYKhX3Mz/nK1Xf6hxullKERyktjNMC4x8koOeaDNTA2fEJ09BdWLbM/iTW0ithREUP0w==
+  dependencies:
+    source-list-map "^2.0.1"
+    source-map "^0.6.1"
 
 webpack@4.44.1:
   version "4.44.1"
