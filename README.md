@@ -27,7 +27,7 @@
   - 关闭标签页 - `window.closeTab()`
   - 返回之前标签页 - `window.goBackTab()`
   - 关闭并返回之前标签页 - `window.closeAndGoBackTab()`
-- `followPath`，路由定义中新增配置，默认打开方式是添加到所有标签页最后面，可通过配置该属性，使得一个标签页在 `followPath` 指定的标签页后面打开（可参考查询页 Demo）
+- `follow`，路由定义中新增配置，默认打开方式是添加到所有标签页最后面，可通过配置该属性，使得一个标签页在 `follow` 指定的标签页后面打开（可参考查询页 Demo）
 
 注：返回默认只会返回上次的路由，所以如果上次的路由没有关闭，会在两个路由之前反复横跳，当删除上次打开的标签页之后再调用该返回方法时只会打印警告。
 
@@ -35,23 +35,17 @@
 
 ```
 ├── config
-│   └── defaultSettings.ts   # 关于 RouteTabs 的配置
+│   └── defaultSettings.ts   # 系统风格配置，新增关于 RouteTabs 的配置
 ├── src
 │   └── components
 │       └── RouteTabs        # 核心组件
 │   └── hooks
 │       └── common           # 使用到的 hook - `useReallyPrevious`
 │   └── layouts
-│       └── RouteTabsLayout  # 菜单加载
+│       └── RouteTabsLayout  # 路由加载
 │   └── pages
 │       └── RouteTabsDemo    # 标签页功能展示
 ```
-
-### 新增依赖
-
-- ahooks
-- fast-deep-equal
-- hash-string
 
 ## 分支说明
 
@@ -65,18 +59,18 @@
 
 ## Q & A
 
-### 预览页面不能使用动态路由
+### 基于 `children` 的标签页功能实现从 umi@&#8203;2.x 升级到 umi@&#8203;3.x 的问题
 
-由于是部署到 Github Pages，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic)，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是功能实现 \_(:з」∠)\_
+相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101) 修复了该问题，但需要使用 umi@&#8203;3.3.8 以上版本。
 
 ### 性能问题
 
 可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
 
-### 基于 `children` 的标签页功能实现从 umi@&#8203;2.x 升级到 umi@&#8203;3.x 的问题
-
-相关讨论和分析参考 [umijs/umi#4425](https://github.com/umijs/umi/issues/4425)，最终分析得出了导致暂时无法升级的[根本原因](https://github.com/umijs/umi/issues/4425#issuecomment-770360267)，PR [umijs/umi#6101](https://github.com/umijs/umi/pull/6101) 修复了该问题，但需要使用 umi@&#8203;3.3.8 以上版本。
-
 ### 标签闪烁的问题
 
 在切换的时候标签会出现闪烁的情况 [#5](https://github.com/theprimone/ant-design-pro-plus/issues/5)，刚开始还没在意，后来发现了原因，参考 [ant-design/ant-design#25343](https://github.com/ant-design/ant-design/issues/25343)。
+
+### 预览页面不能使用动态路由
+
+由于是部署到 Github Pages，配置了 [`exportStatic`](https://v2.umijs.org/zh/config/#exportstatic)，故无法使用形如 `/result/:id` 的动态路由。又通过 `isProductionEnv` 变量避免登录逻辑等问题，如果有接口报错可忽略，重点是功能实现 \_(:з」∠)\_
