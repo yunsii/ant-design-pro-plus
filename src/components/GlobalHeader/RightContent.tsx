@@ -2,6 +2,7 @@ import { Tooltip } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi';
+import { Settings as ProSettings } from '@ant-design/pro-layout';
 import { ReloadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -9,22 +10,22 @@ import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
-import { RouteTabsMode } from '../RouteTabs/data';
+import { Mode } from '../RouteTabs';
 
 export type SiderTheme = 'light' | 'dark';
 export interface GlobalHeaderRightProps extends ConnectProps {
-  theme?: SiderTheme;
-  layout: 'sidemenu' | 'topmenu';
+  navTheme?: ProSettings['navTheme'];
+  layout: ProSettings['layout'];
 
-  routeTabsMode?: RouteTabsMode | false;
-  reloadTab: boolean;
+  routeTabsMode?: Mode;
+  routeTabsReloadable?: boolean;
 }
 
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
-  const { theme, layout, routeTabsMode, reloadTab } = props;
+  const { navTheme, layout, routeTabsMode, routeTabsReloadable } = props;
   let className = styles.right;
 
-  if (theme === 'dark' && layout === 'topmenu') {
+  if (navTheme === 'dark' && layout === 'top') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
@@ -53,7 +54,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
         //   //console.log('input', value);
         // }}
       />
-      {routeTabsMode && reloadTab ? (
+      {routeTabsMode && routeTabsReloadable ? (
         <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
           <a className={styles.action} onClick={() => window.reloadTab()}>
             <ReloadOutlined />
@@ -77,9 +78,9 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 };
 
 export default connect(({ settings }: ConnectState) => ({
-  theme: settings.navTheme,
+  navTheme: settings.navTheme,
   layout: settings.layout,
 
-  routeTabsMode: settings.routeTabsMode,
-  reloadTab: settings.reloadTab,
+  routeTabsMode: settings?.routeTabs?.mode,
+  routeTabsReloadable: settings?.routeTabs?.reloadable,
 }))(GlobalHeaderRight);

@@ -7,10 +7,10 @@ export type DefaultSettings = Partial<ProSettings> & {
 
   routeTabs?: {
     mode: Mode;
-    /** sticky route tabs */
+    /** 固定标签页头部 */
     fixed?: boolean;
-    /**  */
-    reload?: boolean;
+    /** 是否在顶栏显示刷新按钮 */
+    reloadable?: boolean;
   };
 };
 
