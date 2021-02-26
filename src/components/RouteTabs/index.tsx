@@ -14,9 +14,9 @@ import styles from './index.less';
 export { Mode } from './config';
 
 enum CloseTabKey {
-  Current = 1,
-  Others,
-  ToRight,
+  Current = 'current',
+  Others = 'others',
+  ToRight = 'toRight',
 }
 
 export interface RouteTab {
