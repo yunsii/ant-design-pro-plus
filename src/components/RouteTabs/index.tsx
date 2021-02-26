@@ -26,7 +26,7 @@ export interface RouteTab {
   content: JSX.Element;
   closable?: boolean;
   /** used to extends tab's properties */
-  extraTabProperties: { location: H.LocationDescriptorObject<any> };
+  extraProperties: { location: H.LocationDescriptorObject<any> };
 }
 
 export interface RouteTabsProps

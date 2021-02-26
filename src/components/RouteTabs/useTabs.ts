@@ -88,8 +88,7 @@ function useTabs(options: UseTabsOptions) {
        * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
        */
       const targetTab = getTab(keyToSwitch);
-      // history.push(targetTab.extraTabProperties.location);
-      history.push(targetTab ? targetTab.extraTabProperties.location : (keyToSwitch as any));
+      history.push(targetTab ? targetTab.extraProperties.location : (keyToSwitch as any));
 
       if (force) {
         callback?.();
@@ -168,7 +167,7 @@ function useTabs(options: UseTabsOptions) {
     (
       reloadKey: string = getTabKey(),
       tabTitle?: React.ReactNode,
-      extraTabProperties?: any,
+      extraProperties?: any,
       content?: JSX.Element,
     ) => {
       if (tabs.length < 1) {
@@ -180,14 +179,14 @@ function useTabs(options: UseTabsOptions) {
         if (item.key === reloadKey) {
           const {
             tab: prevTabTitle,
-            extraTabProperties: prevExtraTabProperties,
+            extraProperties: prevExtraProperties,
             content: prevContent,
             ...rest
           } = item;
           return {
             ...rest,
             tab: tabTitle || prevTabTitle,
-            extraTabProperties: extraTabProperties || prevExtraTabProperties,
+            extraProperties: extraProperties || prevExtraProperties,
             content:
               content ||
               React.cloneElement(item.content as JSX.Element, { key: new Date().valueOf() }),
@@ -249,21 +248,22 @@ function useTabs(options: UseTabsOptions) {
   }, []);
 
   useEffect(() => {
-    const currentExtraTabProperties = { location: _omit(location, ['key']) };
+    const currentExtraProperties = { location: _omit(location, ['key']) };
     const activedTab = getTab(getTabKey());
 
     if (activedTab) {
-      const { extraTabProperties: prevExtraTabProperties } = activedTab;
-      if (!_isEqual(currentExtraTabProperties, prevExtraTabProperties)) {
-        reloadTab(getTabKey(), activeTitle, currentExtraTabProperties, children);
+      const { extraProperties: prevExtraProperties } = activedTab;
+      if (!_isEqual(currentExtraProperties, prevExtraProperties)) {
+        reloadTab(getTabKey(), activeTitle, currentExtraProperties, children);
+      } else {
+        logger.log(`no effect of tab key: ${getTabKey()}`);
       }
-      logger.log(`no effect of tab key: ${getTabKey()}`);
     } else {
       const newTab = {
         tab: activeTitle,
         key: getTabKey(),
         content: children as any,
-        extraTabProperties: currentExtraTabProperties,
+        extraProperties: currentExtraProperties,
       };
 
       const { follow } = menuItem || {};
