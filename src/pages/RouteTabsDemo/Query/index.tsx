@@ -12,8 +12,10 @@ export default withRouteTab(() => {
   const handleSearch = () => {
     history.push({
       pathname: `/route-tabs-demo/result`,
-      state: options.includes('withState') ? { state: 'yes', id: text } : null,
-      query: options.includes('withQuery') ? { query: 'yes', id: text || null } : undefined,
+      state: options.includes('withState') ? { state: 'yes', text } : null,
+      query: options.includes('withQuery')
+        ? { query: 'yes', text: text || null }
+        : { text: text || null },
     });
   };
 
@@ -23,7 +25,7 @@ export default withRouteTab(() => {
         <Form.Item
           labelCol={{ xs: 24 }}
           labelAlign='left'
-          label='Text'
+          label='text'
           extra={
             <>
               <Checkbox.Group
