@@ -6,7 +6,7 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
 import * as H from 'history-with-query';
-import { formatMessage, useLocation } from 'umi';
+import { useIntl, useLocation } from 'umi';
 import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
@@ -15,10 +15,13 @@ import RouteTabs, { Mode } from '@/components/RouteTabs';
 import { CustomRoute } from '@/components/RouteTabs/useTabs';
 import { isRouteTab } from '@/components/RouteTabs/utils';
 import PageLoading from '@/components/PageLoading';
-import GlobalFooter from '@/components/GlobalFooter';
 
 /** 根据路由定义中的 name 本地化标题 */
-function localeRoutes(routes: CustomRoute[], parent: MenuDataItem | null = null): MenuDataItem[] {
+function localeRoutes(
+  routes: CustomRoute[],
+  formatMessage: any,
+  parent: MenuDataItem | null = null,
+): MenuDataItem[] {
   const result: MenuDataItem[] = [];
 
   routes.forEach(item => {
@@ -46,7 +49,7 @@ function localeRoutes(routes: CustomRoute[], parent: MenuDataItem | null = null)
     if (_isArray(itemRoutes) && itemRoutes.length) {
       newItem = {
         ...newItem,
-        children: localeRoutes(itemRoutes, newItem),
+        children: localeRoutes(itemRoutes, formatMessage, newItem),
       };
     }
 
@@ -69,17 +72,18 @@ export interface RouteTabsLayoutProps {
     params: any,
     location: H.Location,
   ) => React.ReactNode;
-  menuLoading: boolean;
+  loading?: boolean;
 }
 
 export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
-  const { mode, fixed, menuLoading, routes, children } = props;
+  const { mode, fixed, loading, routes, children } = props;
 
+  const { formatMessage } = useIntl();
   const location = useLocation();
-  const originalRoutes = memoizedOneLocaleRoutes(routes!);
+  const originalRoutes = memoizedOneLocaleRoutes(routes!, formatMessage);
 
   if (mode && isRouteTab(location.pathname, originalRoutes)) {
-    if (menuLoading) {
+    if (loading) {
       return <PageLoading />;
     }
     if (routes) {
@@ -95,5 +99,5 @@ export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Elemen
       );
     }
   }
-  return <GlobalFooter content={children} />;
+  return children;
 }

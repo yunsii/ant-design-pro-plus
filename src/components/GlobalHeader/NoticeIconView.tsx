@@ -3,10 +3,11 @@ import { Tag, message } from 'antd';
 import { connect } from 'dva';
 import groupBy from 'lodash/groupBy';
 import moment from 'moment';
+
 import { NoticeItem } from '@/models/global';
-import NoticeIcon from '../NoticeIcon';
 import { CurrentUser } from '@/models/user';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import NoticeIcon from '../NoticeIcon';
 import styles from './index.less';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
@@ -126,33 +127,33 @@ class GlobalHeaderRight extends Component<GlobalHeaderRightProps> {
           this.changeReadState(item as NoticeItem);
         }}
         loading={fetchingNotices}
-        clearText="清空"
-        viewMoreText="查看更多"
+        clearText='清空'
+        viewMoreText='查看更多'
         onClear={this.handleNoticeClear}
         onPopupVisibleChange={onNoticeVisibleChange}
         onViewMore={() => message.info('Click on view more')}
         clearClose
       >
         <NoticeIcon.Tab
-          tabKey="notification"
+          tabKey='notification'
           count={unreadMsg.notification}
           list={noticeData.notification}
-          title="通知"
-          emptyText="你已查看所有通知"
+          title='通知'
+          emptyText='你已查看所有通知'
           showViewMore
         />
         <NoticeIcon.Tab
-          tabKey="message"
+          tabKey='message'
           count={unreadMsg.message}
           list={noticeData.message}
-          title="消息"
-          emptyText="您已读完所有消息"
+          title='消息'
+          emptyText='您已读完所有消息'
           showViewMore
         />
         <NoticeIcon.Tab
-          tabKey="event"
-          title="待办"
-          emptyText="你已完成所有待办"
+          tabKey='event'
+          title='待办'
+          emptyText='你已完成所有待办'
           count={unreadMsg.event}
           list={noticeData.event}
           showViewMore

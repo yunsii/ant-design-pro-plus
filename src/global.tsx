@@ -1,15 +1,17 @@
+import * as React from 'react';
 import { Button, message, notification } from 'antd';
+import { useIntl } from 'umi';
 
-import React from 'react';
-import { formatMessage } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
+const isHttps = document.location.protocol === 'https:';
+
 // if pwa is true
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(formatMessage({ id: 'app.pwa.offline' }));
+    message.warning(useIntl().formatMessage({ id: 'app.pwa.offline' }));
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -47,18 +49,18 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+        {useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
       </Button>
     );
     notification.open({
-      message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+      message: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
       btn,
       key,
-      onClose: async () => {},
+      onClose: async () => null,
     });
   });
-} else if ('serviceWorker' in navigator) {
+} else if ('serviceWorker' in navigator && isHttps) {
   // unregister service worker
   const { serviceWorker } = navigator;
   if (serviceWorker.getRegistrations) {
@@ -73,6 +75,7 @@ if (pwa) {
   });
 
   // remove all caches
+  // @ts-ignore
   if (window.caches && window.caches.keys) {
     caches.keys().then(keys => {
       keys.forEach(key => {

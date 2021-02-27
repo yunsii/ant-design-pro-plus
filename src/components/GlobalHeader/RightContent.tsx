@@ -1,16 +1,15 @@
-import { Tooltip } from 'antd';
 import React from 'react';
+import { Tooltip } from 'antd';
+import { useIntl, SelectLang } from 'umi';
 import { connect } from 'dva';
-import { formatMessage } from 'umi';
 import { Settings as ProSettings } from '@ant-design/pro-layout';
 import { ReloadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { ConnectProps, ConnectState } from '@/models/connect';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
-import SelectLang from '../SelectLang';
-import styles from './index.less';
 import { Mode } from '../RouteTabs';
+import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 export interface GlobalHeaderRightProps extends ConnectProps {
@@ -23,6 +22,9 @@ export interface GlobalHeaderRightProps extends ConnectProps {
 
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
   const { navTheme, layout, routeTabsMode, routeTabsReloadable } = props;
+
+  const { formatMessage } = useIntl();
+
   let className = styles.right;
 
   if (navTheme === 'dark' && layout === 'top') {
@@ -56,13 +58,22 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
       />
       {routeTabsMode && routeTabsReloadable ? (
         <Tooltip title={formatMessage({ id: 'component.globalHeader.reload' })}>
-          <a className={styles.action} onClick={() => window.reloadTab()}>
+          <a
+            style={{
+              color: 'inherit',
+            }}
+            className={styles.action}
+            onClick={() => window.reloadTab()}
+          >
             <ReloadOutlined />
           </a>
         </Tooltip>
       ) : null}
       <Tooltip title='使用文档'>
         <a
+          style={{
+            color: 'inherit',
+          }}
           target='_blank'
           href='https://pro.ant.design/docs/getting-started'
           rel='noopener noreferrer'

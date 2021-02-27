@@ -7,7 +7,6 @@ import * as H from 'history-with-query';
 import { usePersistFn } from 'ahooks';
 import classNames from 'classnames';
 
-import GlobalFooter from '@/components/GlobalFooter';
 import useTabs, { UseTabsOptions } from './useTabs';
 import styles from './index.less';
 
@@ -117,7 +116,7 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
           key={item.key}
           closable={item.closable}
         >
-          <GlobalFooter content={item.content} />
+          {item.content}
         </Tabs.TabPane>
       ))}
     </Tabs>

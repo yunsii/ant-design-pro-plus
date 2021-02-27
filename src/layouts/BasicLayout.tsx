@@ -3,23 +3,23 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Link, history, useIntl } from 'umi';
+import { getMatchMenu } from '@umijs/route-utils';
+import { Result, Button } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
 import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
-  SettingDrawer,
-  PageLoading,
+  DefaultFooter,
 } from '@ant-design/pro-layout';
-import { formatMessage, Link } from 'umi';
-import React, { useEffect, useState } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import { Result, Button } from 'antd';
-import classNames from 'classnames';
 
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
-import { getAuthorityFromRouter, isProductionEnv } from '@/utils/utils';
+import { isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
 import { DefaultSettings } from '../../config/defaultSettings';
 import RouteTabsLayout from './RouteTabsLayout';
@@ -69,6 +69,32 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
 
+const defaultFooterDom = (
+  <DefaultFooter
+    copyright='2019 蚂蚁金服体验技术部出品'
+    links={[
+      {
+        key: 'Ant Design Pro',
+        title: 'Ant Design Pro',
+        href: 'https://pro.ant.design',
+        blankTarget: true,
+      },
+      {
+        key: 'github',
+        title: <GithubOutlined />,
+        href: 'https://github.com/ant-design/ant-design-pro',
+        blankTarget: true,
+      },
+      {
+        key: 'Ant Design',
+        title: 'Ant Design',
+        href: 'https://ant.design',
+        blankTarget: true,
+      },
+    ]}
+  />
+);
+
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const {
     dispatch,
@@ -76,17 +102,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     location = {
       pathname: '/',
     },
-    settings: initSettings,
+    settings,
   } = props;
 
-  const [settings, setSettings] = useState<DefaultSettings>(initSettings);
-  const [menuLoading, setMenuLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setMenuLoading(false);
-    }, 2000);
-  }, []);
+  const menuDataRef = useRef<MenuDataItem[]>([]);
 
   useEffect(() => {
     if (dispatch) {
@@ -110,40 +129,28 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   }
 
   // get children authority
-  const authorized = isProductionEnv
-    ? { authority: ['admin'] }
-    : getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
+  const authorized = useMemo(
+    () =>
+      getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
         authority: undefined,
-      };
+      },
+    [location.pathname],
+  );
+
+  const { formatMessage } = useIntl();
 
   return (
     <ProLayout
       className={settings.routeTabs?.mode && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
-      menuRender={(_, dom) =>
-        menuLoading ? (
-          <div
-            className={classNames(
-              styles.menuLoading,
-              styles[`menu-background-${props.settings.navTheme || 'dark'}`],
-            )}
-          >
-            <PageLoading />
-          </div>
-        ) : (
-          dom
-        )
-      }
-      menuHeaderRender={(logoDom, titleDom) => (
-        <Link to='/'>
-          {logoDom}
-          {titleDom}
-        </Link>
-      )}
+      {...props}
+      {...settings}
       onCollapse={collapsed => {
-        if (menuLoading) return;
         handleMenuCollapse(collapsed);
+      }}
+      onMenuHeaderClick={() => {
+        history.push(window.routerBase);
       }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
@@ -167,29 +174,24 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           <span>{route.breadcrumbName}</span>
         );
       }}
-      style={{ paddingLeft: 0 }}
-      footerRender={false}
+      footerRender={() => {
+        if (settings.footerRender || settings.footerRender === undefined) {
+          return defaultFooterDom;
+        }
+        return null;
+      }}
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
-      {...props}
-      {...settings}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <RouteTabsLayout
           mode={settings?.routeTabs?.mode}
           fixed={settings?.routeTabs?.fixed}
-          menuLoading={menuLoading}
           routes={props.route.routes!}
         >
           {children}
         </RouteTabsLayout>
       </Authorized>
-      <SettingDrawer
-        settings={settings}
-        onSettingChange={config => {
-          setSettings({ ...config, routeTabs: settings.routeTabs } as DefaultSettings);
-        }}
-      />
     </ProLayout>
   );
 };

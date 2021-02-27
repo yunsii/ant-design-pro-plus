@@ -6,7 +6,7 @@ export default [
       {
         name: 'login',
         path: '/user/login',
-        component: './user/login',
+        component: './User/Login',
       },
     ],
   },
@@ -40,7 +40,7 @@ export default [
             name: 'list.table-list',
             icon: 'table',
             path: '/list',
-            component: './ListTableList',
+            component: './TableList',
           },
           {
             name: 'page-tabs-demo',

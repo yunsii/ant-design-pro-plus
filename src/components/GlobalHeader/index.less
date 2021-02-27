@@ -14,7 +14,7 @@
 .right {
   display: flex;
   float: right;
-  height: @layout-header-height;
+  height: 48px;
   margin-left: auto;
   overflow: hidden;
   .action {
@@ -25,7 +25,6 @@
     cursor: pointer;
     transition: all 0.3s;
     > span {
-      color: @text-color;
       vertical-align: middle;
     }
     &:hover {
@@ -77,25 +76,6 @@
         > span {
           color: rgba(255, 255, 255, 0.85);
         }
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: @screen-md) {
-  :global(.ant-divider-vertical) {
-    vertical-align: unset;
-  }
-  .name {
-    display: none;
-  }
-  .right {
-    position: absolute;
-    top: 0;
-    right: 12px;
-    .account {
-      .avatar {
-        margin-right: 0;
       }
     }
   }
