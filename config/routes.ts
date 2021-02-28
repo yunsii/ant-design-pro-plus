@@ -49,7 +49,12 @@ export default [
             routes: [
               {
                 path: '/route-tabs-demo',
-                redirect: '/route-tabs-demo/parent',
+                redirect: '/route-tabs-demo/control',
+              },
+              {
+                name: 'control',
+                path: '/route-tabs-demo/control',
+                component: './RouteTabsDemo/Control',
               },
               {
                 name: 'parent',

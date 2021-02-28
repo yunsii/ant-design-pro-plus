@@ -101,14 +101,16 @@ function useTabs(options: UseTabsOptions) {
 
   /** 删除标签页处理事件，可接收一个 `nextTabKey` 参数，自定义需要返回的标签页 */
   const handleRemove = usePersistFn(
-    (removeKey: string, nextTabKey?: string | false, callback?: () => void, force?: boolean) => {
+    (removeKey: string, nextTabKey?: string, callback?: () => void, force?: boolean) => {
+      if (tabs.length === 1) {
+        logger.warn('the final tab, can not remove.');
+        return;
+      }
+
       const getNextTabKeyByRemove = () =>
         removeKey === getTabKey() ? getNextTab()?.key : getTabKey();
 
-      /** 如果 nextTabKey 为 false 时，不执行切换便签页操作，因此需要注意如此调用后应该还有已打开的标签页 */
-      if (nextTabKey !== false) {
-        handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback, force);
-      }
+      handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback, force);
 
       setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key !== removeKey)));
     },
@@ -209,14 +211,14 @@ function useTabs(options: UseTabsOptions) {
     handleSwitch(path || prevActiveKey!, callback, force);
   });
 
-  /** 关闭后切记需要激活另一个标签页，否则会导致页面空白 */
+  /** 关闭后自动切换到附近的标签页，如果是最后一个标签页不可删除 */
   const closeTab = usePersistFn((path?: string, callback?: () => void, force?: boolean) => {
     if (path && !getTab(path)) {
       logger.warn('close failed, target tab is closed.');
       return;
     }
 
-    handleRemove(path || getTabKey(), false, callback, force);
+    handleRemove(path || getTabKey(), undefined, callback, force);
   });
 
   /** 关闭当前标签页并返回到上次打开的标签页 */

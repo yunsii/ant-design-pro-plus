@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Typography, Alert, Button } from 'antd';
+import { Card, Typography, Alert } from 'antd';
 import { HeartTwoTone, SmileTwoTone } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
@@ -30,14 +30,6 @@ export default (): React.ReactNode => {
         <Typography.Title level={2} style={{ textAlign: 'center' }}>
           <SmileTwoTone /> Ant Design Pro <HeartTwoTone twoToneColor='#eb2f96' /> You
         </Typography.Title>
-        <Button
-          type='primary'
-          onClick={() => {
-            window.closeAndGoBackTab('/list', () => window.reloadTab('/list'));
-          }}
-        >
-          Close and Go Back Tab
-        </Button>
       </Card>
       <p style={{ textAlign: 'center', marginTop: 24 }}>
         Want to add more pages? Please refer to{' '}

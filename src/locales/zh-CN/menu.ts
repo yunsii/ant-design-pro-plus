@@ -50,6 +50,7 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
 
   'menu.page-tabs-demo': '标签页 Demo',
+  'menu.page-tabs-demo.control': '控制台',
   'menu.page-tabs-demo.parent': '嵌套路由',
   'menu.page-tabs-demo.parent.child2': '嵌套路由 - 子节点 2',
   'menu.page-tabs-demo.query': '查询页',

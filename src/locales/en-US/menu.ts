@@ -50,6 +50,7 @@ export default {
   'menu.editor.koni': 'Koni Editor',
 
   'menu.page-tabs-demo': 'Page Tabs Demo',
+  'menu.page-tabs-demo.control': 'Control',
   'menu.page-tabs-demo.parent': 'Nested Route',
   'menu.page-tabs-demo.parent.child2': 'Nested Route - Child 2',
   'menu.page-tabs-demo.query': 'Query',
