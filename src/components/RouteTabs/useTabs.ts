@@ -54,8 +54,9 @@ function useTabs(options: UseTabsOptions) {
 
   /** 可指定 key，默认使用 activeKey */
   const getTabKey = useCallback(
-    (key?: string) => (mode === Mode.Dynamic ? `${key || activeKey}-${hash}` : key || activeKey),
-    [activeKey],
+    (key?: string) =>
+      mode === Mode.Dynamic && hash ? `${key || activeKey}-${hash}` : key || activeKey,
+    [activeKey, hash],
   );
 
   const prevActiveKey = useReallyPrevious(getTabKey());
@@ -243,6 +244,7 @@ function useTabs(options: UseTabsOptions) {
 
       window.reloadTab = hint;
       window.goBackTab = hint;
+      window.closeTab = hint;
       window.closeAndGoBackTab = hint;
     };
   }, []);

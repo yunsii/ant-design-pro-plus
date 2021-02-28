@@ -1,6 +1,7 @@
 import React from 'react';
 import _find from 'lodash/find';
 import _isEqual from 'lodash/isEqual';
+import _isEmpty from 'lodash/isEmpty';
 import _mapValues from 'lodash/mapValues';
 import hash from 'hash-string';
 import { pathToRegexp, match as pathMatch } from '@qixian.cs/path-to-regexp';
@@ -133,22 +134,26 @@ export function getActiveTabInfo(location: H.Location) {
     const params = getParams(pathID, location.pathname!);
     const { query, state = {} } = location;
 
-    const hashPart = hash(
-      JSON.stringify({
-        ...params,
-        /**
-         * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
-         * 导致了计算的 hash 值可能不唯一
-         * 故统一转换为 string 类型
-         */
-        ..._mapValues(query, String),
-        ...(state as any),
-      }),
-    );
+    let hashString = '';
+
+    if (!_isEmpty(params) || !_isEmpty(query) || !_isEmpty(state)) {
+      hashString = hash(
+        JSON.stringify({
+          ...params,
+          /**
+           * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
+           * 导致了计算的 hash 值可能不唯一
+           * 故统一转换为 string 类型
+           */
+          ..._mapValues(query, String),
+          ...(state as any),
+        }),
+      );
+    }
 
     return {
       id: pathID,
-      hash: hashPart,
+      hash: hashString,
       title: setTabTitle?.({ path: pathID, locale: title, params, location }) || title,
       item,
     };
