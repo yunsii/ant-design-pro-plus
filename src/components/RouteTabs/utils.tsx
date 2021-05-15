@@ -9,13 +9,15 @@ import * as H from 'history-with-query';
 
 import { useConsole } from '@/hooks/test/lifeCycle';
 import Logger from '@/utils/Logger';
-import { CustomRoute } from './useTabs';
+import type { MakeUpRoute, RenderRoute } from './useTabs';
 import { Mode } from './config';
 import { RouteTabsProps } from '.';
 
-export function isRouteTab(pathname: string, originalRoutes: CustomRoute[]): boolean {
-  function isInMenus(menuData: CustomRoute[]) {
-    const targetMenuItem = _find(menuData, item => pathToRegexp(`${item.path}(.*)`).test(pathname));
+export function isRouteTab(location: H.Location, originalRoutes: MakeUpRoute[]): boolean {
+  function isInMenus(menuData: MakeUpRoute[]) {
+    const targetMenuItem = _find(menuData, (item) =>
+      pathToRegexp(`${item.path}(.*)`).test(location.pathname),
+    );
 
     return !!targetMenuItem;
   }
@@ -23,56 +25,78 @@ export function isRouteTab(pathname: string, originalRoutes: CustomRoute[]): boo
   return isInMenus(originalRoutes);
 }
 
-const mapCache: {
+export function getRouteTabComponent(
+  location: H.Location,
+  originalRoutes: MakeUpRoute[],
+): React.ComponentType<{ location: any }> {
+  const route = _find(originalRoutes, (item) => {
+    console.log('item.path', item.path);
+    return pathToRegexp(`${item.path}(.*)`).test(location.pathname);
+  })!;
+
+  if (route.component) {
+    return route.component;
+  }
+
+  if (Array.isArray(route?.children) && route.children.length) {
+    return getRouteTabComponent(location, route.children);
+  }
+
+  return route.component!;
+}
+
+const pathNameMapCache: {
   [k: string]: any;
 } = {};
 
 /**
  * 解析当前 `pathname` 的 `pathID` 和 `title`
  *
- * @param pathname 必须是 `withRouter` 注入的 `location` 的 `pathname`
- * @param originalMenuData 原始菜单数据，未经过滤处理
+ * @param location
+ * @param originalRoutes 原始路由数据，未经过滤处理
  */
-export function getPathnameMetadata(
-  pathname: string,
-  originalMenuData: CustomRoute[],
-): [string, string, CustomRoute | undefined] {
-  if (mapCache[pathname]) {
-    return mapCache[pathname];
+function getOriginalRenderRoute(location: H.Location, originalRoutes: MakeUpRoute[]): RenderRoute {
+  const { pathname } = location;
+
+  if (pathNameMapCache[pathname]) {
+    return pathNameMapCache[pathname];
   }
 
-  function getMetadata(
-    menuData: CustomRoute[],
-    parent: CustomRoute | null,
-  ): [string, string, CustomRoute | undefined] | null {
-    let result: [string, string, CustomRoute | undefined] | null = null;
+  function getMetadata(menuData: MakeUpRoute[], parent: MakeUpRoute | null): RenderRoute {
+    let result: any;
 
     /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
-    const targetMenuItem = _find(
+    const targetRoute = _find(
       menuData,
-      item => pathToRegexp(`${item.path}(.*)`).test(pathname) && !!item.name,
+      (item) => pathToRegexp(`${item.path}(.*)`).test(pathname) && !!item.name,
     );
 
     /** 如果为 **一级路由** 直接写入 `result` ，否则父级没有 `component` 时才能写入 `result` */
-    if ((!parent && targetMenuItem) || (parent && !parent.component && targetMenuItem)) {
-      result = [targetMenuItem.path!, targetMenuItem.name!, targetMenuItem];
+    if ((!parent && targetRoute) || (parent && !parent.component && targetRoute)) {
+      result = {
+        renderKey: targetRoute.path!,
+        ...targetRoute,
+      };
     }
     /** 如果父级配置了 `hideChildrenInMenu` ，子级配置了 `name` 则重写 `result` */
-    if (parent?.hideChildrenInMenu && targetMenuItem) {
-      result = [parent.path!, targetMenuItem.name!, targetMenuItem];
+    if (parent?.hideChildrenInMenu && targetRoute) {
+      result = {
+        renderKey: parent.path!,
+        ...targetRoute,
+      };
     }
 
     /** 递归设置 `pathID` 和 `title` */
-    if (Array.isArray(targetMenuItem?.children) && targetMenuItem?.children.length) {
-      result = getMetadata(targetMenuItem!.children!, targetMenuItem!) || result;
+    if (Array.isArray(targetRoute?.children) && targetRoute?.children.length) {
+      result = getMetadata(targetRoute!.children!, targetRoute!) || result;
     }
 
     return result;
   }
 
-  const result = getMetadata(originalMenuData, null) || ['404', 'Error', undefined];
+  const result = getMetadata(originalRoutes, null);
 
-  mapCache[pathname] = result;
+  pathNameMapCache[pathname] = result;
   return result;
 }
 
@@ -97,69 +121,54 @@ export function getParams(path: string, pathname: string): { [key: string]: stri
 /**
  * 获取要激活的标签页信息
  *
- * @param location 必须是 `withRouter` 注入的 `location`
+ * @param options 其中，`location` 必须是 `react-router` 注入的 `location`，否则部署到非根目录功能时功能异常
+ * @returns
  */
-export function getActiveTabInfo(location: H.Location) {
-  /**
-   * 获取标签页的 id 和标题
-   *
-   * @param pageTabs
-   * @param originalRoutes
-   * @param setTabTitle
-   */
-  function getInfo(
-    mode: Mode,
-    originalRoutes: CustomRoute[],
-    setTabTitle: RouteTabsProps['setTabTitle'],
-  ): {
-    id: string;
-    hash?: string;
-    title: React.ReactNode;
-    item?: CustomRoute;
-  } {
-    const [pathID, title, item] = getPathnameMetadata(location.pathname!, originalRoutes);
+export function getRenderRoute(options: {
+  location: H.Location;
+  mode: Mode;
+  originalRoutes: MakeUpRoute[];
+  setTabTitle: RouteTabsProps['setTabTitle'];
+}): RenderRoute {
+  const { location, mode, originalRoutes, setTabTitle } = options;
 
-    if (mode === Mode.Route) {
-      return {
-        id: pathID,
-        title,
-        item,
-      };
-    }
+  const renderRoute = getOriginalRenderRoute(location, originalRoutes);
 
-    // 以下为 **路径** 模式的处理逻辑：
-    // 核心是根据路由中所带的参数算出参数的哈希值，并将其与算出的 `pathID` 拼成一个标签页的唯一 id
-    // 这样，不同的参数就能得到不同的标签页了
-
-    const params = getParams(pathID, location.pathname!);
-    const { query, state = {} } = location;
-
-    let hashString = '';
-
-    if (!_isEmpty(params) || !_isEmpty(query) || !_isEmpty(state)) {
-      hashString = hash(
-        JSON.stringify({
-          ...params,
-          /**
-           * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
-           * 导致了计算的 hash 值可能不唯一
-           * 故统一转换为 string 类型
-           */
-          ..._mapValues(query, String),
-          ...(state as any),
-        }),
-      );
-    }
-
-    return {
-      id: pathID,
-      hash: hashString,
-      title: setTabTitle?.({ path: pathID, locale: title, params, location }) || title,
-      item,
-    };
+  if (!renderRoute || mode === Mode.Route) {
+    return renderRoute;
   }
 
-  return getInfo;
+  // 以下为 **路径** 模式的处理逻辑：
+  // 核心是根据路由中所带的参数算出参数的哈希值，之后可将其与算出的 `renderKey` 拼成一个标签页的唯一 id
+  // 这样，不同的参数就能得到不同的标签页了
+
+  const params = getParams(renderRoute.renderKey, location.pathname!);
+  const { query, state = {} } = location;
+
+  let hashString = '';
+
+  if (!_isEmpty(params) || !_isEmpty(query) || !_isEmpty(state)) {
+    hashString = hash(
+      JSON.stringify({
+        ...params,
+        /**
+         * 如果在 router.push 的时候设置 query ，可能导致查询参数为 number 类型，在点击标签页标题的时候又会变为 string 类型
+         * 导致了计算的 hash 值可能不唯一
+         * 故统一转换为 string 类型
+         */
+        ..._mapValues(query, String),
+        ...(state as any),
+      }),
+    );
+  }
+
+  return {
+    ...renderRoute,
+    hash: hashString,
+    title:
+      setTabTitle?.({ path: renderRoute.renderKey, locale: renderRoute.title, params, location }) ||
+      renderRoute.title,
+  };
 }
 
 const logger = new Logger('PropsAreEqual');
@@ -223,4 +232,11 @@ export function withRouteTab<Props = unknown>(
 
 function getDisplayName(WrappedComponent: React.ComponentType<any>) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+export function getRenderRouteKey(renderRoute: RenderRoute, mode: Mode) {
+  if (mode === Mode.Dynamic && renderRoute?.hash) {
+    return `${renderRoute.renderKey}-${renderRoute.hash}`;
+  }
+  return renderRoute.renderKey;
 }

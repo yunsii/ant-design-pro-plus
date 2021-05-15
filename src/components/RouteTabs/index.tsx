@@ -6,6 +6,7 @@ import { MenuProps } from 'antd/lib/menu';
 import * as H from 'history-with-query';
 import { usePersistFn } from 'ahooks';
 import classNames from 'classnames';
+import _get from 'lodash/get';
 
 import useTabs, { UseTabsOptions } from './useTabs';
 import styles from './index.less';
@@ -25,7 +26,7 @@ export interface RouteTab {
   content: JSX.Element;
   closable?: boolean;
   /** used to extends tab's properties */
-  extraProperties: { location: H.LocationDescriptorObject<any> };
+  location: Omit<H.Location, 'key'>;
 }
 
 export interface RouteTabsProps
@@ -35,21 +36,16 @@ export interface RouteTabsProps
 }
 
 export default function RouteTabs(props: RouteTabsProps): JSX.Element {
-  const { mode, fixed, originalRoutes, setTabTitle, children, ...rest } = props;
+  const { mode, fixed, originalRoutes, setTabTitle, persistent, children, ...rest } = props;
 
-  const {
-    tabs,
-    activeKey,
-    handleSwitch,
-    handleRemove,
-    handleRemoveOthers,
-    handRemoveRightTabs,
-  } = useTabs({
-    children,
-    setTabTitle,
-    originalRoutes,
-    mode,
-  });
+  const { tabs, activeKey, handleSwitch, handleRemove, handleRemoveOthers, handRemoveRightTabs } =
+    useTabs({
+      children,
+      setTabTitle,
+      originalRoutes,
+      mode,
+      persistent,
+    });
 
   const remove = usePersistFn((key: string) => {
     handleRemove(key);
@@ -61,7 +57,7 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
     }
   });
 
-  const handleTabsMenuClick = usePersistFn((tabKey: string): MenuProps['onClick'] => event => {
+  const handleTabsMenuClick = usePersistFn((tabKey: string): MenuProps['onClick'] => (event) => {
     const { key, domEvent } = event;
     domEvent.stopPropagation();
 
@@ -89,7 +85,7 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
   ));
 
   const setTab = usePersistFn((tab: React.ReactNode, key: string, index: number) => (
-    <span onContextMenu={event => event.preventDefault()}>
+    <span onContextMenu={(event) => event.preventDefault()}>
       <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
         <span className={styles.tabTitle}>{tab}</span>
       </Dropdown>
@@ -115,6 +111,7 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
           tab={setTab(item.tab, item.key, index)}
           key={item.key}
           closable={item.closable}
+          forceRender={_get(persistent, 'force', false)}
         >
           {item.content}
         </Tabs.TabPane>

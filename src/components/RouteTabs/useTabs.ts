@@ -1,25 +1,35 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, history } from 'umi';
 import * as H from 'history-with-query';
 import { Route } from '@ant-design/pro-layout/lib/typings';
-import { usePersistFn } from 'ahooks';
+import { useLocalStorageState, usePersistFn } from 'ahooks';
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _isEqual from 'lodash/isEqual';
 import _omit from 'lodash/omit';
+import _isArray from 'lodash/isArray';
 
 import { useReallyPrevious } from '@/hooks/common';
 import Logger from '@/utils/Logger';
-import { getActiveTabInfo } from './utils';
+import { getRenderRoute, getRenderRouteKey, getRouteTabComponent } from './utils';
 import { Mode } from './config';
 import { RouteTab } from '.';
+import { RouteTabsOptions } from 'config/defaultSettings';
 
 const logger = new Logger('useTabs');
 
-export interface CustomRoute extends Route {
+export interface MakeUpRoute extends Route {
   /** 配置该路由标签页紧跟指定的某个路由 */
   follow?: string;
+  component?: React.ComponentType<{ location: H.Location }>;
 }
+
+export interface RenderRoute extends MakeUpRoute {
+  renderKey: string;
+  /** Mode.Dynamic 会计算路由参数的 hash 值 */
+  hash?: string;
+}
+
 export interface SetTabTitlePayload {
   path: string;
   locale: string;
@@ -29,8 +39,10 @@ export interface SetTabTitlePayload {
 
 export interface UseTabsOptions {
   mode?: Mode;
+  /** tabs 持久化 */
+  persistent?: RouteTabsOptions['persistent'];
   children?: JSX.Element;
-  originalRoutes: CustomRoute[];
+  originalRoutes: MakeUpRoute[];
 
   /**
    *
@@ -44,32 +56,59 @@ export interface UseTabsOptions {
 }
 
 function useTabs(options: UseTabsOptions) {
-  const { mode = Mode.Route, setTabTitle, originalRoutes, children } = options;
-  const location = useLocation();
+  const { mode = Mode.Route, setTabTitle, originalRoutes, persistent, children } = options;
+  const location = useLocation() as H.Location;
 
-  const [tabs, setTabs] = useState<RouteTab[]>([]);
-  const { id: activeKey, hash, title: activeTitle, item: menuItem } = getActiveTabInfo(
-    location as H.Location,
-  )(mode, originalRoutes, setTabTitle);
-
-  /** 可指定 key，默认使用 activeKey */
-  const getTabKey = useCallback(
-    (key?: string) =>
-      mode === Mode.Dynamic && hash ? `${key || activeKey}-${hash}` : key || activeKey,
-    [activeKey, hash],
+  const [tabLocations, setTabLocations] = useLocalStorageState<RouteTab['location'][]>(
+    'tabLocations',
+    [],
   );
+  const [tabs, setTabs] = useState<RouteTab[]>(() => {
+    if (_isArray(tabLocations) && tabLocations.length) {
+      return tabLocations.map((tabLocation) => {
+        const renderRoute = getRenderRoute({
+          location: tabLocation,
+          mode,
+          originalRoutes,
+          setTabTitle,
+        });
+        return {
+          tab: renderRoute.name,
+          key: getRenderRouteKey(renderRoute, mode),
+          content: React.createElement(getRouteTabComponent(tabLocation as any, originalRoutes), {
+            location: tabLocation,
+          }),
+          location: tabLocation,
+        };
+      });
+    }
+    return [];
+  });
+  const currentRenderRoute = getRenderRoute({
+    location,
+    mode,
+    originalRoutes,
+    setTabTitle,
+  });
 
-  const prevActiveKey = useReallyPrevious(getTabKey());
+  console.log('persistent', persistent);
+  console.log('tabLocations', tabLocations);
+
+  const currentTabKey = useMemo(() => {
+    return getRenderRouteKey(currentRenderRoute, mode);
+  }, [mode, currentRenderRoute]);
+
+  const prevActiveKey = useReallyPrevious(currentTabKey);
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
   const processTabs = usePersistFn((_tabs: RouteTab[]) =>
-    _tabs.map(item => (_tabs.length === 1 ? { ...item, closable: false } : item)),
+    _tabs.map((item) => (_tabs.length === 1 ? { ...item, closable: false } : item)),
   );
 
   /** 获取激活标签页的相邻标签页 */
   const getNextTab = usePersistFn(() => {
-    const removeIndex = _findIndex(tabs, { key: getTabKey() });
+    const removeIndex = _findIndex(tabs, { key: currentTabKey });
     const nextIndex = removeIndex >= 1 ? removeIndex - 1 : removeIndex + 1;
     return tabs[nextIndex];
   });
@@ -89,7 +128,7 @@ function useTabs(options: UseTabsOptions) {
        * 如：一个会调用 `window.closeAndGoBackTab(path)` 的页面在 F5 刷新之后
        */
       const targetTab = getTab(keyToSwitch);
-      history.push(targetTab ? targetTab.extraProperties.location : (keyToSwitch as any));
+      history.push(targetTab ? targetTab.location : (keyToSwitch as any));
 
       if (force) {
         callback?.();
@@ -108,24 +147,24 @@ function useTabs(options: UseTabsOptions) {
       }
 
       const getNextTabKeyByRemove = () =>
-        removeKey === getTabKey() ? getNextTab()?.key : getTabKey();
+        removeKey === currentTabKey ? getNextTab()?.key : currentTabKey;
 
       handleSwitch(nextTabKey || getNextTabKeyByRemove(), callback, force);
 
-      setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key !== removeKey)));
+      setTabs((prevTabs) => processTabs(prevTabs.filter((item) => item.key !== removeKey)));
     },
   );
 
   const handleRemoveOthers = usePersistFn((currentKey: string, callback?: () => void) => {
     handleSwitch(currentKey, callback);
 
-    setTabs(prevTabs => processTabs(prevTabs.filter(item => item.key === currentKey)));
+    setTabs((prevTabs) => processTabs(prevTabs.filter((item) => item.key === currentKey)));
   });
 
   const handRemoveRightTabs = usePersistFn((currentKey: string, callback?: () => void) => {
     handleSwitch(getTab(currentKey)!.key, callback);
 
-    setTabs(prevTabs =>
+    setTabs((prevTabs) =>
       processTabs(prevTabs.slice(0, _findIndex(prevTabs, { key: currentKey }) + 1)),
     );
   });
@@ -136,11 +175,17 @@ function useTabs(options: UseTabsOptions) {
    * @param newTab
    */
   const addTab = usePersistFn((newTab: RouteTab, follow?: string) => {
-    setTabs(prevTabs => {
+    setTabs((prevTabs) => {
       let result = [...prevTabs];
       if (follow) {
         logger.log(`follow: ${follow}`);
-        const targetIndex = _findIndex(prevTabs, { key: getTabKey(follow) });
+        const targetIndex = _findIndex(prevTabs, (tab) => {
+          if (mode === Mode.Route) {
+            return tab.key === follow;
+          }
+          const followReg = new RegExp(`^${follow}`);
+          return followReg.test(tab.key);
+        });
         if (targetIndex >= 0) {
           result.splice(targetIndex + 1, 0, newTab);
         } else {
@@ -163,14 +208,14 @@ function useTabs(options: UseTabsOptions) {
    *
    * @param reloadKey 需要刷新的 tab key
    * @param tabTitle 需要刷新的 tab 标题
-   * @param extraTabProperties 需要刷新的 tab 额外属性
+   * @param location 需要刷新的 tab location
    * @param content 需要刷新的 tab 渲染的内容
    */
   const reloadTab = usePersistFn(
     (
-      reloadKey: string = getTabKey(),
+      reloadKey: string = currentTabKey,
       tabTitle?: React.ReactNode,
-      extraProperties?: any,
+      tabLocation?: RouteTab['location'],
       content?: JSX.Element,
     ) => {
       if (tabs.length < 1) {
@@ -178,18 +223,13 @@ function useTabs(options: UseTabsOptions) {
       }
 
       logger.log(`reload tab key: ${reloadKey}`);
-      const updatedTabs = tabs.map(item => {
+      const updatedTabs = tabs.map((item) => {
         if (item.key === reloadKey) {
-          const {
-            tab: prevTabTitle,
-            extraProperties: prevExtraProperties,
-            content: prevContent,
-            ...rest
-          } = item;
+          const { tab: prevTabTitle, location: prevLocation, content: prevContent, ...rest } = item;
           return {
             ...rest,
             tab: tabTitle || prevTabTitle,
-            extraProperties: extraProperties || prevExtraProperties,
+            location: tabLocation || prevLocation,
             content:
               content ||
               React.cloneElement(item.content as JSX.Element, { key: new Date().valueOf() }),
@@ -218,7 +258,7 @@ function useTabs(options: UseTabsOptions) {
       return;
     }
 
-    handleRemove(path || getTabKey(), undefined, callback, force);
+    handleRemove(path || currentTabKey, undefined, callback, force);
   });
 
   /** 关闭当前标签页并返回到上次打开的标签页 */
@@ -229,9 +269,17 @@ function useTabs(options: UseTabsOptions) {
         return;
       }
 
-      handleRemove(getTabKey(), path || prevActiveKey, callback, force);
+      handleRemove(currentTabKey, path || prevActiveKey, callback, force);
     },
   );
+
+  useEffect(() => {
+    if (persistent) {
+      setTabLocations(tabs.map((item) => item.location));
+    } else {
+      setTabLocations();
+    }
+  }, [persistent, tabs]);
 
   useEffect(() => {
     window.reloadTab = reloadTab;
@@ -251,35 +299,36 @@ function useTabs(options: UseTabsOptions) {
     };
   }, []);
 
+  console.log('currentRenderRoute', currentRenderRoute);
   useEffect(() => {
-    const currentExtraProperties = { location: _omit(location, ['key']) };
-    const activedTab = getTab(getTabKey());
+    const currentTabLocation = _omit(location, ['key']);
+    const activedTab = getTab(currentTabKey);
 
     if (activedTab) {
-      const { extraProperties: prevExtraProperties } = activedTab;
-      if (!_isEqual(currentExtraProperties, prevExtraProperties)) {
-        reloadTab(getTabKey(), activeTitle, currentExtraProperties, children);
+      const { location: prevTabLocation } = activedTab;
+      if (!_isEqual(currentTabLocation, prevTabLocation)) {
+        reloadTab(currentTabKey, currentRenderRoute.name, currentTabLocation, children);
       } else {
-        logger.log(`no effect of tab key: ${getTabKey()}`);
+        logger.log(`no effect of tab key: ${currentTabKey}`);
       }
     } else {
       const newTab = {
-        tab: activeTitle,
-        key: getTabKey(),
+        tab: currentRenderRoute.name,
+        key: currentTabKey,
         content: children as any,
-        extraProperties: currentExtraProperties,
+        location: currentTabLocation,
       };
 
-      const { follow } = menuItem || {};
+      const { follow } = currentRenderRoute || {};
 
-      logger.log(`add tab key: ${getTabKey()}`);
+      logger.log(`add tab key: ${currentTabKey}`);
       addTab(newTab, follow);
     }
-  }, [children]);
+  }, [children, currentTabKey]);
 
   return {
     tabs,
-    activeKey: getTabKey(),
+    activeKey: currentTabKey,
     handleSwitch,
     handleRemove,
     handleRemoveOthers,
