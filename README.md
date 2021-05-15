@@ -11,7 +11,7 @@
 <!-- ![GudmSe.png](https://s1.ax1x.com/2020/03/30/GudmSe.png) -->
 <img alt="Snapshot" src="static/snapshot.svg" width="100%" />
 
-## ✨ 页面基于路由的标签化展示
+## ✨ 基于路由的页面标签化展示
 
 **兼容性：`^umi@2.0.0 | ^umi@3.3.8`**
 
