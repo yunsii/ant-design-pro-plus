@@ -64,7 +64,7 @@ function useTabs(options: UseTabsOptions) {
     [],
   );
   const [tabs, setTabs] = useState<RouteTab[]>(() => {
-    if (_isArray(tabLocations) && tabLocations.length) {
+    if (persistent && _isArray(tabLocations) && tabLocations.length) {
       return tabLocations.map((tabLocation) => {
         const renderRoute = getRenderRoute({
           location: tabLocation,
@@ -90,9 +90,6 @@ function useTabs(options: UseTabsOptions) {
     originalRoutes,
     setTabTitle,
   });
-
-  console.log('persistent', persistent);
-  console.log('tabLocations', tabLocations);
 
   const currentTabKey = useMemo(() => {
     return getRenderRouteKey(currentRenderRoute, mode);
@@ -276,7 +273,9 @@ function useTabs(options: UseTabsOptions) {
   useEffect(() => {
     if (persistent) {
       setTabLocations(tabs.map((item) => item.location));
-    } else {
+      return;
+    }
+    if (tabLocations) {
       setTabLocations();
     }
   }, [persistent, tabs]);
@@ -299,7 +298,6 @@ function useTabs(options: UseTabsOptions) {
     };
   }, []);
 
-  console.log('currentRenderRoute', currentRenderRoute);
   useEffect(() => {
     const currentTabLocation = _omit(location, ['key']);
     const activedTab = getTab(currentTabKey);
