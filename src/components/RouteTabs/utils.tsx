@@ -45,12 +45,12 @@ export function getRouteTabComponent(
   return route.component!;
 }
 
-const pathNameMapCache: {
+const pathnameMapCache: {
   [k: string]: any;
 } = {};
 
 /**
- * 解析当前 `pathname` 的 `pathID` 和 `title`
+ * 解析 `RenderRoute`，核心是算出合适的 `renderKey`
  *
  * @param location
  * @param originalRoutes 原始路由数据，未经过滤处理
@@ -58,14 +58,14 @@ const pathNameMapCache: {
 function getOriginalRenderRoute(location: H.Location, originalRoutes: MakeUpRoute[]): RenderRoute {
   const { pathname } = location;
 
-  if (pathNameMapCache[pathname]) {
-    return pathNameMapCache[pathname];
+  if (pathnameMapCache[pathname]) {
+    return pathnameMapCache[pathname];
   }
 
   function getMetadata(menuData: MakeUpRoute[], parent: MakeUpRoute | null): RenderRoute {
     let result: any;
 
-    /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `pathID` 和 `title` 的组合 */
+    /** 根据前缀匹配菜单项，因此，`BasicLayout` 下的 **一级路由** 只要配置了 `name` 属性，总能找到一个 `path` 和 `name` 的组合 */
     const targetRoute = _find(
       menuData,
       (item) => pathToRegexp(`${item.path}(.*)`).test(pathname) && !!item.name,
@@ -86,7 +86,7 @@ function getOriginalRenderRoute(location: H.Location, originalRoutes: MakeUpRout
       };
     }
 
-    /** 递归设置 `pathID` 和 `title` */
+    /** 递归设置 `renderKey` */
     if (Array.isArray(targetRoute?.children) && targetRoute?.children.length) {
       result = getMetadata(targetRoute!.children!, targetRoute!) || result;
     }
@@ -96,7 +96,7 @@ function getOriginalRenderRoute(location: H.Location, originalRoutes: MakeUpRout
 
   const result = getMetadata(originalRoutes, null);
 
-  pathNameMapCache[pathname] = result;
+  pathnameMapCache[pathname] = result;
   return result;
 }
 
