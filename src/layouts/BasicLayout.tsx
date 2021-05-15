@@ -184,6 +184,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <RouteTabsLayout
           mode={settings?.routeTabs?.mode}
+          persistent={settings?.routeTabs?.persistent}
           fixed={settings?.routeTabs?.fixed}
           routes={props.route.routes!}
         >

@@ -11,20 +11,20 @@ import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
 
-import RouteTabs, { Mode } from '@/components/RouteTabs';
-import { CustomRoute } from '@/components/RouteTabs/useTabs';
+import RouteTabs, { Mode, RouteTabsProps } from '@/components/RouteTabs';
+import type { MakeUpRoute } from '@/components/RouteTabs/useTabs';
 import { isRouteTab } from '@/components/RouteTabs/utils';
 import PageLoading from '@/components/PageLoading';
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(
-  routes: CustomRoute[],
+  routes: MakeUpRoute[],
   formatMessage: any,
   parent: MenuDataItem | null = null,
 ): MenuDataItem[] {
   const result: MenuDataItem[] = [];
 
-  routes.forEach(item => {
+  routes.forEach((item) => {
     const { routes: itemRoutes, ...rest } = item;
 
     if (!item.name) {
@@ -61,28 +61,22 @@ function localeRoutes(
 
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
-export interface RouteTabsLayoutProps {
+export interface RouteTabsLayoutProps
+  extends Pick<RouteTabsProps, 'persistent' | 'fixed' | 'setTabTitle'> {
   mode?: Mode | false;
-  fixed?: boolean;
   children: React.ReactElement;
-  routes?: CustomRoute[];
-  setTabTitle?: (
-    path: string,
-    locale: string,
-    params: any,
-    location: H.Location,
-  ) => React.ReactNode;
+  routes?: MakeUpRoute[];
   loading?: boolean;
 }
 
 export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
-  const { mode, fixed, loading, routes, children } = props;
+  const { mode, persistent, fixed, loading, routes, children } = props;
 
   const { formatMessage } = useIntl();
-  const location = useLocation();
+  const location = useLocation() as H.Location;
   const originalRoutes = memoizedOneLocaleRoutes(routes!, formatMessage);
 
-  if (mode && isRouteTab(location.pathname, originalRoutes)) {
+  if (mode && isRouteTab(location, originalRoutes)) {
     if (loading) {
       return <PageLoading />;
     }
@@ -90,6 +84,7 @@ export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Elemen
       return (
         <RouteTabs
           mode={mode}
+          persistent={persistent}
           fixed={fixed}
           originalRoutes={originalRoutes}
           // animated={false}
