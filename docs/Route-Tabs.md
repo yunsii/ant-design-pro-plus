@@ -1,6 +1,10 @@
-![snapshot](/static/snapshot.png)
+[掘金](https://juejin.cn/post/6962493943606951966) | [V2EX](https://www.v2ex.com/t/777147) | [知乎](https://zhuanlan.zhihu.com/p/372607549)
+
+![snapshot](https://github.com/theprimone/ant-design-pro-plus/blob/master/static/snapshot.png)
 
 # 基于 Ant Design Pro 页面标签化展示的研究与实现
+
+[效果预览 🚀](https://theprimone.top/ant-design-pro-plus)
 
 ## 摘要
 
@@ -25,7 +29,7 @@ Ant Design 作为一个昔日世界第一的 UI 库，影响力自是足够深�
 
 ## 前途是光明的
 
-![snapshot](/static/snapshot.png)
+[![snapshot](https://github.com/theprimone/ant-design-pro-plus/blob/master/static/snapshot.png)](https://theprimone.top/ant-design-pro-plus)
 
 近两年的时间里随着各方面的不断成熟，当前实现 **[Ant Design Pro Plus](https://github.com/theprimone/ant-design-pro-plus)** 已经支持了足够丰富的功能：
 
