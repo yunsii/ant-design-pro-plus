@@ -62,7 +62,7 @@
     "@qixian.cs/path-to-regexp": "^6.1.0",
     "@umijs/route-utils": "^1.0.36",
     "ahooks": "^2.9.6",
-    "antd": "^4.12.3",
+    "antd": "^4.15.5",
     "classnames": "^2.2.6",
     "dva": "^2.6.0-beta.16",
     "fast-deep-equal": "^3.1.1",
