@@ -25,26 +25,6 @@ export function isRouteTab(location: H.Location, originalRoutes: MakeUpRoute[]):
   return isInMenus(originalRoutes);
 }
 
-export function getRouteTabComponent(
-  location: H.Location,
-  originalRoutes: MakeUpRoute[],
-): React.ComponentType<{ location: any }> {
-  const route = _find(originalRoutes, (item) => {
-    console.log('item.path', item.path);
-    return pathToRegexp(`${item.path}(.*)`).test(location.pathname);
-  })!;
-
-  if (route.component) {
-    return route.component;
-  }
-
-  if (Array.isArray(route?.children) && route.children.length) {
-    return getRouteTabComponent(location, route.children);
-  }
-
-  return route.component!;
-}
-
 const pathnameMapCache: {
   [k: string]: any;
 } = {};

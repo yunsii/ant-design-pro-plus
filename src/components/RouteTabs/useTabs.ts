@@ -11,7 +11,7 @@ import _isArray from 'lodash/isArray';
 
 import { useReallyPrevious } from '@/hooks/common';
 import Logger from '@/utils/Logger';
-import { getRenderRoute, getRenderRouteKey, getRouteTabComponent } from './utils';
+import { getRenderRoute, getRenderRouteKey } from './utils';
 import { Mode } from './config';
 import { RouteTab } from '.';
 import { RouteTabsOptions } from 'config/defaultSettings';
@@ -58,6 +58,7 @@ export interface UseTabsOptions {
 function useTabs(options: UseTabsOptions) {
   const { mode = Mode.Route, setTabTitle, originalRoutes, persistent, children } = options;
   const location = useLocation() as H.Location;
+  const currentTabLocation = _omit(location, ['key']);
 
   const [tabLocations, setTabLocations] = useLocalStorageState<RouteTab['location'][]>(
     'tabLocations',
@@ -75,7 +76,7 @@ function useTabs(options: UseTabsOptions) {
         return {
           tab: renderRoute.name,
           key: getRenderRouteKey(renderRoute, mode),
-          content: React.createElement(getRouteTabComponent(tabLocation as any, originalRoutes), {
+          content: React.cloneElement(children!, {
             location: tabLocation,
           }),
           location: tabLocation,
@@ -84,6 +85,7 @@ function useTabs(options: UseTabsOptions) {
     }
     return [];
   });
+
   const currentRenderRoute = getRenderRoute({
     location,
     mode,
@@ -99,9 +101,9 @@ function useTabs(options: UseTabsOptions) {
 
   const getTab = usePersistFn((tabKey: string) => _find(tabs, { key: tabKey }));
 
-  const processTabs = usePersistFn((_tabs: RouteTab[]) =>
-    _tabs.map((item) => (_tabs.length === 1 ? { ...item, closable: false } : item)),
-  );
+  const processTabs = usePersistFn((_tabs: RouteTab[]) => {
+    return _tabs.map((item) => (_tabs.length === 1 ? { ...item, closable: false } : item));
+  });
 
   /** 获取激活标签页的相邻标签页 */
   const getNextTab = usePersistFn(() => {
@@ -299,7 +301,6 @@ function useTabs(options: UseTabsOptions) {
   }, []);
 
   useEffect(() => {
-    const currentTabLocation = _omit(location, ['key']);
     const activedTab = getTab(currentTabKey);
 
     if (activedTab) {
@@ -322,6 +323,9 @@ function useTabs(options: UseTabsOptions) {
       logger.log(`add tab key: ${currentTabKey}`);
       addTab(newTab, follow);
     }
+    // 不可将当前 location 作为依赖，否则在操作非当前 location 对应的标签页时会有异常
+    // 比如在非当前 location 对应的标签页的标签菜单中触发删除其他标签页，会导致本应只有一个标签页时，
+    // 但会再次创建一个当前 location 对应的标签页
   }, [children, currentTabKey]);
 
   return {
