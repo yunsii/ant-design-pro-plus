@@ -1,7 +1,8 @@
+import React from 'react';
+import { useIntl, Link, SelectLang, ConnectProps } from 'umi';
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
-import { useIntl, Link, SelectLang, ConnectProps } from 'umi';
-import React from 'react';
+import { GithubOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 
 import { ConnectState } from '@/models/connect';
@@ -57,7 +58,29 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        <DefaultFooter
+          copyright='2021 theprimone 出品'
+          links={[
+            {
+              key: 'Ant Design Pro',
+              title: 'Ant Design Pro',
+              href: 'https://pro.ant.design',
+              blankTarget: true,
+            },
+            {
+              key: 'github',
+              title: <GithubOutlined />,
+              href: 'https://github.com/theprimone/ant-design-pro-plus',
+              blankTarget: true,
+            },
+            {
+              key: 'Ant Design',
+              title: 'Ant Design',
+              href: 'https://ant.design',
+              blankTarget: true,
+            },
+          ]}
+        />
       </div>
     </>
   );

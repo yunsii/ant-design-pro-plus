@@ -71,7 +71,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright='2019 蚂蚁金服体验技术部出品'
+    copyright='2021 theprimone 出品'
     links={[
       {
         key: 'Ant Design Pro',
@@ -82,7 +82,7 @@ const defaultFooterDom = (
       {
         key: 'github',
         title: <GithubOutlined />,
-        href: 'https://github.com/ant-design/ant-design-pro',
+        href: 'https://github.com/theprimone/ant-design-pro-plus',
         blankTarget: true,
       },
       {
