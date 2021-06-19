@@ -3,9 +3,9 @@ import { Card, Input, Checkbox, Button, Form } from 'antd';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import { withRouteTab } from '@/components/RouteTabs/utils';
+import { withSwitchTab } from 'use-switch-tabs';
 
-export default withRouteTab(() => {
+export default withSwitchTab(() => {
   const [text, setText] = useState<string>();
   const [options, setOptions] = useState<any[]>([]);
 

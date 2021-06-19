@@ -49,10 +49,10 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
 
-  'menu.page-tabs-demo': '标签页 Demo',
-  'menu.page-tabs-demo.control': '控制台',
-  'menu.page-tabs-demo.parent': '嵌套路由',
-  'menu.page-tabs-demo.parent.child2': '嵌套路由 - 子节点 2',
-  'menu.page-tabs-demo.query': '查询页',
-  'menu.page-tabs-demo.result': '结果页',
+  'menu.switch-tabs-demo': '标签页 Demo',
+  'menu.switch-tabs-demo.control': '控制台',
+  'menu.switch-tabs-demo.parent': '嵌套路由',
+  'menu.switch-tabs-demo.parent.child2': '嵌套路由 - 子节点 2',
+  'menu.switch-tabs-demo.query': '查询页',
+  'menu.switch-tabs-demo.result': '结果页',
 };

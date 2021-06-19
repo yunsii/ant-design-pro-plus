@@ -1,6 +1,5 @@
+import { Mode, UseSwitchTabsOptions } from 'use-switch-tabs';
 import { Settings as ProSettings } from '@ant-design/pro-layout';
-
-import { Mode } from '../src/components/RouteTabs/config';
 
 export type RouteTabsOptions = {
   mode: Mode;
@@ -8,12 +7,7 @@ export type RouteTabsOptions = {
   fixed?: boolean;
   /** 是否在顶栏显示刷新按钮 */
   reloadable?: boolean;
-  /** tabs 持久化 */
-  persistent?: {
-    /** 是否强制渲染，参考 [Tabs.TabPane.forceRender](https://ant.design/components/tabs-cn/#Tabs.TabPane) */
-    force?: boolean;
-  };
-};
+} & Pick<UseSwitchTabsOptions, 'persistent'>;
 
 export type DefaultSettings = Partial<ProSettings> & {
   pwa: boolean;

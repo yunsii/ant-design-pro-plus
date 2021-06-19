@@ -82,7 +82,8 @@
     "react-router": "^5.1.2",
     "redux": "^4.0.1",
     "umi": "^3.3.8",
-    "umi-request": "^1.0.8"
+    "umi-request": "^1.0.8",
+    "use-switch-tabs": "^0.1.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.19",

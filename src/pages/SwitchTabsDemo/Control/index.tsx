@@ -6,6 +6,22 @@ export default (): React.ReactNode => (
   <PageHeaderWrapper content='控制台'>
     <Card>
       <Alert
+        message={
+          <div>
+            🎉🎉🎉 <a href='https://github.com/theprimone/use-switch-tabs' target='_blank'>use-switch-tabs</a>
+            &nbsp;已发布
+          </div>
+        }
+        description={
+          <div>
+            <b>页面标签化功能</b>已打包发布，该项目已完全适配，欢迎试用与反馈。
+          </div>
+        }
+        type='info'
+        showIcon
+        style={{ marginBottom: 12 }}
+      />
+      <Alert
         message='可通过调用全局方法控制标签页的刷新，返回和关闭'
         type='success'
         showIcon
@@ -24,28 +40,30 @@ export default (): React.ReactNode => (
         <Button
           type='primary'
           onClick={() => {
-            window.reloadTab();
+            window.tabsAction.reloadTab();
           }}
         >
           reloadTab
         </Button>
         <Button
           onClick={() => {
-            window.goBackTab();
+            window.tabsAction.goBackTab();
           }}
         >
           goBackTab
         </Button>
         <Button
           onClick={() => {
-            window.closeTab();
+            window.tabsAction.closeTab();
           }}
         >
           closeTab
         </Button>
         <Button
           onClick={() => {
-            window.closeAndGoBackTab('/list', () => window.reloadTab('/list'));
+            window.tabsAction.closeAndGoBackTab('/list', () =>
+              window.tabsAction.reloadTab('/list'),
+            );
           }}
         >
           closeAndGoBackTab

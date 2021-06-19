@@ -22,7 +22,7 @@ import { ConnectState } from '@/models/connect';
 import { isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
 import { DefaultSettings } from '../../config/defaultSettings';
-import RouteTabsLayout from './RouteTabsLayout';
+import SwitchTabsLayout from './SwitchTabsLayout';
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
 
@@ -182,14 +182,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       rightContentRender={() => <RightContent />}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
-        <RouteTabsLayout
+        <SwitchTabsLayout
           mode={settings?.routeTabs?.mode}
           persistent={settings?.routeTabs?.persistent}
           fixed={settings?.routeTabs?.fixed}
           routes={props.route.routes!}
         >
           {children}
-        </RouteTabsLayout>
+        </SwitchTabsLayout>
       </Authorized>
     </ProLayout>
   );

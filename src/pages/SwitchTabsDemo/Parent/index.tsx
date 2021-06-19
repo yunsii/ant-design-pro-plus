@@ -4,10 +4,10 @@ import * as H from 'history-with-query';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import { withRouteTab } from '@/components/RouteTabs/utils';
+import { withSwitchTab } from 'use-switch-tabs';
 import styles from './index.less';
 
-export default withRouteTab(
+export default withSwitchTab(
   ({ children, location }: { children: React.ReactChildren; location: H.Location }) => {
     const setCurrentByLocation = () => {
       if (location.pathname.endsWith('1')) {

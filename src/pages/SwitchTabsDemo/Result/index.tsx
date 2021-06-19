@@ -4,10 +4,10 @@ import { match as Match } from 'react-router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import * as H from 'history-with-query';
 
-import { withRouteTab } from '@/components/RouteTabs/utils';
+import { withSwitchTab } from 'use-switch-tabs';
 import { useConsole } from '@/hooks/test/lifeCycle';
 
-export default withRouteTab(
+export default withSwitchTab(
   ({ match, location }: { match: Match; location: H.LocationDescriptorObject }) => {
     useConsole('Result');
 

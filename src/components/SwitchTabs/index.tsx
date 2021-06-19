@@ -1,17 +1,13 @@
-import React from 'react';
-import { FormattedMessage } from 'umi';
+import React, { useEffect, useRef } from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
+import { history, useLocation } from 'umi';
 import { TabsProps } from 'antd/lib/tabs';
 import { MenuProps } from 'antd/lib/menu';
 import * as H from 'history-with-query';
 import { usePersistFn } from 'ahooks';
+import useSwitchTabs, { UseSwitchTabsOptions, ActionType } from 'use-switch-tabs';
 import classNames from 'classnames';
 import _get from 'lodash/get';
-
-import useTabs, { UseTabsOptions } from './useTabs';
-import styles from './index.less';
-
-export { Mode } from './config';
 
 enum CloseTabKey {
   Current = 'current',
@@ -29,22 +25,28 @@ export interface RouteTab {
   location: Omit<H.Location, 'key'>;
 }
 
-export interface RouteTabsProps
-  extends UseTabsOptions,
+export interface SwitchTabsProps
+  extends Omit<UseSwitchTabsOptions, 'location' | 'history'>,
     Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
 }
 
-export default function RouteTabs(props: RouteTabsProps): JSX.Element {
-  const { mode, fixed, originalRoutes, setTabTitle, persistent, children, ...rest } = props;
+export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
+  const { mode, fixed, originalRoutes, setTabName, persistent, children, ...rest } = props;
+
+  const location = useLocation() as any;
+  const actionRef = useRef<ActionType>();
 
   const { tabs, activeKey, handleSwitch, handleRemove, handleRemoveOthers, handRemoveRightTabs } =
-    useTabs({
+    useSwitchTabs({
       children,
-      setTabTitle,
+      setTabName,
       originalRoutes,
       mode,
       persistent,
+      location,
+      history,
+      actionRef,
     });
 
   const remove = usePersistFn((key: string) => {
@@ -73,13 +75,13 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
   const setMenu = usePersistFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>
       <Menu.Item disabled={tabs.length === 1} key={CloseTabKey.Current}>
-        <FormattedMessage id='component.childrenTabs.closeCurrent' />
+        closeCurrent
       </Menu.Item>
       <Menu.Item disabled={tabs.length === 1} key={CloseTabKey.Others}>
-        <FormattedMessage id='component.childrenTabs.closeOthers' />
+        closeOthers
       </Menu.Item>
       <Menu.Item disabled={tabs.length === index + 1} key={CloseTabKey.ToRight}>
-        <FormattedMessage id='component.childrenTabs.closeToRight' />
+        closeToRight
       </Menu.Item>
     </Menu>
   ));
@@ -87,10 +89,14 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
   const setTab = usePersistFn((tab: React.ReactNode, key: string, index: number) => (
     <span onContextMenu={(event) => event.preventDefault()}>
       <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
-        <span className={styles.tabTitle}>{tab}</span>
+        <span>{tab}</span>
       </Dropdown>
     </span>
   ));
+
+  useEffect(() => {
+    window.tabsAction = actionRef.current!;
+  }, [actionRef.current]);
 
   return (
     <Tabs
@@ -106,9 +112,9 @@ export default function RouteTabs(props: RouteTabsProps): JSX.Element {
       onEdit={handleTabEdit as TabsProps['onEdit']}
       onChange={handleSwitch}
     >
-      {tabs.map((item: RouteTab, index) => (
+      {tabs.map((item, index) => (
         <Tabs.TabPane
-          tab={setTab(item.tab, item.key, index)}
+          tab={setTab(item.title, item.key, index)}
           key={item.key}
           closable={item.closable}
           forceRender={_get(persistent, 'force', false)}

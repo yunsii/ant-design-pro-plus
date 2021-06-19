@@ -10,17 +10,19 @@ import { useIntl, useLocation } from 'umi';
 import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
+import type { Route } from '@ant-design/pro-layout/lib/typings';
 
-import RouteTabs, { Mode, RouteTabsProps } from '@/components/RouteTabs';
-import type { MakeUpRoute } from '@/components/RouteTabs/useTabs';
-import { isRouteTab } from '@/components/RouteTabs/utils';
+import { Mode, RouteConfig, isSwitchTab } from 'use-switch-tabs';
+import SwitchTabs, { SwitchTabsProps } from '@/components/SwitchTabs';
 import PageLoading from '@/components/PageLoading';
+
+export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> {}
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(
   routes: MakeUpRoute[],
   formatMessage: any,
-  parent: MenuDataItem | null = null,
+  parent: MakeUpRoute | null = null,
 ): MenuDataItem[] {
   const result: MenuDataItem[] = [];
 
@@ -62,7 +64,7 @@ function localeRoutes(
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
 export interface RouteTabsLayoutProps
-  extends Pick<RouteTabsProps, 'persistent' | 'fixed' | 'setTabTitle'> {
+  extends Pick<SwitchTabsProps, 'persistent' | 'fixed' | 'setTabName'> {
   mode?: Mode | false;
   children: React.ReactElement;
   routes?: MakeUpRoute[];
@@ -76,13 +78,13 @@ export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Elemen
   const location = useLocation() as H.Location;
   const originalRoutes = memoizedOneLocaleRoutes(routes!, formatMessage);
 
-  if (mode && isRouteTab(location, originalRoutes)) {
+  if (mode && isSwitchTab(location as any, originalRoutes)) {
     if (loading) {
       return <PageLoading />;
     }
     if (routes) {
       return (
-        <RouteTabs
+        <SwitchTabs
           mode={mode}
           persistent={persistent}
           fixed={fixed}
@@ -90,7 +92,7 @@ export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Elemen
           // animated={false}
         >
           {children}
-        </RouteTabs>
+        </SwitchTabs>
       );
     }
   }
