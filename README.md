@@ -40,12 +40,12 @@
 │   └── layouts
 │       └── SwitchTabsLayout  # 路由加载
 │   └── pages
-│       └── SwitchTabsDemo     # 标签页功能展示
+│       └── SwitchTabsDemo    # 标签页功能展示
 ```
 
 🎉🎉🎉
 
-已发包 [use-switch-tabs](https://github.com/theprimone/use-switch-tabs)，同时通过 use-switch-tabs 进行了重构。 ———— 2021.06.19
+已发包 [use-switch-tabs](https://github.com/theprimone/use-switch-tabs)，同时通过 use-switch-tabs 进行了重构。 —— 2021.06.19
 
 ## 分支说明
 
@@ -65,7 +65,7 @@
 
 ### 性能问题
 
-可使用 [`withRouteTab`](/src/components/RouteTabs/utils.tsx#L180) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
+可使用 [`withSwitchTab`](/src/pages/SwitchTabsDemo/Query/index.tsx#L6) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
 
 ### 标签闪烁的问题
 
