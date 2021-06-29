@@ -25,7 +25,7 @@ export default withSwitchTab(
           <Steps
             current={setCurrentByLocation()}
             onChange={_current => {
-              history.push(`/route-tabs-demo/parent/child${_current + 1}`);
+              history.push(`/switch-tabs-demo/parent/child${_current + 1}`);
             }}
           >
             <Steps.Step title='child 1' />

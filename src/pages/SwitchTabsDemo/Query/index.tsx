@@ -11,7 +11,7 @@ export default withSwitchTab(() => {
 
   const handleSearch = () => {
     history.push({
-      pathname: `/route-tabs-demo/result`,
+      pathname: `/switch-tabs-demo/result`,
       state: options.includes('withState') ? { state: 'yes', text } : null,
       query: options.includes('withQuery')
         ? { query: 'yes', text: text || null }
