@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
 import { history, useLocation } from 'umi';
 import { TabsProps } from 'antd/lib/tabs';
@@ -8,6 +8,8 @@ import { usePersistFn } from 'ahooks';
 import useSwitchTabs, { UseSwitchTabsOptions, ActionType } from 'use-switch-tabs';
 import classNames from 'classnames';
 import _get from 'lodash/get';
+
+import styles from './index.less';
 
 enum CloseTabKey {
   Current = 'current',
@@ -27,12 +29,13 @@ export interface RouteTab {
 
 export interface SwitchTabsProps
   extends Omit<UseSwitchTabsOptions, 'location' | 'history'>,
-    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
+  Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
+  footerRender?: (() => React.ReactNode) | false,
 }
 
 export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
-  const { mode, fixed, originalRoutes, setTabName, persistent, children, ...rest } = props;
+  const { mode, fixed, originalRoutes, setTabName, persistent, children, footerRender, ...rest } = props;
 
   const location = useLocation() as any;
   const actionRef = useRef<ActionType>();
@@ -89,7 +92,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
   const setTab = usePersistFn((tab: React.ReactNode, key: string, index: number) => (
     <span onContextMenu={(event) => event.preventDefault()}>
       <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
-        <span>{tab}</span>
+        <span className={styles.tabTitle}>{tab}</span>
       </Dropdown>
     </span>
   ));
@@ -98,6 +101,13 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
     window.tabsAction = actionRef.current!;
   }, [actionRef.current]);
 
+  const footer = useMemo(() => {
+    if (typeof footerRender === 'function') {
+      return footerRender();
+    }
+    return footerRender;
+  }, [footerRender])
+
   return (
     <Tabs
       tabPosition='top'
@@ -105,7 +115,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
       tabBarStyle={{ margin: 0 }}
       tabBarGutter={0}
       animated
-      className={classNames('route-tabs', { 'page-tabs-fixed': fixed })}
+      className={classNames('switch-tabs', { 'page-tabs-fixed': fixed })}
       {...rest}
       hideAdd
       activeKey={activeKey}
@@ -120,6 +130,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
           forceRender={_get(persistent, 'force', false)}
         >
           {item.content}
+          {footer}
         </Tabs.TabPane>
       ))}
     </Tabs>

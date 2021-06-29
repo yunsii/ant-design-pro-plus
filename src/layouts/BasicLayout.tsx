@@ -169,14 +169,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-          <span>{route.breadcrumbName}</span>
-        );
-      }}
-      footerRender={() => {
-        if (settings.footerRender || settings.footerRender === undefined) {
-          return defaultFooterDom;
-        }
-        return null;
+            <span>{route.breadcrumbName}</span>
+          );
       }}
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
@@ -187,6 +181,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           persistent={settings?.routeTabs?.persistent}
           fixed={settings?.routeTabs?.fixed}
           routes={props.route.routes!}
+          footerRender={() => {
+            if (settings.footerRender || settings.footerRender === undefined) {
+              return defaultFooterDom;
+            }
+            return null;
+          }}
         >
           {children}
         </SwitchTabsLayout>

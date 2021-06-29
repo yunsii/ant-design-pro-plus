@@ -16,7 +16,7 @@ import { Mode, RouteConfig, isSwitchTab } from 'use-switch-tabs';
 import SwitchTabs, { SwitchTabsProps } from '@/components/SwitchTabs';
 import PageLoading from '@/components/PageLoading';
 
-export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> {}
+export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> { }
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(
@@ -64,15 +64,15 @@ function localeRoutes(
 const memoizedOneLocaleRoutes = memoizedOne(localeRoutes, deepEqual);
 
 export interface RouteTabsLayoutProps
-  extends Pick<SwitchTabsProps, 'persistent' | 'fixed' | 'setTabName'> {
+  extends Pick<SwitchTabsProps, 'persistent' | 'fixed' | 'setTabName' | 'footerRender'> {
   mode?: Mode | false;
-  children: React.ReactElement;
-  routes?: MakeUpRoute[];
   loading?: boolean;
+  routes?: MakeUpRoute[];
+  children: React.ReactElement;
 }
 
-export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
-  const { mode, persistent, fixed, loading, routes, children } = props;
+export default function SwitchTabsLayout(props: RouteTabsLayoutProps): JSX.Element {
+  const { mode, loading, routes, children, ...rest } = props;
 
   const { formatMessage } = useIntl();
   const location = useLocation() as H.Location;
@@ -86,8 +86,7 @@ export default function RouteTabsLayout(props: RouteTabsLayoutProps): JSX.Elemen
       return (
         <SwitchTabs
           mode={mode}
-          persistent={persistent}
-          fixed={fixed}
+          {...rest}
           originalRoutes={originalRoutes}
           // animated={false}
         >

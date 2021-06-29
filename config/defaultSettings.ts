@@ -34,7 +34,7 @@ export default {
 
   routeTabs: {
     mode: Mode.Route,
-    fixed: false,
+    fixed: true,
     reloadable: true,
     persistent: {
       force: true,
