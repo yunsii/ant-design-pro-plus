@@ -63,7 +63,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
               color: 'inherit',
             }}
             className={styles.action}
-            onClick={() => window.reloadTab()}
+            onClick={() => window.tabsAction.reloadTab()}
           >
             <ReloadOutlined />
           </a>
