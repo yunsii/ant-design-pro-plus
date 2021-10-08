@@ -55,4 +55,5 @@ export default {
   'menu.switch-tabs-demo.parent.child2': '嵌套路由 - 子节点 2',
   'menu.switch-tabs-demo.query': '查询页',
   'menu.switch-tabs-demo.result': '结果页',
+  'menu.switch-tabs-demo.dynamic': '动态路由',
 };

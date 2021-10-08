@@ -93,6 +93,12 @@ export default [
                 hideInMenu: true,
                 component: './SwitchTabsDemo/Result',
               },
+              {
+                name: 'dynamic',
+                path: '/switch-tabs-demo/dynamic/:anyStr',
+                hideInMenu: true,
+                component: './SwitchTabsDemo/Dynamic',
+              },
             ],
           },
           {

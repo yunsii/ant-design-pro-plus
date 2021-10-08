@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Alert, Button, Space } from 'antd';
+import { history } from 'umi';
+import { Card, Alert, Button, Space, Input } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 export default (): React.ReactNode => (
@@ -8,7 +9,10 @@ export default (): React.ReactNode => (
       <Alert
         message={
           <div>
-            🎉🎉🎉 <a href='https://github.com/theprimone/use-switch-tabs' target='_blank'>use-switch-tabs</a>
+            🎉🎉🎉{' '}
+            <a href='https://github.com/theprimone/use-switch-tabs' target='_blank'>
+              use-switch-tabs
+            </a>
             &nbsp;已发布
           </div>
         }
@@ -36,6 +40,17 @@ export default (): React.ReactNode => (
           marginBottom: 48,
         }}
       />
+      {/* 仅开发环境可用，部署到 GitHub Pages 后不能使用动态路由 */}
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ marginBottom: 24, maxWidth: 480 }}>
+          <Input.Search
+            onSearch={(value) => {
+              history.push(`/switch-tabs-demo/dynamic/${value}`);
+            }}
+            enterButton='go to /switch-tabs-demo/dynamic/:inputValue'
+          />
+        </div>
+      )}
       <Space>
         <Button
           type='primary'
