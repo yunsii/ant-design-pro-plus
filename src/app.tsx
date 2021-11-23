@@ -34,8 +34,18 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      fetchUserInfo,
+      currentUser: {
+        name: 'Yuns',
+        avatar: 'https://avatars.githubusercontent.com/u/18096089',
+      },
+      settings: defaultSettings,
+    };
+  }
   if (history.location.pathname !== loginPath) {
+    // 如果是登录页面，不执行
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,

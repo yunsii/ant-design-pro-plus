@@ -25,4 +25,12 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 interface Window {
   tabsAction: import('use-switch-tabs').ActionType;
+  routerBase: string;
+}
+
+// ref: https://dev.to/isthatcentered/typing-process-env-and-dealing-with-nodeenv-3ilm
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NODE_ENV: 'development' | 'production';
+  }
 }
