@@ -45,9 +45,9 @@ export default (): React.ReactNode => (
         <div style={{ marginBottom: 24, maxWidth: 480 }}>
           <Input.Search
             onSearch={(value) => {
-              history.push(`/switch-tabs-demo/dynamic/${value}`);
+              history.push(`/switch-tabs-demos/dynamic/${value}`);
             }}
-            enterButton='go to /switch-tabs-demo/dynamic/:inputValue'
+            enterButton='go to /switch-tabs-demos/dynamic/:inputValue'
           />
         </div>
       )}

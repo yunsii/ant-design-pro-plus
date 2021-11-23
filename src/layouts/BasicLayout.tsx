@@ -8,20 +8,17 @@ import { Link, history, useIntl } from 'umi';
 import { getMatchMenu } from '@umijs/route-utils';
 import { Result, Button } from 'antd';
 import { GithubOutlined } from '@ant-design/icons';
-import ProLayout, {
-  MenuDataItem,
-  BasicLayoutProps as ProLayoutProps,
-  DefaultFooter,
-} from '@ant-design/pro-layout';
-import { Dispatch } from 'redux';
+import type { MenuDataItem, BasicLayoutProps as ProLayoutProps } from '@ant-design/pro-layout';
+import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
+import type { Dispatch } from 'redux';
 import { connect } from 'dva';
 
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { ConnectState } from '@/models/connect';
+import type { ConnectState } from '@/models/connect';
 import { isProductionEnv } from '@/utils/utils';
 import { setAuthority } from '@/utils/authority';
-import { DefaultSettings } from '../../config/defaultSettings';
+import type { DefaultSettings } from '../../config/defaultSettings';
 import SwitchTabsLayout from './SwitchTabsLayout';
 import logo from '../assets/logo.svg';
 import styles from './BasicLayout.less';
@@ -40,9 +37,7 @@ const noMatch = (
 );
 
 export interface BasicLayoutProps extends Omit<ProLayoutProps, 'children'> {
-  breadcrumbNameMap: {
-    [path: string]: MenuDataItem;
-  };
+  breadcrumbNameMap: Record<string, MenuDataItem>;
   route: ProLayoutProps['route'] & {
     authority: string[];
   };
@@ -52,16 +47,14 @@ export interface BasicLayoutProps extends Omit<ProLayoutProps, 'children'> {
 }
 
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
-  breadcrumbNameMap: {
-    [path: string]: MenuDataItem;
-  };
+  breadcrumbNameMap: Record<string, MenuDataItem>;
 };
 
 /**
  * use Authorized check all menu item
  */
 const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
-  menuList.map(item => {
+  menuList.map((item) => {
     const localItem = {
       ...item,
       children: item.children ? menuDataRender(item.children) : [],
@@ -95,7 +88,7 @@ const defaultFooterDom = (
   />
 );
 
-const BasicLayout: React.FC<BasicLayoutProps> = props => {
+const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   const {
     dispatch,
     children,
@@ -141,12 +134,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   return (
     <ProLayout
-      className={settings.routeTabs?.mode && styles.customByPageTabs}
+      className={settings.switchTabs?.mode && styles.customByPageTabs}
       logo={logo}
       formatMessage={formatMessage}
       {...props}
       {...settings}
-      onCollapse={collapsed => {
+      onCollapse={(collapsed) => {
         handleMenuCollapse(collapsed);
       }}
       onMenuHeaderClick={() => history.push('/')}
@@ -169,17 +162,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return first ? (
           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
         ) : (
-            <span>{route.breadcrumbName}</span>
-          );
+          <span>{route.breadcrumbName}</span>
+        );
       }}
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         <SwitchTabsLayout
-          mode={settings?.routeTabs?.mode}
-          persistent={settings?.routeTabs?.persistent}
-          fixed={settings?.routeTabs?.fixed}
+          mode={settings?.switchTabs?.mode}
+          persistent={settings?.switchTabs?.persistent}
+          fixed={settings?.switchTabs?.fixed}
           routes={props.route.routes!}
           footerRender={() => {
             if (settings.footerRender || settings.footerRender === undefined) {

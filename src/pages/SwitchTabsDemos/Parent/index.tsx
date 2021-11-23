@@ -24,8 +24,8 @@ export default withSwitchTab(
         <Card title='Parent'>
           <Steps
             current={setCurrentByLocation()}
-            onChange={_current => {
-              history.push(`/switch-tabs-demo/parent/child${_current + 1}`);
+            onChange={(_current) => {
+              history.push(`/switch-tabs-demos/parent/child${_current + 1}`);
             }}
           >
             <Steps.Step title='child 1' />

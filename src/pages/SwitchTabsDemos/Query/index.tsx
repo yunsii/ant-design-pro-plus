@@ -11,7 +11,7 @@ export default withSwitchTab(() => {
 
   const handleSearch = () => {
     history.push({
-      pathname: `/switch-tabs-demo/result`,
+      pathname: `/switch-tabs-demos/result`,
       state: options.includes('withState') ? { state: 'yes', text } : null,
       query: options.includes('withQuery')
         ? { query: 'yes', text: text || null }
@@ -41,7 +41,7 @@ export default withSwitchTab(() => {
                     value: 'withQuery',
                   },
                 ]}
-                onChange={_options => {
+                onChange={(_options) => {
                   setOptions(_options);
                 }}
               />
@@ -57,7 +57,7 @@ export default withSwitchTab(() => {
         >
           <Input
             value={text}
-            onChange={e => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
             onPressEnter={() => {
               handleSearch();
             }}

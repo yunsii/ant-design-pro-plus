@@ -49,11 +49,11 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
 
-  'menu.switch-tabs-demo': 'Page Tabs Demo',
-  'menu.switch-tabs-demo.control': 'Control',
-  'menu.switch-tabs-demo.parent': 'Nested Route',
-  'menu.switch-tabs-demo.parent.child2': 'Nested Route - Child 2',
-  'menu.switch-tabs-demo.query': 'Query',
-  'menu.switch-tabs-demo.result': 'Result',
-  'menu.switch-tabs-demo.dynamic': 'Dynamic Route',
+  'menu.switch-tabs-demos': 'Switch Tabs Demos',
+  'menu.switch-tabs-demos.control': 'Control',
+  'menu.switch-tabs-demos.parent': 'Nested Route',
+  'menu.switch-tabs-demos.parent.child2': 'Nested Route - Child 2',
+  'menu.switch-tabs-demos.query': 'Query',
+  'menu.switch-tabs-demos.result': 'Result',
+  'menu.switch-tabs-demos.dynamic': 'Dynamic Route',
 };

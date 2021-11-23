@@ -29,13 +29,14 @@ export interface RouteTab {
 
 export interface SwitchTabsProps
   extends Omit<UseSwitchTabsOptions, 'location' | 'history'>,
-  Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
+    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
-  footerRender?: (() => React.ReactNode) | false,
+  footerRender?: (() => React.ReactNode) | false;
 }
 
 export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
-  const { mode, fixed, originalRoutes, setTabName, persistent, children, footerRender, ...rest } = props;
+  const { mode, fixed, originalRoutes, setTabName, persistent, children, footerRender, ...rest } =
+    props;
 
   const location = useLocation() as any;
   const actionRef = useRef<ActionType>();
@@ -106,7 +107,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
       return footerRender();
     }
     return footerRender;
-  }, [footerRender])
+  }, [footerRender]);
 
   return (
     <Tabs
@@ -115,7 +116,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
       tabBarStyle={{ margin: 0 }}
       tabBarGutter={0}
       animated
-      className={classNames('switch-tabs', { 'page-tabs-fixed': fixed })}
+      className={classNames('switch-tabs', { 'switch-tabs-fixed': fixed })}
       {...rest}
       hideAdd
       activeKey={activeKey}

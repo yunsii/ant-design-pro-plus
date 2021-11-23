@@ -1,7 +1,7 @@
 import { Mode, UseSwitchTabsOptions } from 'use-switch-tabs';
 import { Settings as ProSettings } from '@ant-design/pro-layout';
 
-export type RouteTabsOptions = {
+export type SwitchTabsOptions = {
   mode: Mode;
   /** 固定标签页头部 */
   fixed?: boolean;
@@ -12,7 +12,7 @@ export type RouteTabsOptions = {
 export type DefaultSettings = Partial<ProSettings> & {
   pwa: boolean;
 
-  routeTabs?: RouteTabsOptions;
+  switchTabs?: SwitchTabsOptions;
 };
 
 export default {

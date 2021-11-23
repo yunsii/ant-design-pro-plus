@@ -3,20 +3,22 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-import { MenuDataItem } from '@ant-design/pro-layout';
+import type { MenuDataItem } from '@ant-design/pro-layout';
 import React from 'react';
-import * as H from 'history-with-query';
+import type * as H from 'history-with-query';
 import { useIntl, useLocation } from 'umi';
 import _isArray from 'lodash/isArray';
 import memoizedOne from 'memoize-one';
 import deepEqual from 'fast-deep-equal';
 import type { Route } from '@ant-design/pro-layout/lib/typings';
 
-import { Mode, RouteConfig, isSwitchTab } from 'use-switch-tabs';
-import SwitchTabs, { SwitchTabsProps } from '@/components/SwitchTabs';
+import type { Mode, RouteConfig } from 'use-switch-tabs';
+import { isSwitchTab } from 'use-switch-tabs';
+import type { SwitchTabsProps } from '@/components/SwitchTabs';
+import SwitchTabs from '@/components/SwitchTabs';
 import PageLoading from '@/components/PageLoading';
 
-export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> { }
+export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> {}
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(
@@ -36,7 +38,7 @@ function localeRoutes(
     // 初始化 locale 字段
     let newItem: MenuDataItem = {
       ...rest,
-      routes: null,
+      routes: undefined,
       locale: item.name,
     };
 
