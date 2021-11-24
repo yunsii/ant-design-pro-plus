@@ -32,7 +32,7 @@ export default {
   pwa: false,
   iconfontUrl: '',
 
-  routeTabs: {
+  switchTabs: {
     mode: Mode.Route,
     fixed: true,
     reloadable: true,
