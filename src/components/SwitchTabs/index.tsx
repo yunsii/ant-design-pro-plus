@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import { Tabs, Dropdown, Menu } from 'antd';
-import { history, useLocation } from 'umi';
+import { history, useLocation, useIntl } from 'umi';
 import type { TabsProps } from 'antd/lib/tabs';
 import type { MenuProps } from 'antd/lib/menu';
 import type * as H from 'history-with-query';
@@ -30,7 +30,7 @@ export interface RouteTab {
 
 export interface SwitchTabsProps
   extends Omit<UseSwitchTabsOptions, 'location' | 'history'>,
-    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
+  Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
   footerRender?: (() => React.ReactNode) | false;
 }
@@ -39,6 +39,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
   const { mode, fixed, originalRoutes, setTabName, persistent, children, footerRender, ...rest } =
     props;
 
+  const { formatMessage } = useIntl();
   const location = useLocation() as any;
   const actionRef = useRef<ActionType>();
 
@@ -80,13 +81,13 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
   const setMenu = usePersistFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>
       <Menu.Item disabled={tabs.length === 1} key={CloseTabKey.Current}>
-        closeCurrent
+        {formatMessage({ id: 'component.switchTabs.closeCurrent' })}
       </Menu.Item>
       <Menu.Item disabled={tabs.length === 1} key={CloseTabKey.Others}>
-        closeOthers
+        {formatMessage({ id: 'component.switchTabs.closeOthers' })}
       </Menu.Item>
       <Menu.Item disabled={tabs.length === index + 1} key={CloseTabKey.ToRight}>
-        closeToRight
+        {formatMessage({ id: 'component.switchTabs.closeToRight' })}
       </Menu.Item>
     </Menu>
   ));
