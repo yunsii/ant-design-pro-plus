@@ -30,7 +30,7 @@ export interface RouteTab {
 
 export interface SwitchTabsProps
   extends Omit<UseSwitchTabsOptions, 'location' | 'history'>,
-  Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
+    Omit<TabsProps, 'hideAdd' | 'activeKey' | 'onEdit' | 'onChange' | 'children'> {
   fixed?: boolean;
   footerRender?: (() => React.ReactNode) | false;
 }
@@ -132,7 +132,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
           closable={item.closable}
           forceRender={_get(persistent, 'force', false)}
         >
-          {item.content}
+          <main className={styles.content}>{item.content}</main>
           {footer}
         </Tabs.TabPane>
       ))}

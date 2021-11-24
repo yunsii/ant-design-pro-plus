@@ -3,6 +3,10 @@
   font-weight: initial;
 }
 
+.content {
+  flex: auto;
+}
+
 :global {
   .switch-tabs-fixed {
     > .ant-tabs-nav {
@@ -13,9 +17,13 @@
 
     > .ant-tabs-content-holder {
       .ant-tabs-content {
+        .ant-tabs-tabpane {
+          display: flex;
+          flex-direction: column;
+        }
+
         .ant-tabs-tabpane-active {
-          // 头部 108px
-          height: calc(100vh - 108px);
+          min-height: calc(100vh - 88px);
           overflow: auto;
         }
       }
