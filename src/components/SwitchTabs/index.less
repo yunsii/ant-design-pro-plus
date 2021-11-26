@@ -1,6 +1,24 @@
 .tabTitle {
   position: relative;
   font-weight: initial;
+
+  &::before {
+    position: absolute;
+    top: -10px;
+    left: -16px;
+    width: calc(100% + 24px);
+    height: calc(100% + 20px);
+    content: ' ';
+  }
+
+  &::after {
+    position: absolute;
+    top: -10px;
+    right: -40px;
+    width: 12px;
+    height: calc(100% + 20px);
+    content: ' ';
+  }
 }
 
 .content {
