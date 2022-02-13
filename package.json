@@ -54,13 +54,13 @@
     "not ie <= 10"
   ],
   "dependencies": {
-    "@ant-design/icons": "^4.5.0",
-    "@ant-design/pro-descriptions": "^1.9.0",
-    "@ant-design/pro-form": "^1.43.0",
-    "@ant-design/pro-layout": "^6.26.0",
-    "@ant-design/pro-table": "^2.56.0",
-    "@umijs/route-utils": "^2.0.3",
-    "antd": "4.16.13",
+    "@ant-design/icons": "^4.7.0",
+    "@ant-design/pro-descriptions": "^1.10.0",
+    "@ant-design/pro-form": "^1.52.0",
+    "@ant-design/pro-layout": "^6.32.0",
+    "@ant-design/pro-table": "^2.61.0",
+    "@umijs/route-utils": "^2.0.0",
+    "antd": "^4.17.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
@@ -72,7 +72,6 @@
     "react-dom": "^17.0.0",
     "react-helmet-async": "^1.0.4",
     "umi": "^3.5.0",
-    "umi-serve": "^1.9.10",
     "use-switch-tabs": "^0.1.3"
   },
   "devDependencies": {
@@ -108,7 +107,8 @@
     "puppeteer-core": "^8.0.0",
     "stylelint": "^13.0.0",
     "swagger-ui-react": "^3.52.3",
-    "typescript": "^4.2.2"
+    "typescript": "^4.2.2",
+    "umi-serve": "^1.9.10"
   },
   "engines": {
     "node": ">=10.0.0"
