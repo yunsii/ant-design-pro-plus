@@ -9,7 +9,7 @@
           {
             name: 'login',
             path: '/user/login',
-            component: './user/Login',
+            component: './User/Login',
           },
         ],
       },
@@ -60,12 +60,12 @@
       {
         name: 'control',
         path: '/switch-tabs-demos/control',
-        component: './switchTabsDemos/Control',
+        component: './SwitchTabsDemos/Control',
       },
       {
         name: 'parent',
         path: '/switch-tabs-demos/parent',
-        component: './switchTabsDemos/Parent',
+        component: './SwitchTabsDemos/Parent',
         hideChildrenInMenu: true,
         routes: [
           {
@@ -74,36 +74,36 @@
           },
           {
             path: '/switch-tabs-demos/parent/child1',
-            component: './switchTabsDemos/Parent/Child1',
+            component: './SwitchTabsDemos/Parent/Child1',
           },
           {
             path: '/switch-tabs-demos/parent/child2',
             name: 'child2',
-            component: './switchTabsDemos/Parent/Child2',
+            component: './SwitchTabsDemos/Parent/Child2',
           },
           {
             path: '/switch-tabs-demos/parent/child3',
-            component: './switchTabsDemos/Parent/Child3',
+            component: './SwitchTabsDemos/Parent/Child3',
           },
         ],
       },
       {
         name: 'query',
         path: '/switch-tabs-demos/query',
-        component: './switchTabsDemos/Query',
+        component: './SwitchTabsDemos/Query',
       },
       {
         name: 'result',
         path: '/switch-tabs-demos/result',
         follow: '/switch-tabs-demos/query',
         hideInMenu: true,
-        component: './switchTabsDemos/Result',
+        component: './SwitchTabsDemos/Result',
       },
       {
         name: 'dynamic',
         path: '/switch-tabs-demos/dynamic/:anyStr',
         hideInMenu: true,
-        component: './switchTabsDemos/Dynamic',
+        component: './SwitchTabsDemos/Dynamic',
       },
     ],
   },
