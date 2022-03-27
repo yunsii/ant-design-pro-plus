@@ -4,7 +4,7 @@
 
 官方说明请参阅 [/master/README.zh-CN](https://github.com/ant-design/ant-design-pro/blob/master/README.zh-CN.md)
 
-![github pages](https://github.com/theprimone/ant-design-pro-plus/workflows/github%20pages/badge.svg) [![GitHub license](https://img.shields.io/github/license/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/theprimone/ant-design-pro-plus.svg)](https://github.com/theprimone/ant-design-pro-plus/commits/master)
+![github pages](https://github.com/yunsii/ant-design-pro-plus/workflows/github%20pages/badge.svg) [![GitHub license](https://img.shields.io/github/license/yunsii/ant-design-pro-plus.svg)](https://github.com/yunsii/ant-design-pro-plus/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/yunsii/ant-design-pro-plus.svg)](https://github.com/yunsii/ant-design-pro-plus/stargazers) [![GitHub issues](https://img.shields.io/github/issues/yunsii/ant-design-pro-plus.svg)](https://github.com/yunsii/ant-design-pro-plus/issues) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/yunsii/ant-design-pro-plus.svg)](https://github.com/yunsii/ant-design-pro-plus/commits/master)
 
 </div>
 
@@ -48,19 +48,19 @@
 
 🎉🎉🎉
 
-已发包 [use-switch-tabs](https://github.com/theprimone/use-switch-tabs)，同时通过 use-switch-tabs 进行了重构。 —— 2021.06.19
+已发包 [use-switch-tabs](https://github.com/yunsii/use-switch-tabs)，同时通过 use-switch-tabs 进行了重构。 —— 2021.06.19
 
 ## 分支说明
 
-### [`v4-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v4-legacy)
+### [`v4-legacy`](https://github.com/yunsii/ant-design-pro-plus/tree/v4-legacy)
 
 基于 `ant design pro` V4 版本的功能分支。
 
-### [`v2-legacy`](https://github.com/theprimone/ant-design-pro-plus/tree/v2-legacy)
+### [`v2-legacy`](https://github.com/yunsii/ant-design-pro-plus/tree/v2-legacy)
 
 原仓库名称 `ant design pro v2 plus` ，代码移到此分支。重命名为 `ant design pro plus` 后，在 `master` 分支跟进 `ant design pro` 中的更新。
 
-### [`umi/v2.x`](https://github.com/theprimone/ant-design-pro-plus/tree/umi/v2.x)
+### [`umi/v2.x`](https://github.com/yunsii/ant-design-pro-plus/tree/umi/v2.x)
 
 基于 umi@&#8203;2.x 的功能实现。
 
@@ -68,7 +68,7 @@
 
 ### 标签页功能从 ant design pro V4 迁移到 V5
 
-Pro V5 在架构上有了较大的重构，通过 Umi 的插件机制屏蔽了更多的实现细节。不过得益于此前已将标签页核心功能发包 [use-switch-tabs](https://github.com/theprimone/use-switch-tabs)，故需要做得工作并不多。但是值得注意的一点是需要 `@umijs/plugin-layout` 的版本不能低于 `0.18.0`，详见[此讨论](https://github.com/umijs/plugins/issues/744)，因此 `@umijs/preset-react` 版本不能低于 `1.8.28`，详见[此更新](https://github.com/umijs/plugins/compare/@umijs/preset-react@1.8.27...@umijs/preset-react@1.8.28)。
+Pro V5 在架构上有了较大的重构，通过 Umi 的插件机制屏蔽了更多的实现细节。不过得益于此前已将标签页核心功能发包 [use-switch-tabs](https://github.com/yunsii/use-switch-tabs)，故需要做得工作并不多。但是值得注意的一点是需要 `@umijs/plugin-layout` 的版本不能低于 `0.18.0`，详见[此讨论](https://github.com/umijs/plugins/issues/744)，因此 `@umijs/preset-react` 版本不能低于 `1.8.28`，详见[此更新](https://github.com/umijs/plugins/compare/@umijs/preset-react@1.8.27...@umijs/preset-react@1.8.28)。
 
 最后，实现入口改到了 [app.ts](./src/app.tsx)，通过此入口可查看具体实现，相关 UI 组件较于 V4 基本没有改动。
 
@@ -78,11 +78,11 @@ Pro V5 在架构上有了较大的重构，通过 Umi 的插件机制屏蔽了�
 
 ### 性能问题
 
-可使用 [`withSwitchTab`](/src/pages/SwitchTabsDemo/Query/index.tsx#L6) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
+可使用 [`withSwitchTab`](/src/pages/SwitchTabsDemos/Query/index.tsx#L6) 函数包装页面组件，避免页面反复渲染。值得注意的是，如果在页面中使用了一些特殊的状态，如 `useLocation` 这样的 hook，会导致无法优化。如果一定要用的话，可自行使用 `useMemo` 优化。
 
 ### 标签闪烁的问题
 
-在切换的时候标签会出现闪烁的情况 [#5](https://github.com/theprimone/ant-design-pro-plus/issues/5)，刚开始还没在意，后来发现了原因，参考 [ant-design/ant-design#25343](https://github.com/ant-design/ant-design/issues/25343)。
+在切换的时候标签会出现闪烁的情况 [#5](https://github.com/yunsii/ant-design-pro-plus/issues/5)，刚开始还没在意，后来发现了原因，参考 [ant-design/ant-design#25343](https://github.com/ant-design/ant-design/issues/25343)。
 
 ### 预览页面不能使用动态路由
 
