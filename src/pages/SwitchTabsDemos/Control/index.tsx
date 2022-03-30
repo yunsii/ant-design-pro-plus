@@ -10,7 +10,7 @@ export default (): React.ReactNode => (
         message={
           <div>
             🎉🎉🎉{' '}
-            <a href="https://github.com/theprimone/use-switch-tabs" target="_blank">
+            <a href="https://github.com/yunsii/use-switch-tabs" target="_blank" rel="noreferrer">
               use-switch-tabs
             </a>
             &nbsp;已发布

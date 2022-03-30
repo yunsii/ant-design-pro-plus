@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
   const intl = useIntl();
   const defaultMessage = intl.formatMessage({
     id: 'app.copyright.produced',
-    defaultMessage: 'theprimone 出品',
+    defaultMessage: '云深加点 buff 出品',
   });
 
   const currentYear = new Date().getFullYear();
@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/theprimone/ant-design-pro-plus',
+          href: 'https://github.com/yunsii/ant-design-pro-plus',
           blankTarget: true,
         },
         {
