@@ -25,6 +25,8 @@
   - 关闭标签页 - `window.tabsAction.closeTab()`
   - 返回之前标签页 - `window.tabsAction.goBackTab()`
   - 关闭并返回之前标签页 - `window.tabsAction.closeAndGoBackTab()`
+  - 获取 location 对应的 tabKey，如果没有入参，返回当前激活的 tabKey - `window.tabsAction.getTabKey()`
+  - 监听 activeKey 变化事件 - `window.tabsAction.listenActiveChange()`
 - `reloadable`，支持在头部操作栏刷新当前标签页
 - `follow`，路由定义中新增配置，默认打开方式是添加到所有标签页最后面，可通过配置该属性，使得一个标签页在 `follow` 指定的标签页后面打开（可参考查询页 Demo）
 - `persistent`，支持页面刷新之后恢复上次的标签页状态
