@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, Input, Checkbox, Button, Form } from 'antd';
-import { history } from 'umi';
+import { history, useLocation } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import { withSwitchTab } from 'use-switch-tabs';
@@ -8,6 +8,18 @@ import { withSwitchTab } from 'use-switch-tabs';
 export default withSwitchTab(() => {
   const [text, setText] = useState<string>();
   const [options, setOptions] = useState<any[]>([]);
+
+  const pageLocation = useLocation();
+  const pageTabKeyRef = useRef(window.tabsAction.getTabKey(pageLocation));
+  const [active, setActive] = useState(pageTabKeyRef.current === window.tabsAction.getTabKey());
+
+  useEffect(() => {
+    const disposer = window.tabsAction.listenActiveChange((tabKey) => {
+      setActive(pageTabKeyRef.current === tabKey);
+    });
+
+    return () => disposer();
+  }, []);
 
   const handleSearch = () => {
     history.push({
@@ -20,8 +32,11 @@ export default withSwitchTab(() => {
   };
 
   return (
-    <PageHeaderWrapper title="Query" content="Input and press enter to new page">
-      <Card title="Query">
+    <PageHeaderWrapper
+      title={`Query [${active ? 'active' : 'inactive'}]`}
+      content="Input and press enter to new page"
+    >
+      <Card title={`Query [${active ? 'active' : 'inactive'}]`}>
         <Form.Item
           labelCol={{ xs: 24 }}
           labelAlign="left"

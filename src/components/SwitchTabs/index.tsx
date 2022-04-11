@@ -4,7 +4,7 @@ import { history, useLocation, useIntl } from 'umi';
 import type { TabsProps } from 'antd/lib/tabs';
 import type { MenuProps } from 'antd/lib/menu';
 import type * as H from 'history-with-query';
-import { usePersistFn } from 'ahooks';
+import { useMemoizedFn } from 'ahooks';
 import type { UseSwitchTabsOptions, ActionType } from 'use-switch-tabs';
 import useSwitchTabs from 'use-switch-tabs';
 import classNames from 'classnames';
@@ -43,7 +43,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
   const location = useLocation() as any;
   const actionRef = useRef<ActionType>();
 
-  const { tabs, activeKey, handleSwitch, handleRemove, handleRemoveOthers, handRemoveRightTabs } =
+  const { tabs, activeKey, handleSwitch, handleRemove, handleRemoveOthers, handleRemoveRightTabs } =
     useSwitchTabs({
       children,
       setTabName,
@@ -55,17 +55,17 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
       actionRef,
     });
 
-  const remove = usePersistFn((key: string) => {
+  const remove = useMemoizedFn((key: string) => {
     handleRemove(key);
   });
 
-  const handleTabEdit = usePersistFn((targetKey: string, action: 'add' | 'remove') => {
+  const handleTabEdit = useMemoizedFn((targetKey: string, action: 'add' | 'remove') => {
     if (action === 'remove') {
       remove(targetKey);
     }
   });
 
-  const handleTabsMenuClick = usePersistFn((tabKey: string): MenuProps['onClick'] => (event) => {
+  const handleTabsMenuClick = useMemoizedFn((tabKey: string): MenuProps['onClick'] => (event) => {
     const { key, domEvent } = event;
     domEvent.stopPropagation();
 
@@ -74,11 +74,11 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
     } else if (key === CloseTabKey.Others) {
       handleRemoveOthers(tabKey);
     } else if (key === CloseTabKey.ToRight) {
-      handRemoveRightTabs(tabKey);
+      handleRemoveRightTabs(tabKey);
     }
   });
 
-  const setMenu = usePersistFn((key: string, index: number) => (
+  const setMenu = useMemoizedFn((key: string, index: number) => (
     <Menu onClick={handleTabsMenuClick(key)}>
       <Menu.Item disabled={tabs.length === 1} key={CloseTabKey.Current}>
         {formatMessage({ id: 'component.switchTabs.closeCurrent' })}
@@ -92,7 +92,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
     </Menu>
   ));
 
-  const setTab = usePersistFn((tab: React.ReactNode, key: string, index: number) => (
+  const setTab = useMemoizedFn((tab: React.ReactNode, key: string, index: number) => (
     <span onContextMenu={(event) => event.preventDefault()}>
       <Dropdown overlay={setMenu(key, index)} trigger={['contextMenu']}>
         <span className={styles.tabTitle}>{tab}</span>
@@ -102,7 +102,7 @@ export default function SwitchTabs(props: SwitchTabsProps): JSX.Element {
 
   useEffect(() => {
     window.tabsAction = actionRef.current!;
-  }, [actionRef.current]);
+  }, []);
 
   const footer = useMemo(() => {
     if (typeof footerRender === 'function') {
