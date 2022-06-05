@@ -20,6 +20,8 @@ const Settings: Settings = {
   // 拂晓蓝
   primaryColor: '#1890ff',
   layout: 'side',
+  // layout: 'mix',
+  // splitMenus: true,
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,

@@ -18,7 +18,7 @@ import { isSwitchTab } from 'use-switch-tabs';
 import type { SwitchTabsProps } from '@/components/SwitchTabs';
 import SwitchTabs from '@/components/SwitchTabs';
 
-export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow'> {}
+export interface MakeUpRoute extends Route, Pick<RouteConfig, 'follow' | 'redirect'> {}
 
 /** 根据路由定义中的 name 本地化标题 */
 function localeRoutes(
@@ -31,6 +31,14 @@ function localeRoutes(
   routes.forEach((item) => {
     const { routes: itemRoutes, ...rest } = item;
 
+    if (item.layout === false || item.path?.startsWith('/_demos')) {
+      return;
+    }
+    // 为标签页展示的页面注入 redirect 路由
+    if (item.redirect && item.path !== '/') {
+      result.push(item);
+      return;
+    }
     if (!item.name) {
       return;
     }
@@ -78,9 +86,9 @@ export default function SwitchTabsLayout(props: RouteTabsLayoutProps): JSX.Eleme
 
   const { formatMessage } = useIntl();
   const location = useLocation() as H.Location;
-  const originalRoutes = memoizedOneLocaleRoutes(routes!, formatMessage);
+  const originalTabsRoutes = memoizedOneLocaleRoutes(routes!, formatMessage);
 
-  if (mode && isSwitchTab(location as any, originalRoutes)) {
+  if (mode && isSwitchTab(location as any, originalTabsRoutes)) {
     if (loading) {
       return <PageLoading />;
     }
@@ -89,7 +97,7 @@ export default function SwitchTabsLayout(props: RouteTabsLayoutProps): JSX.Eleme
         <SwitchTabs
           mode={mode}
           {...rest}
-          originalRoutes={originalRoutes}
+          originalRoutes={originalTabsRoutes}
           // animated={false}
         >
           {children}
