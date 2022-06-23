@@ -15936,10 +15936,10 @@ use-subscription@1.5.1:
   dependencies:
     object-assign "^4.1.1"
 
-use-switch-tabs@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npmmirror.com/use-switch-tabs/-/use-switch-tabs-0.2.2.tgz#1911bf4d81844f4e704bd553a506052875281ec7"
-  integrity sha512-uKuWYCor63EFy+SmhcvHaHMZLDiUEDO/oq/9fCcfKTdABl2wJxr4Ezk9DOAhALciNU7qGEoEVeOZFhB5oeyFVQ==
+use-switch-tabs@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.npmmirror.com/use-switch-tabs/-/use-switch-tabs-0.2.3.tgz#53f69cb5ac691d0b881976b8871f4247d53ed2b8"
+  integrity sha512-7Wd2p8aUmT30QBfLwzgtm/QeIqg4bzjoV4qj0B39B3V3W/zZci5xn0kFR/SgfRxCzvFvdzZHLIpEwExgvJlKTw==
   dependencies:
     "@qixian.cs/path-to-regexp" "^6.1.0"
     ahooks "^3.3.0"
