@@ -26,6 +26,15 @@
 }
 
 :global {
+  .custom-by-switch-tabs {
+    .ant-layout {
+      .ant-layout {
+        // 当值 Tabs force render 时向右切换出现闪烁的纵向滚动条
+        overflow: hidden;
+      }
+    }
+  }
+
   .switch-tabs-fixed {
     > .ant-tabs-nav {
       // height: 41px;
@@ -34,6 +43,9 @@
     }
 
     > .ant-tabs-content-holder {
+      // 当值 Tabs force render 时向右切换出现闪烁的纵向滚动条
+      overflow: hidden;
+
       .ant-tabs-content {
         .ant-tabs-tabpane {
           display: flex;
